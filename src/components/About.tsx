@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { Button } from "./ui/button";
 
 const AboutSection = ({ children, index }: { children: React.ReactNode, index: number }) => {
@@ -39,11 +39,11 @@ export default function About() {
             <div>
               <h3 className="text-3xl font-bold mb-6 text-blue-400">The Mission</h3>
               <p className="text-lg mb-6">
-                Power Projects' mission is to make it easier for developers of all skill levels to find projects to collaborate on,
+                Power Projects&apos;s mission is to make it easier for developers of all skill levels to find projects to collaborate on,
                 learn new technologies, or create their own portfolio-worthy projects with a team they build.
               </p>
               <p className="text-lg mb-6">
-                Whether you're a a beginner seeking to gain experience, or an experienced developer looking to mentor others,
+                Whether you&apos;sre a a beginner seeking to gain experience, or an experienced developer looking to mentor others,
                 Power Projects provides the tools and community to help you succeed.
               </p>
             </div>
