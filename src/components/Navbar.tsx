@@ -117,7 +117,10 @@ const Navbar = () => {
                   <div className="flex-grow">
                     <div className="flex flex-col divide-y">
                       <button
-                        onClick={() => scrollToSection('top')}
+                        onClick={() => {
+                          scrollToSection('top');
+                          setIsOpen(false);
+                        }}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <span className="text-lg font-medium">Home</span>
@@ -125,7 +128,10 @@ const Navbar = () => {
                       </button>
 
                       <button
-                        onClick={() => scrollToSection('features')}
+                        onClick={() => {
+                          scrollToSection('features');
+                          setIsOpen(false);
+                        }}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <span className="text-lg font-medium">Features</span>
@@ -133,6 +139,7 @@ const Navbar = () => {
                       </button>
 
                       <button
+                        onClick={() => setIsOpen(false)}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <span className="text-lg font-medium">Project Board</span>
@@ -140,7 +147,10 @@ const Navbar = () => {
                       </button>
 
                       <button
-                        onClick={() => scrollToSection('features')}
+                        onClick={() => {
+                          scrollToSection('about');
+                          setIsOpen(false);
+                        }}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <span className="text-lg font-medium">About</span>
@@ -148,6 +158,7 @@ const Navbar = () => {
                       </button>
 
                       <button
+                        onClick={() => setIsOpen(false)}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <span className="text-lg font-medium">Contact</span>
@@ -155,6 +166,7 @@ const Navbar = () => {
                       </button>
 
                       <button
+                        onClick={() => setIsOpen(false)}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         <span className="text-lg font-medium">Support</span>
@@ -164,7 +176,7 @@ const Navbar = () => {
                   </div>
 
                   <div className="p-4 space-y-4 border-t">
-                    <Link href="/signin" className="block">
+                    <Link href="" className="block">
                       <Button
                         variant="outline"
                         className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
