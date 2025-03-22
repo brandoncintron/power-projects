@@ -8,9 +8,10 @@ import { SelectableCard } from "./SelectableCard";
 import { CustomItemInput } from "./CustomItemInput";
 import { CustomItemsList } from "./CustomItemsList";
 import { useScrollTo } from "@/hooks/useScrollTo";
+import { ProjectFormData } from "../hooks/useProjectForm";
 
 interface DatabaseSelectionStepProps {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<ProjectFormData>;
   selectedAppType: string;
   customDatabase: string;
   customDbDescription: string;
@@ -23,7 +24,7 @@ interface DatabaseSelectionStepProps {
   onBackToFrameworks: () => void;
   getCustomFrameworkLanguage: (framework: string) => string | undefined;
   getDbOptions: () => Array<{ name: string; description: string }>;
-  onSubmit: (values: any) => void;
+  onSubmit: (values: ProjectFormData) => void;
 }
 
 /**
@@ -46,8 +47,15 @@ export function DatabaseSelectionStep({
   getDbOptions,
   onSubmit,
 }: DatabaseSelectionStepProps) {
-  // Get scrollToSection function from the useScrollTo hook
   const { scrollToSection } = useScrollTo();
+  
+  // We don't use these directly, but we need to derive other values from them
+  const selectedFrameworks = form.watch("frameworks") || [];
+  const selectedDatabases = form.watch("databases") || [];
+  
+  // Additional derived state
+  const hasSelectedDatabases = selectedDatabases.length > 0;
+  const dbOptions = getDbOptions();
   
   // Handle back navigation with smooth scroll
   const handleBackNavigation = useCallback(() => {
@@ -153,7 +161,7 @@ export function DatabaseSelectionStep({
                   <span className="text-sm font-medium mr-1">Selected Databases:</span>
                 </div>
                 <div className={(form.watch("databases") || []).length > 3 ? "grid grid-cols-1 sm:grid-cols-2 gap-2 w-full" : "flex flex-wrap gap-2"}>
-                  {form.watch("databases").map((databaseName: string) => {
+                  {(form.watch("databases") || []).map((databaseName: string) => {
                     // Check if this is a custom database
                     const isCustomDatabase = customDatabases.some(db => db.name === databaseName);
                     

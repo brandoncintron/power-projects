@@ -9,9 +9,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { applicationTypes } from "../form-data";
+import { ProjectFormData } from "../hooks/useProjectForm";
 
 interface ApplicationTypeSectionProps {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<ProjectFormData>;
   onApplicationTypeChange: (value: string) => void;
 }
 

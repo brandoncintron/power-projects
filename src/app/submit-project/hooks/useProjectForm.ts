@@ -26,6 +26,8 @@ export type ProjectFormData = z.infer<typeof formSchema>;
  * Combines form state, validation, and submission handling
  */
 export function useProjectForm() {
+  // Keep router but mark as unused for potential future use
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
   const [charCount, setCharCount] = useState(0);
 

@@ -1,11 +1,12 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { FormField, FormItem, FormLabel, FormDescription, FormControl, FormMessage } from "@/components/ui/form";
+import { FormField, FormItem, FormLabel, FormDescription, FormControl } from "@/components/ui/form";
 import { FrameworkSelectionStep } from "./FrameworkSelection";
 import { DatabaseSelectionStep } from "./DatabaseSelection";
+import { ProjectFormData } from "../hooks/useProjectForm";
 
 interface TechnologySelectionSectionProps {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<ProjectFormData>;
   selectedAppType: string;
   selectionStep: "framework" | "database";
   customFramework: string;
@@ -28,7 +29,7 @@ interface TechnologySelectionSectionProps {
   onBackToFrameworks: () => void;
   getCustomFrameworkLanguage: (framework: string) => string | undefined;
   getDbOptions: () => Array<{ name: string; description: string }>;
-  onSubmit: (values: any) => void;
+  onSubmit: (values: ProjectFormData) => void;
 }
 
 /**

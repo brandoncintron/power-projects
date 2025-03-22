@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { ProjectFormData } from "../hooks/useProjectForm";
 
 interface ProjectSettingsSectionProps {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<ProjectFormData>;
 }
 
 /**

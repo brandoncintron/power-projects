@@ -39,7 +39,7 @@ export function useCustomItems<T>({
       ? currentItems.filter((item: string) => item !== "Custom")
       : [];
     // Add the new item
-    form.setValue(fieldName, [...filteredItems, getItemName(newItem)] as any);
+    form.setValue(fieldName, [...filteredItems, getItemName(newItem)] as unknown as any);
 
     // Reset input fields
     setItemName("");
@@ -55,7 +55,7 @@ export function useCustomItems<T>({
     if (Array.isArray(currentItems)) {
       form.setValue(
         fieldName,
-        currentItems.filter((item: string) => item !== itemToRemove) as any
+        currentItems.filter((item: string) => item !== itemToRemove) as unknown as any
       );
     }
   }, [form, fieldName, getItemName]);

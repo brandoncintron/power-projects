@@ -33,6 +33,8 @@ export function FrameworkSelectionStep({
   selectedAppType,
   customFramework,
   customLanguage,
+  // Kept for prop destructuring consistency but not directly used
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   customFrameworks,
   onCustomFrameworkChange,
   onCustomLanguageChange,
@@ -132,7 +134,7 @@ export function FrameworkSelectionStep({
                               .filter(language =>
                                 language.toLowerCase() !== framework.name.toLowerCase())
                               .slice(0, 3)
-                              .map((language, i) => (
+                              .map((language) => (
                                 <div
                                   key={`${framework.name}-${language}`}
                                   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs"

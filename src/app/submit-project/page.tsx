@@ -3,7 +3,6 @@
 import React, { useMemo } from "react"
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { ProjectInfoSection } from "./components/ProjectInfoSection"
 import { ProjectSettingsSection } from "./components/ProjectSettingsSection"
@@ -39,6 +38,7 @@ export default function ProjectSubmissionPage() {
     getCustomFrameworksData,
     getCustomDatabasesData,
     getDatabaseOptions: rawGetDbOptions,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isFrameworkSelected 
   } = useProjectForm();
 

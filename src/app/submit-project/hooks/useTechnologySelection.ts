@@ -292,7 +292,7 @@ export function useTechnologySelection({ form }: { form: UseFormReturn<ProjectFo
     const frameworks = form.watch("frameworks") || [];
     
     // Create a central array for all database options
-    let allDatabases: { name: string; description: string }[] = [];
+    const allDatabases: { name: string; description: string }[] = [];
     
     // Add the 'None' option always
     allDatabases.push({
