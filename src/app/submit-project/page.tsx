@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo } from "react"
+import React, { useMemo, Suspense } from "react"
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Form } from "@/components/ui/form"
@@ -97,7 +97,13 @@ export default function ProjectSubmissionPage() {
 
   return (
     <>
-      <Navbar />
+      <Suspense fallback={<div className="py-4 px-8 w-full">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="text-2xl font-bold">Power Projects</div>
+        </div>
+      </div>}>
+        <Navbar />
+      </Suspense>
       <main>
         <div className="container px-4 sm:px-6 mx-auto py-10">
           <div className="max-w-3xl mx-auto">
@@ -125,38 +131,50 @@ export default function ProjectSubmissionPage() {
                 />
 
                 {/* Framework and Database Selection */}
-                <TechnologySelectionSection
-                  form={form}
-                  selectedAppType={selectedAppType}
-                  selectionStep={selectionStep}
-                  customFramework={customFramework}
-                  customLanguage={customLanguage}
-                  customFrameworks={customFrameworks}
-                  customDatabase={customDatabase}
-                  customDbDescription={customDbDescription}
-                  customDatabases={customDatabases}
-                  onCustomFrameworkChange={setCustomFramework}
-                  onCustomLanguageChange={setCustomLanguage}
-                  onAddCustomFramework={addCustomFramework}
-                  onRemoveCustomFramework={removeCustomFramework}
-                  onToggleFramework={wrapperFunctions.toggleFramework}
-                  onProceedToDatabase={goToDatabaseStep}
-                  onCustomDatabaseChange={setCustomDatabase}
-                  onCustomDbDescriptionChange={setCustomDbDescription}
-                  onAddCustomDatabase={addCustomDatabase}
-                  onRemoveCustomDatabase={removeCustomDatabase}
-                  onToggleDatabase={wrapperFunctions.toggleDatabase}
-                  onBackToFrameworks={goToFrameworkStep}
-                  getCustomFrameworkLanguage={wrapperFunctions.getCustomFrameworkLanguage}
-                  getDbOptions={wrapperFunctions.getDbOptions}
-                  onSubmit={onSubmit}
-                />
+                <Suspense fallback={<div className="p-4 border rounded-md mt-8">
+                  <div className="h-40 flex items-center justify-center">
+                    <p>Loading technology selection...</p>
+                  </div>
+                </div>}>
+                  <TechnologySelectionSection
+                    form={form}
+                    selectedAppType={selectedAppType}
+                    selectionStep={selectionStep}
+                    customFramework={customFramework}
+                    customLanguage={customLanguage}
+                    customFrameworks={customFrameworks}
+                    customDatabase={customDatabase}
+                    customDbDescription={customDbDescription}
+                    customDatabases={customDatabases}
+                    onCustomFrameworkChange={setCustomFramework}
+                    onCustomLanguageChange={setCustomLanguage}
+                    onAddCustomFramework={addCustomFramework}
+                    onRemoveCustomFramework={removeCustomFramework}
+                    onToggleFramework={wrapperFunctions.toggleFramework}
+                    onProceedToDatabase={goToDatabaseStep}
+                    onCustomDatabaseChange={setCustomDatabase}
+                    onCustomDbDescriptionChange={setCustomDbDescription}
+                    onAddCustomDatabase={addCustomDatabase}
+                    onRemoveCustomDatabase={removeCustomDatabase}
+                    onToggleDatabase={wrapperFunctions.toggleDatabase}
+                    onBackToFrameworks={goToFrameworkStep}
+                    getCustomFrameworkLanguage={wrapperFunctions.getCustomFrameworkLanguage}
+                    getDbOptions={wrapperFunctions.getDbOptions}
+                    onSubmit={onSubmit}
+                  />
+                </Suspense>
               </form>
             </Form>
           </div>
         </div>
       </main>
-      <Footer />
+      <Suspense fallback={<div className="py-8 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">Loading...</div>
+        </div>
+      </div>}>
+        <Footer />
+      </Suspense>
     </>
   )
 } 

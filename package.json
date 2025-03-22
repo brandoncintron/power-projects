@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "pre-deploy": "next build && echo '✅ Build successful! Ready to deploy.' || echo '❌ Build failed. Fix errors before deploying.'"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",

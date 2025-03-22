@@ -50,11 +50,14 @@ export function DatabaseSelectionStep({
   const { scrollToSection } = useScrollTo();
   
   // We don't use these directly, but we need to derive other values from them
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const selectedFrameworks = form.watch("frameworks") || [];
   const selectedDatabases = form.watch("databases") || [];
   
   // Additional derived state
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hasSelectedDatabases = selectedDatabases.length > 0;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dbOptions = getDbOptions();
   
   // Handle back navigation with smooth scroll
@@ -122,6 +125,7 @@ export function DatabaseSelectionStep({
 
                   // If it's a custom framework (not found in options)
                   const isCustomFramework = !framework && frameworkName !== "Custom";
+                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
                   const customLanguage = isCustomFramework ? getCustomFrameworkLanguage(frameworkName) : undefined;
 
                   return (
