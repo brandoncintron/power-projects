@@ -1,7 +1,8 @@
 "use client"
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from "next-themes"
 import { Menu, AlertTriangle, ChevronRight, Moon, Sun } from 'lucide-react';
 import { Button } from "./ui/button";
@@ -19,12 +20,27 @@ import {
   SheetTrigger,
   SheetTitle
 } from "./ui/sheet";
+import { toast } from 'sonner';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // For shadcn mobile hamburger menu
   const { scrolled } = useScrollDetection(); // Check if user scrolled
   const { scrollToSection } = useScrollTo(); // Scroll to a part on the page
   const { setTheme } = useTheme(); // Dark Mode
+  const pathname = usePathname(); // Get current path
+  const router = useRouter(); // Router for navigation
+  const isHomePage = pathname === '/' || pathname === '/home';
+
+  // Handle navigation for section links
+  const handleNavigation = (sectionId: string) => {
+    if (isHomePage) {
+      // If on home page, just scroll
+      scrollToSection(sectionId);
+    } else {
+      // If on another page, navigate to home with hash and fromNavigation flag
+      router.push(`/home?fromNavigation=true&section=${sectionId}`);
+    }
+  };
 
   return (
     <div className="flex flex-col w-full sticky top-0 z-50">
@@ -46,21 +62,25 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex gap-8">
-            <button className="no-underline" onClick={() => scrollToSection('top')}>
+            <button className="no-underline cursor-pointer" onClick={() => handleNavigation('top')}>
               <span className="text-base">Home</span>
             </button>
-            <button className="no-underline" onClick={() => scrollToSection('features')}>
+            <button className="no-underline cursor-pointer" onClick={() => handleNavigation('features')}>
               <span className="text-base">Features</span>
             </button>
-            <Link href="" className="no-underline">
+            {/* Temporary toast for project board */} 
+            <Link href="#" onClick={() => toast.warning("This feature is not yet implemented. Check back soon!", {
+              duration: 3000,
+              position: "bottom-right",
+            })} className="no-underline cursor-pointer">
               <span className="text-base">Project Board</span>
             </Link>
-            <button className="no-underline" onClick={() => scrollToSection('about')}>
+            <Link href="/submit-project" className="no-underline cursor-pointer">
+              <span className="text-base">Submit Project</span>
+            </Link>
+            <button className="no-underline cursor-pointer" onClick={() => handleNavigation('about')}>
               <span className="text-base">About</span>
             </button>
-            <Link href="" className="no-underline">
-              <span className="text-base">Contact</span>
-            </Link>
           </div>
 
           {/* Desktop Right Side */}
@@ -118,7 +138,7 @@ const Navbar = () => {
                     <div className="flex flex-col divide-y">
                       <button
                         onClick={() => {
-                          scrollToSection('top');
+                          handleNavigation('top');
                           setIsOpen(false);
                         }}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
@@ -129,7 +149,7 @@ const Navbar = () => {
 
                       <button
                         onClick={() => {
-                          scrollToSection('features');
+                          handleNavigation('features');
                           setIsOpen(false);
                         }}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
@@ -146,9 +166,18 @@ const Navbar = () => {
                         <ChevronRight size={20} className="text-gray-400" />
                       </button>
 
+                      <Link
+                        href="/submit-project"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      >
+                        <span className="text-lg font-medium">Submit Project</span>
+                        <ChevronRight size={20} className="text-gray-400" />
+                      </Link>
+
                       <button
                         onClick={() => {
-                          scrollToSection('about');
+                          handleNavigation('about');
                           setIsOpen(false);
                         }}
                         className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"

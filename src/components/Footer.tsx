@@ -16,13 +16,14 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Product</h3>
             <ul className="space-y-2">
               <li><button className="opacity-70 hover:opacity-100" onClick={() => scrollToSection('top')}>Home</button></li>
-              <li><button className="opacity-70 hover:opacity-100" onClick={() => scrollToSection('features')}>Features</button></li>
-              <li><Link href="#" className="opacity-70 hover:opacity-100">GitHub Repository</Link></li>
+              <li><Link href="https://github.com/brandoncintron/power-projects" className="opacity-70 hover:opacity-100">GitHub Repository</Link></li>
+              <li><Link href="/submit-project" className="opacity-70 hover:opacity-100">Submit a Project</Link></li>
+              <li><Link href="#" className="opacity-70 hover:opacity-100">Browse Projects</Link></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-lg mb-4">Developer</h3>
+            <h3 className="font-semibold text-lg mb-4">About the Developer</h3>
             <ul className="space-y-2">
               <li><button className="opacity-70 hover:opacity-100" onClick={() => scrollToSection('about')}>About</button></li>
               <li><Link href="#" className="opacity-70 hover:opacity-100">Contact</Link></li>
@@ -40,9 +41,8 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Connect</h3>
             <ul className="space-y-2">
-              <li><Link href="#" className="opacity-70 hover:opacity-100">GitHub</Link></li>
-              <li><Link href="#" className="opacity-70 hover:opacity-100">LinkedIn</Link></li>
-              <li><Link href="#" className="opacity-70 hover:opacity-100">Discord</Link></li>
+              <li><Link href="https://github.com/brandoncintron" className="opacity-70 hover:opacity-100">GitHub</Link></li>
+              <li><Link href="https://www.linkedin.com/in/brandon-cintron/" className="opacity-70 hover:opacity-100">LinkedIn</Link></li>
             </ul>
           </div>
         </div>
