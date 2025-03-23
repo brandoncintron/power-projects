@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const AboutSection = ({ children, index }: { children: React.ReactNode, index: number }) => {
   const ref = useRef(null);
@@ -63,7 +64,10 @@ export default function About() {
               Ready to start building? Sign up and submit your idea to start creating and collaborating on Power Projects.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer" onClick={() => toast.warning("This feature is not yet implemented. Check back soon!", {
+              duration: 3000,
+              position: "bottom-right",
+            })}>
                 Sign Up Now
               </Button>
             </div>

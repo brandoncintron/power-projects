@@ -68,7 +68,7 @@ const Navbar = () => {
             <button className="no-underline cursor-pointer" onClick={() => handleNavigation('features')}>
               <span className="text-base">Features</span>
             </button>
-            {/* Temporary toast for project board */} 
+            {/* Temporary toast for project board */}
             <Link href="#" onClick={() => toast.warning("This feature is not yet implemented. Check back soon!", {
               duration: 3000,
               position: "bottom-right",
@@ -86,17 +86,23 @@ const Navbar = () => {
           {/* Desktop Right Side */}
           <div className="hidden lg:flex items-center gap-6">
 
-            <Link href="/signin" className="no-underline">
+            <Link href="#" className="no-underline" onClick={() => toast.warning("This feature is not yet implemented. Check back soon!", {
+              duration: 3000,
+              position: "bottom-right",
+            })}>
               <span className="text-base">Sign In</span>
             </Link>
 
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 cursor-pointer" onClick={() => toast.warning("This feature is not yet implemented. Check back soon!", {
+              duration: 3000,
+              position: "bottom-right",
+            })}>
               Get Started
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" className="cursor-pointer">
                   <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                   <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                   <span className="sr-only">Toggle theme</span>
