@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTheme } from "next-themes"
-import { Menu, AlertTriangle, ChevronRight, Moon, Sun } from 'lucide-react';
+import { Menu, AlertTriangle, ChevronRight, Moon, Sun, Github } from 'lucide-react';
 import { Button } from "./ui/button";
 import { useScrollTo } from '../hooks/useScrollTo';
 import { useScrollDetection } from '../hooks/useScrollDetection';
@@ -99,6 +99,14 @@ const Navbar = () => {
             })}>
               Get Started
             </Button>
+
+            <Link
+              href="https://github.com/brandoncintron/power-projects"
+              target="_blank"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            >
+              <Github size={20} />
+            </Link>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -207,6 +215,17 @@ const Navbar = () => {
                         <span className="text-lg font-medium">Support</span>
                         <ChevronRight size={20} className="text-gray-400" />
                       </button>
+
+                      <Link
+                        href="https://github.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                      >
+                        <span className="text-lg font-medium">GitHub</span>
+                        <Github size={20} className="text-gray-400" />
+                      </Link>
                     </div>
                   </div>
 
