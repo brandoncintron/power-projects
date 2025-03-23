@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useScrollTo } from '@/hooks/useScrollTo';
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Users, Sparkles, Compass } from "lucide-react";
 import Link from "next/link";
 
 export default function Hero() {
@@ -37,34 +37,38 @@ export default function Hero() {
         </div>
 
         {/* Feature highlights */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 text-left px-4 pt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left px-4 pt-6 max-w-5xl mx-auto">
           <div>
-            <h3 className="text-xl font-semibold mb-3 text-blue-400">Real-Time Collaboration</h3>
+            <div className="flex items-center gap-2 mb-3">
+              <Compass className="h-5 w-5 text-blue-400" />
+              <h3 className="text-xl font-semibold text-blue-400">Discover Projects</h3>
+            </div>
             <p className="text-gray-400">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Find projects that match your skill level or explore new technologies. Connect with students from your university or collaborate on open-source projects.
             </p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-3 text-blue-400">GitHub Integration</h3>
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles className="h-5 w-5 text-blue-400" />
+              <h3 className="text-xl font-semibold text-blue-400">Create or Contribute</h3>
+            </div>
             <p className="text-gray-400">
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.
+            <span className="font-bold">Build your portfolio while making connections. </span>Launch your own project and recruit collaborators, or join existing teams to build great things together. 
             </p>
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-3 text-blue-400">Built-in communication</h3>
+            <div className="flex items-center gap-2 mb-3">
+              <Users className="h-5 w-5 text-blue-400" />
+              <h3 className="text-xl font-semibold text-blue-400">For All Skill Levels</h3>
+            </div>
             <p className="text-gray-400">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+              Whether you&apos;re creating your first project or building a complex one, there&apos;s a place for you here. Learn from experienced developers or mentor newcomers.
             </p>
           </div>
 
-          <div>
-            <h3 className="text-xl font-semibold mb-3 text-blue-400">Agile Development</h3>
-            <p className="text-gray-400">
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </p>
-          </div>
+
         </div>
       </div>
     </section>

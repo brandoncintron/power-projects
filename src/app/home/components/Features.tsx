@@ -2,6 +2,7 @@
 
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { GitBranch, LayoutGrid, MessageSquare } from "lucide-react";
 
 const FeatureSection = ({ children, index }: { children: React.ReactNode, index: number }) => {
   const ref = useRef(null);
@@ -27,26 +28,28 @@ export default function Features() {
         <h2 className="text-5xl font-bold mb-16 text-center">Features</h2>
 
         {/* First Feature */}
-        <FeatureSection index={0}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32 items-center">
+        <FeatureSection index={2}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-32">
             <div className="order-2 md:order-1">
               <div className="flex items-center mb-6">
+                <LayoutGrid className="h-6 w-6 text-blue-400 mr-3" />
                 <h3 className="text-3xl font-bold text-blue-400">
-                  Discover or Create New Projects.
+                  Agile Development
                 </h3>
               </div>
               <p className="text-lg leading-relaxed">
-                Find the perfect project to join, or get inspired to learn new technologies. All while collaborating with others.
+                Organize your projects with intuitive kanban boards, sprint planning tools, and task tracking capabilities. Experience the workflow used by professional developers and prepare yourself for future tech roles.
               </p>
             </div>
 
             <div className="order-1 md:order-2">
               <div className="rounded-lg shadow-xl overflow-hidden border border-gray-700 h-[400px]">
-                Image placeholder1
+                Image placeholder3
               </div>
             </div>
           </div>
         </FeatureSection>
+        
 
         {/* Second Feature */}
         <FeatureSection index={1}>
@@ -59,36 +62,36 @@ export default function Features() {
 
             <div>
               <div className="flex items-center mb-6">
+                <GitBranch className="h-6 w-6 text-blue-400 mr-3" />
                 <h3 className="text-3xl font-bold text-blue-400">
-                  Project Collaboration, Made Easy.
+                  GitHub Integration
                 </h3>
               </div>
               <p className="text-lg leading-relaxed">
-                Create and manage your projects with directly through the interface. Upload a project idea,
-                manage your project, and collaborate with team members, all in one place.
+                Seamlessly connect with your GitHub repositories to track contributions, manage pull requests, and sync issues. Keep your codebase organized without switching between platforms, making collaboration smoother for everyone.
               </p>
             </div>
           </div>
         </FeatureSection>
 
         {/* Third Feature */}
-        <FeatureSection index={2}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <FeatureSection index={0}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32 items-center">
             <div className="order-2 md:order-1">
               <div className="flex items-center mb-6">
+                <MessageSquare className="h-6 w-6 text-blue-400 mr-3" />
                 <h3 className="text-3xl font-bold text-blue-400">
-                  Built-in Collaboration Tools.
+                Built-in communication
                 </h3>
               </div>
               <p className="text-lg leading-relaxed">
-                Stay connected to your team with built-in chat features, making
-                collaboration smooth and efficient.
+              Stay connected with your team through real-time chat and direct messaging. No need to switch between apps while collaborating on code.
               </p>
             </div>
 
             <div className="order-1 md:order-2">
               <div className="rounded-lg shadow-xl overflow-hidden border border-gray-700 h-[400px]">
-                Image placeholder3
+                Image placeholder1
               </div>
             </div>
           </div>
