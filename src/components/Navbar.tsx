@@ -85,11 +85,7 @@ const Navbar = () => {
 
           {/* Desktop Right Side */}
           <div className="hidden lg:flex items-center gap-6">
-
-            <Link href="#" className="no-underline" onClick={() => toast.warning("This feature is not yet implemented. Check back soon!", {
-              duration: 3000,
-              position: "bottom-right",
-            })}>
+            <Link href="/accounts/signin" className="no-underline">
               <span className="text-base">Sign In</span>
             </Link>
 
@@ -211,7 +207,7 @@ const Navbar = () => {
                   </div>
 
                   <div className="p-4 space-y-4 border-t">
-                    <Link href="" className="block">
+                    <Link href="/accounts/signin" className="block">
                       <Button
                         variant="outline"
                         className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
@@ -220,13 +216,14 @@ const Navbar = () => {
                         Sign In
                       </Button>
                     </Link>
-                    
+                    <Link href="/accounts/signup" className="block">
                       <Button
                         className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
                         onClick={() => setIsOpen(false)}
                       >
-                        <Link href="/accounts/signup" className="block">Get Started</Link>
+                        Get Started
                       </Button>
+                    </Link>
                   </div>
                 </div>
               </SheetContent>
