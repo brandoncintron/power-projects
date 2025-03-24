@@ -93,11 +93,8 @@ const Navbar = () => {
               <span className="text-base">Sign In</span>
             </Link>
 
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 cursor-pointer" onClick={() => toast.warning("This feature is not yet implemented. Check back soon!", {
-              duration: 3000,
-              position: "bottom-right",
-            })}>
-              Get Started
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 cursor-pointer">
+              <Link href="/accounts/signup">Get Started</Link>
             </Button>
 
             <Link
@@ -200,22 +197,6 @@ const Navbar = () => {
                         <ChevronRight size={20} className="text-gray-400" />
                       </button>
 
-                      <button
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                      >
-                        <span className="text-lg font-medium">Contact</span>
-                        <ChevronRight size={20} className="text-gray-400" />
-                      </button>
-
-                      <button
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                      >
-                        <span className="text-lg font-medium">Support</span>
-                        <ChevronRight size={20} className="text-gray-400" />
-                      </button>
-
                       <Link
                         href="https://github.com"
                         target="_blank"
@@ -239,12 +220,13 @@ const Navbar = () => {
                         Sign In
                       </Button>
                     </Link>
-                    <Button
-                      className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Get Started
-                    </Button>
+                    
+                      <Button
+                        className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <Link href="/accounts/signup" className="block">Get Started</Link>
+                      </Button>
                   </div>
                 </div>
               </SheetContent>
