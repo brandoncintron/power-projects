@@ -13,15 +13,11 @@ interface FrameworkSelectionStepProps {
   form: UseFormReturn<ProjectFormData>;
   selectedAppType: string;
   customFramework: string;
-  customLanguage: string;
-  customFrameworks: { name: string; language?: string }[];
   onCustomFrameworkChange: (value: string) => void;
-  onCustomLanguageChange: (value: string) => void;
   onAddCustomFramework: () => void;
   onRemoveCustomFramework: (framework: string) => void;
   onToggleFramework: (framework: string) => void;
   onProceedToDatabase: () => void;
-  getCustomFrameworkLanguage: (framework: string) => string | undefined;
 }
 
 /**
@@ -32,17 +28,11 @@ export function FrameworkSelectionStep({
   form,
   selectedAppType,
   customFramework,
-  customLanguage,
-  // Kept for prop destructuring consistency but not directly used
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  customFrameworks,
   onCustomFrameworkChange,
-  onCustomLanguageChange,
   onAddCustomFramework,
   onRemoveCustomFramework,
   onToggleFramework,
   onProceedToDatabase,
-  getCustomFrameworkLanguage,
 }: FrameworkSelectionStepProps) {
   // Get scrollToSection function from the useScrollTo hook
   const { scrollToSection } = useScrollTo();
@@ -72,7 +62,19 @@ export function FrameworkSelectionStep({
   const availableFrameworkOptions = useMemo(() => {
     return frameworkOptions[selectedAppType as keyof typeof frameworkOptions] || [];
   }, [selectedAppType]);
+
+  // Function to check if a framework is from the predefined list
+  const isPredefinedFramework = useCallback((frameworkName: string) => {
+    return frameworkOptions[selectedAppType as keyof typeof frameworkOptions]?.some(
+      category => category.options.some(opt => opt.name === frameworkName)
+    ) || false;
+  }, [selectedAppType]);
   
+  // Function to get custom frameworks (those not in the predefined options)
+  const getCustomFrameworks = useCallback(() => {
+    return form.watch("frameworks").filter((fw: string) => !isPredefinedFramework(fw));
+  }, [form, isPredefinedFramework]);
+
   return (
     <>
       {/* FRAMEWORK HEADER - Title and navigation button */}
@@ -106,9 +108,6 @@ export function FrameworkSelectionStep({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               {category.options.map((framework: FrameworkOption) => {
                 const isSelected = form.watch("frameworks").includes(framework.name);
-                const isCustomOption = selectedAppType === "Other" &&
-                  category.category === "Custom" &&
-                  framework.name === "Custom";
 
                 return (
                   <SelectableCard
@@ -121,81 +120,92 @@ export function FrameworkSelectionStep({
                         <span>{framework.name}</span>
                       </div>
                     }
-                    description={!isCustomOption ? framework.description : undefined}
-                    isSelected={isSelected || (isCustomOption && form.watch("frameworks").some((fw: string) => fw !== "Custom"))}
-                    onClick={() => isCustomOption ? null : onToggleFramework(framework.name)}
+                    description={framework.description}
+                    isSelected={isSelected}
+                    onClick={() => onToggleFramework(framework.name)}
                   >
                     {/* LANGUAGE BADGES - Shows primary languages used with framework */}
-                    {!isCustomOption && (
-                      <div className="flex flex-wrap gap-1 justify-start sm:justify-end mt-2">
-                        {framework.primaryLanguages ? (
-                          <>
-                            {framework.primaryLanguages
-                              .filter(language =>
-                                language.toLowerCase() !== framework.name.toLowerCase())
-                              .slice(0, 3)
-                              .map((language) => (
-                                <div
-                                  key={`${framework.name}-${language}`}
-                                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs"
-                                >
-                                  {getLanguageIcon(language)}
-                                  <span className="font-medium">{language}-based</span>
-                                </div>
-                              ))}
-                          </>
-                        ) : framework.primaryLanguage &&
-                          framework.primaryLanguage.toLowerCase() !== framework.name.toLowerCase() ? (
-                          <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs">
-                            {getLanguageIcon(framework.primaryLanguage)}
-                            <span className="font-medium">{framework.primaryLanguage}</span>
-                          </div>
-                        ) : null}
-                      </div>
-                    )}
-
-                    {/* CUSTOM FRAMEWORK INPUT - Allows users to add their own framework */}
-                    {isCustomOption && (
-                      <div className="mt-3">
-                        <CustomItemInput
-                          itemName={customFramework}
-                          itemNamePlaceholder="Enter framework name..."
-                          secondaryValue={customLanguage}
-                          secondaryValuePlaceholder="e.g. Python, JavaScript, etc."
-                          secondaryLabel="Primary Language"
-                          onNameChange={onCustomFrameworkChange}
-                          onSecondaryChange={onCustomLanguageChange}
-                          onAddItem={onAddCustomFramework}
-                        />
-
-                        {/* CUSTOM FRAMEWORKS LIST - Shows user-added frameworks */}
-                        {form.watch("frameworks").filter((fw: string) => fw !== "Custom").length > 0 && (
-                          <div className="pt-2">
-                            <CustomItemsList
-                              items={form.watch("frameworks").filter((fw: string) => fw !== "Custom")}
-                              renderItemContent={(fw) => (
-                                <>
-                                  <span>{fw}</span>
-                                  {getCustomFrameworkLanguage(fw) && (
-                                    <div className="ml-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-primary/10 text-xs">
-                                      {getLanguageIcon(getCustomFrameworkLanguage(fw) || "")}
-                                      <span className="font-medium">{getCustomFrameworkLanguage(fw)}</span>
-                                    </div>
-                                  )}
-                                </>
-                              )}
-                              onRemoveItem={onRemoveCustomFramework}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    <div className="flex flex-wrap gap-1 justify-start sm:justify-end mt-2">
+                      {framework.primaryLanguages ? (
+                        <>
+                          {framework.primaryLanguages
+                            .filter(language =>
+                              language.toLowerCase() !== framework.name.toLowerCase())
+                            .slice(0, 3)
+                            .map((language) => (
+                              <div
+                                key={`${framework.name}-${language}`}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs"
+                              >
+                                {getLanguageIcon(language)}
+                                <span className="font-medium">{language}-based</span>
+                              </div>
+                            ))}
+                        </>
+                      ) : framework.primaryLanguage &&
+                        framework.primaryLanguage.toLowerCase() !== framework.name.toLowerCase() ? (
+                        <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs">
+                          {getLanguageIcon(framework.primaryLanguage)}
+                          <span className="font-medium">{framework.primaryLanguage}</span>
+                        </div>
+                      ) : null}
+                    </div>
                   </SelectableCard>
                 );
               })}
             </div>
           </div>
         ))}
+      </div>
+
+      {/* CUSTOM FRAMEWORK SECTION - Available for all application types */}
+      <div className="mt-4 sm:mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <SelectableCard
+            title={
+              <div className="flex items-center gap-2">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center">
+                  <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                  </svg>
+                </div>
+                <span>Custom Framework</span>
+              </div>
+            }
+            isSelected={getCustomFrameworks().length > 0}
+          >
+            <div className="mt-3">
+              <CustomItemInput
+                itemName={customFramework}
+                itemNamePlaceholder="Enter framework name..."
+                onNameChange={onCustomFrameworkChange}
+                onAddItem={onAddCustomFramework}
+              />
+
+              {/* CUSTOM FRAMEWORKS LIST - Shows user-added custom frameworks */}
+              {getCustomFrameworks().length > 0 && (
+                <div className="pt-2">
+                  <CustomItemsList
+                    items={getCustomFrameworks()}
+                    renderItemContent={(fw) => (
+                      <div className="flex items-center gap-1.5">
+                        <div className="flex h-5 w-5 shrink-0 items-center justify-center">
+                          <svg className="h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 2v6M12 22v-6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M22 12h-6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24" />
+                          </svg>
+                        </div>
+                        <span>{fw}</span>
+                      </div>
+                    )}
+                    onRemoveItem={onRemoveCustomFramework}
+                  />
+                </div>
+              )}
+            </div>
+          </SelectableCard>
+        </div>
       </div>
 
       {/* Add a new Next button at the bottom right of the framework section */}

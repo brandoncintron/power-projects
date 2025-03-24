@@ -14,15 +14,12 @@ interface DatabaseSelectionStepProps {
   form: UseFormReturn<ProjectFormData>;
   selectedAppType: string;
   customDatabase: string;
-  customDbDescription: string;
-  customDatabases: { name: string; description: string }[];
+  customDatabases: string[];
   onCustomDatabaseChange: (value: string) => void;
-  onCustomDbDescriptionChange: (value: string) => void;
   onAddCustomDatabase: () => void;
   onRemoveCustomDatabase: (database: string) => void;
   onToggleDatabase: (database: string) => void;
   onBackToFrameworks: () => void;
-  getCustomFrameworkLanguage: (framework: string) => string | undefined;
   getDbOptions: () => Array<{ name: string; description: string }>;
   onSubmit: (values: ProjectFormData) => void;
 }
@@ -35,15 +32,12 @@ export function DatabaseSelectionStep({
   form,
   selectedAppType,
   customDatabase,
-  customDbDescription,
   customDatabases,
   onCustomDatabaseChange,
-  onCustomDbDescriptionChange,
   onAddCustomDatabase,
   onRemoveCustomDatabase,
   onToggleDatabase,
   onBackToFrameworks,
-  getCustomFrameworkLanguage,
   getDbOptions,
   onSubmit,
 }: DatabaseSelectionStepProps) {
@@ -125,9 +119,7 @@ export function DatabaseSelectionStep({
 
                   // If it's a custom framework (not found in options)
                   const isCustomFramework = !framework && frameworkName !== "Custom";
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  const customLanguage = isCustomFramework ? getCustomFrameworkLanguage(frameworkName) : undefined;
-
+                  
                   return (
                     <div
                       key={frameworkName}
@@ -167,7 +159,7 @@ export function DatabaseSelectionStep({
                 <div className={(form.watch("databases") || []).length > 3 ? "grid grid-cols-1 sm:grid-cols-2 gap-2 w-full" : "flex flex-wrap gap-2"}>
                   {(form.watch("databases") || []).map((databaseName: string) => {
                     // Check if this is a custom database
-                    const isCustomDatabase = customDatabases.some(db => db.name === databaseName);
+                    const isCustomDatabase = customDatabases.includes(databaseName);
                     
                     return (
                       <div
@@ -198,59 +190,7 @@ export function DatabaseSelectionStep({
         </div>
       </div>
 
-      {/* CUSTOM DATABASE SECTION - Card for adding custom databases */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-6">
-        <SelectableCard
-          title={
-            <div className="flex items-center">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center mr-2">
-                <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
-                  <line x1="12" y1="8" x2="12" y2="16"></line>
-                  <line x1="8" y1="12" x2="16" y2="12"></line>
-                </svg>
-              </div>
-              <span>Custom Database</span>
-            </div>
-          }
-          isSelected={customDatabases.length > 0}
-        >
-          <div className="mt-3">
-            {/* CUSTOM DATABASE FORM - Input fields for custom database */}
-            <CustomItemInput
-              itemName={customDatabase}
-              itemNamePlaceholder="Enter database name..."
-              secondaryValue={customDbDescription}
-              secondaryValuePlaceholder="Brief description of the database..."
-              secondaryLabel="Description"
-              onNameChange={onCustomDatabaseChange}
-              onSecondaryChange={onCustomDbDescriptionChange}
-              onAddItem={onAddCustomDatabase}
-            />
-
-            {/* CUSTOM DATABASE LIST - Shows user-added databases */}
-            {customDatabases.length > 0 && (
-              <CustomItemsList
-                items={customDatabases.map(db => db.name)}
-                renderItemContent={(dbName) => (
-                  <div className="flex items-center gap-1.5">
-                    <div className="flex h-5 w-5 shrink-0 items-center justify-center">
-                      <svg className="h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
-                        <line x1="7" y1="7" x2="17" y2="7"></line>
-                        <line x1="7" y1="12" x2="17" y2="12"></line>
-                        <line x1="7" y1="17" x2="17" y2="17"></line>
-                      </svg>
-                    </div>
-                    <span>{dbName}</span>
-                  </div>
-                )}
-                onRemoveItem={onRemoveCustomDatabase}
-              />
-            )}
-          </div>
-        </SelectableCard>
-      </div>
+      
 
       {/* DATABASE OPTIONS HEADER */}
       <div className="mb-3">
@@ -265,7 +205,7 @@ export function DatabaseSelectionStep({
           const isSelected = selectedDatabases.includes(database.name) || 
                              (database.name === "None" && selectedDatabases.length === 0);
           // Check if this is a custom database
-          const isCustomDatabase = customDatabases.some(db => db.name === database.name);
+          const isCustomDatabase = customDatabases.includes(database.name);
 
           return (
             <SelectableCard
@@ -302,6 +242,56 @@ export function DatabaseSelectionStep({
             />
           );
         })}
+      </div>
+
+      {/* CUSTOM DATABASE SECTION - Card for adding custom databases */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mt-4">
+        <SelectableCard
+          title={
+            <div className="flex items-center">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center mr-2">
+                <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
+                  <line x1="12" y1="8" x2="12" y2="16"></line>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+              </div>
+              <span>Custom Database</span>
+            </div>
+          }
+          isSelected={customDatabases.length > 0}
+        >
+          <div className="mt-3">
+            {/* CUSTOM DATABASE FORM - Input field for custom database */}
+            <CustomItemInput
+              itemName={customDatabase}
+              itemNamePlaceholder="Enter database name..."
+              onNameChange={onCustomDatabaseChange}
+              onAddItem={onAddCustomDatabase}
+            />
+
+            {/* CUSTOM DATABASE LIST - Shows user-added databases */}
+            {customDatabases.length > 0 && (
+              <CustomItemsList
+                items={customDatabases}
+                renderItemContent={(dbName) => (
+                  <div className="flex items-center gap-1.5">
+                    <div className="flex h-5 w-5 shrink-0 items-center justify-center">
+                      <svg className="h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
+                        <line x1="7" y1="7" x2="17" y2="7"></line>
+                        <line x1="7" y1="12" x2="17" y2="12"></line>
+                        <line x1="7" y1="17" x2="17" y2="17"></line>
+                      </svg>
+                    </div>
+                    <span>{dbName}</span>
+                  </div>
+                )}
+                onRemoveItem={onRemoveCustomDatabase}
+              />
+            )}
+          </div>
+        </SelectableCard>
       </div>
 
       {/* BOTTOM NAVIGATION BUTTONS */}

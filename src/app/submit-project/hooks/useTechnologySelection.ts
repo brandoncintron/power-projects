@@ -10,21 +10,16 @@ interface CustomFramework {
   language?: string;
 }
 
-// Custom database type
-interface CustomDatabase {
-  name: string;
-  description: string;
-}
-
-// Framework and database option types
-interface FrameworkOption {
-  name: string;
-  languages: string[];
-}
-
+// Database option type
 interface DatabaseOption {
   name: string;
   description: string;
+}
+
+// Framework option type
+interface FrameworkOption {
+  name: string;
+  languages: string[];
 }
 
 // State type definition
@@ -98,20 +93,15 @@ export function useTechnologySelection({ form }: { form: UseFormReturn<ProjectFo
   const {
     items: customDatabases,
     itemName: databaseName,
-    secondaryValue: databaseDescription,
     setItemName: setDatabaseName,
-    setSecondaryValue: setDatabaseDescription,
     addItem: addCustomDatabase,
     removeItem: removeCustomDatabase,
     resetItems: resetCustomDatabases
-  } = useCustomItems<CustomDatabase>({
+  } = useCustomItems<string>({
     form,
     fieldName: "databases",
-    itemFactory: (name, description) => ({
-      name,
-      description: description || `Custom database: ${name}`,
-    }),
-    getItemName: (item) => item.name,
+    itemFactory: (name) => name,
+    getItemName: (item) => item,
   });
 
   // Action handlers
@@ -161,11 +151,6 @@ export function useTechnologySelection({ form }: { form: UseFormReturn<ProjectFo
 
   // Framework selection
   const toggleFramework = useCallback((framework: FrameworkOption) => {
-    // Handle special case for "Custom" framework in Custom category
-    if (framework.name === "Custom" && state.applicationType === "Other") {
-      return; // Don't toggle - this will be handled by the custom input
-    }
-
     const currentFrameworks = form.watch("frameworks") || [];
     if (currentFrameworks.includes(framework.name)) {
       form.setValue(
@@ -183,7 +168,7 @@ export function useTechnologySelection({ form }: { form: UseFormReturn<ProjectFo
         payload: [...state.selectedFrameworks, framework]
       });
     }
-  }, [form, state.applicationType, state.selectedFrameworks]);
+  }, [form, state.selectedFrameworks]);
 
   // Database selection
   const toggleDatabase = useCallback((database: DatabaseOption) => {
@@ -249,43 +234,35 @@ export function useTechnologySelection({ form }: { form: UseFormReturn<ProjectFo
       customFrameworks,
       frameworkName,
       frameworkLanguages,
+      setFrameworkName,
+      setFrameworkLanguages,
       addCustomFramework,
-      removeCustomFramework,
-      handleFrameworkNameChange: setFrameworkName,
-      handleFrameworkLanguagesChange: setFrameworkLanguages,
-      resetCustomFrameworks
+      removeCustomFramework
     };
   }, [
-    customFrameworks, 
-    frameworkName, 
-    frameworkLanguages, 
-    addCustomFramework, 
-    removeCustomFramework, 
-    setFrameworkName, 
+    customFrameworks,
+    frameworkName,
+    frameworkLanguages,
+    setFrameworkName,
     setFrameworkLanguages,
-    resetCustomFrameworks
+    addCustomFramework,
+    removeCustomFramework
   ]);
 
   const getCustomDatabasesData = useCallback(() => {
     return {
       customDatabases,
       databaseName,
-      databaseDescription,
+      setDatabaseName,
       addCustomDatabase,
-      removeCustomDatabase,
-      handleDatabaseNameChange: setDatabaseName,
-      handleDatabaseDescriptionChange: setDatabaseDescription,
-      resetCustomDatabases
+      removeCustomDatabase
     };
   }, [
     customDatabases,
     databaseName,
-    databaseDescription,
-    addCustomDatabase,
-    removeCustomDatabase,
     setDatabaseName,
-    setDatabaseDescription,
-    resetCustomDatabases
+    addCustomDatabase,
+    removeCustomDatabase
   ]);
 
   const getDatabaseOptions = useCallback(() => {
@@ -323,8 +300,11 @@ export function useTechnologySelection({ form }: { form: UseFormReturn<ProjectFo
     
     // Add custom databases
     customDatabases.forEach(customDb => {
-      if (!allDatabases.some(db => db.name === customDb.name)) {
-        allDatabases.push(customDb);
+      if (!allDatabases.some(db => db.name === customDb)) {
+        allDatabases.push({
+          name: customDb,
+          description: `Custom database: ${customDb}`
+        });
       }
     });
     
@@ -349,7 +329,6 @@ export function useTechnologySelection({ form }: { form: UseFormReturn<ProjectFo
     customLanguage: frameworkLanguages,
     customFrameworks,
     customDatabase: databaseName,
-    customDbDescription: databaseDescription,
     customDatabases,
     setApplicationType,
     toggleFramework,

@@ -119,8 +119,9 @@ export const frameworkOptions = {
       description: "Languages commonly used for automating tasks and writing scripts.",
       options: [
         { name: "Python", description: "A versatile language often used for scripting, automation, and data processing.", primaryLanguages: ["Python"] },
+        { name: "Lua", description: "A lightweight, high-level language designed for embedded use in applications like mods or add-ons for video games.", primaryLanguages: ["Lua"] },
         { name: "PowerShell", description: "A scripting language designed for automating Windows system administration.", primaryLanguages: ["PowerShell"] },
-        { name: "Bash", description: "A Unix shell scripting language for automating system tasks.", primaryLanguages: ["Bash"] }
+        { name: "Bash", description: "A Unix shell scripting language for automating system tasks.", primaryLanguages: ["Bash"] },
       ]
     }
   ],
@@ -128,9 +129,7 @@ export const frameworkOptions = {
     {
       category: "Custom",
       description: "Any framework or technology not covered by the categories above.",
-      options: [
-        { name: "Custom", description: "Any framework or technology not covered by the categories above.", primaryLanguages: ["Various"] }
-      ]
+      options: []
     }
   ],
   // Default empty categories for other application types (can be expanded later)

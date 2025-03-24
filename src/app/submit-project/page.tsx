@@ -25,10 +25,7 @@ export default function ProjectSubmissionPage() {
     onSubmit,
     state,
     customFramework,
-    customLanguage,
-    customFrameworks,
     customDatabase,
-    customDbDescription,
     customDatabases,
     setApplicationType,
     toggleFramework: rawToggleFramework,
@@ -47,16 +44,14 @@ export default function ProjectSubmissionPage() {
   
   // Get custom framework handlers
   const { 
-    handleFrameworkNameChange: setCustomFramework,
-    handleFrameworkLanguagesChange: setCustomLanguage,
+    setFrameworkName: setCustomFramework,
     addCustomFramework,
     removeCustomFramework
   } = getCustomFrameworksData();
   
   // Get custom database handlers
   const {
-    handleDatabaseNameChange: setCustomDatabase,
-    handleDatabaseDescriptionChange: setCustomDbDescription,
+    setDatabaseName: setCustomDatabase,
     addCustomDatabase,
     removeCustomDatabase
   } = getCustomDatabasesData();
@@ -81,19 +76,12 @@ export default function ProjectSubmissionPage() {
       return options.flatMap(category => category.databases);
     };
 
-    // Wrapper for getCustomFrameworkLanguage
-    const getCustomFrameworkLanguage = (framework: string) => {
-      const customFramework = customFrameworks.find(f => f.name === framework);
-      return customFramework?.language;
-    };
-
     return {
       toggleFramework,
       toggleDatabase,
-      getDbOptions,
-      getCustomFrameworkLanguage
+      getDbOptions
     };
-  }, [rawToggleFramework, rawToggleDatabase, rawGetDbOptions, customFrameworks]);
+  }, [rawToggleFramework, rawToggleDatabase, rawGetDbOptions]);
 
   return (
     <>
@@ -141,24 +129,18 @@ export default function ProjectSubmissionPage() {
                     selectedAppType={selectedAppType}
                     selectionStep={selectionStep}
                     customFramework={customFramework}
-                    customLanguage={customLanguage}
-                    customFrameworks={customFrameworks}
                     customDatabase={customDatabase}
-                    customDbDescription={customDbDescription}
                     customDatabases={customDatabases}
                     onCustomFrameworkChange={setCustomFramework}
-                    onCustomLanguageChange={setCustomLanguage}
                     onAddCustomFramework={addCustomFramework}
                     onRemoveCustomFramework={removeCustomFramework}
                     onToggleFramework={wrapperFunctions.toggleFramework}
                     onProceedToDatabase={goToDatabaseStep}
                     onCustomDatabaseChange={setCustomDatabase}
-                    onCustomDbDescriptionChange={setCustomDbDescription}
                     onAddCustomDatabase={addCustomDatabase}
                     onRemoveCustomDatabase={removeCustomDatabase}
                     onToggleDatabase={wrapperFunctions.toggleDatabase}
                     onBackToFrameworks={goToFrameworkStep}
-                    getCustomFrameworkLanguage={wrapperFunctions.getCustomFrameworkLanguage}
                     getDbOptions={wrapperFunctions.getDbOptions}
                     onSubmit={onSubmit}
                   />

@@ -10,24 +10,18 @@ interface TechnologySelectionSectionProps {
   selectedAppType: string;
   selectionStep: "framework" | "database";
   customFramework: string;
-  customLanguage: string;
-  customFrameworks: { name: string, language?: string }[];
   customDatabase: string;
-  customDbDescription: string;
-  customDatabases: { name: string, description: string }[];
+  customDatabases: string[];
   onCustomFrameworkChange: (value: string) => void;
-  onCustomLanguageChange: (value: string) => void;
   onAddCustomFramework: () => void;
   onRemoveCustomFramework: (framework: string) => void;
   onToggleFramework: (framework: string) => void;
   onProceedToDatabase: () => void;
   onCustomDatabaseChange: (value: string) => void;
-  onCustomDbDescriptionChange: (value: string) => void;
   onAddCustomDatabase: () => void;
   onRemoveCustomDatabase: (database: string) => void;
   onToggleDatabase: (database: string) => void;
   onBackToFrameworks: () => void;
-  getCustomFrameworkLanguage: (framework: string) => string | undefined;
   getDbOptions: () => Array<{ name: string; description: string }>;
   onSubmit: (values: ProjectFormData) => void;
 }
@@ -41,24 +35,18 @@ export function TechnologySelectionSection({
   selectedAppType,
   selectionStep,
   customFramework,
-  customLanguage,
-  customFrameworks,
   customDatabase,
-  customDbDescription,
   customDatabases,
   onCustomFrameworkChange,
-  onCustomLanguageChange,
   onAddCustomFramework,
   onRemoveCustomFramework,
   onToggleFramework,
   onProceedToDatabase,
   onCustomDatabaseChange,
-  onCustomDbDescriptionChange,
   onAddCustomDatabase,
   onRemoveCustomDatabase,
   onToggleDatabase,
   onBackToFrameworks,
-  getCustomFrameworkLanguage,
   getDbOptions,
   onSubmit,
 }: TechnologySelectionSectionProps) {
@@ -81,30 +69,23 @@ export function TechnologySelectionSection({
                   form={form}
                   selectedAppType={selectedAppType}
                   customFramework={customFramework}
-                  customLanguage={customLanguage}
-                  customFrameworks={customFrameworks}
                   onCustomFrameworkChange={onCustomFrameworkChange}
-                  onCustomLanguageChange={onCustomLanguageChange}
                   onAddCustomFramework={onAddCustomFramework}
                   onRemoveCustomFramework={onRemoveCustomFramework}
                   onToggleFramework={onToggleFramework}
                   onProceedToDatabase={onProceedToDatabase}
-                  getCustomFrameworkLanguage={getCustomFrameworkLanguage}
                 />
               ) : (
                 <DatabaseSelectionStep 
                   form={form}
                   selectedAppType={selectedAppType}
                   customDatabase={customDatabase}
-                  customDbDescription={customDbDescription}
                   customDatabases={customDatabases}
                   onCustomDatabaseChange={onCustomDatabaseChange}
-                  onCustomDbDescriptionChange={onCustomDbDescriptionChange}
                   onAddCustomDatabase={onAddCustomDatabase}
                   onRemoveCustomDatabase={onRemoveCustomDatabase}
                   onToggleDatabase={onToggleDatabase}
                   onBackToFrameworks={onBackToFrameworks}
-                  getCustomFrameworkLanguage={getCustomFrameworkLanguage}
                   getDbOptions={getDbOptions}
                   onSubmit={onSubmit}
                 />

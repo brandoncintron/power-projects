@@ -64,6 +64,25 @@ export function useProjectForm() {
       position: "bottom-right",
     });
 
+    // Reset the form after submission
+    form.reset({
+      projectName: "",
+      description: "",
+      visibility: "public",
+      teamName: "",
+      applicationType: "",
+      frameworks: [],
+      databases: [],
+      completionDate: undefined,
+    });
+    
+    // Reset character count
+    setCharCount(0);
+    
+    // Reset technology selection state
+    technologySelection.resetTechnologySelections();
+    technologySelection.setApplicationType("");
+
     // Future implementation: API call to submit project
     // const submitProject = async () => {
     //   try {
@@ -80,7 +99,7 @@ export function useProjectForm() {
     //   }
     // };
     // submitProject();
-  }, []);
+  }, [form, setCharCount, technologySelection]);
 
   return {
     form,

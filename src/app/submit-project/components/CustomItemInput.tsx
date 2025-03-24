@@ -5,33 +5,37 @@ import { Button } from "@/components/ui/button";
 interface CustomItemInputProps {
   itemName: string;
   itemNamePlaceholder: string;
-  secondaryValue: string;
-  secondaryValuePlaceholder: string;
-  secondaryLabel: string;
   maxNameLength?: number;
-  maxSecondaryLength?: number;
   onNameChange: (value: string) => void;
-  onSecondaryChange: (value: string) => void;
   onAddItem: () => void;
   isAddDisabled?: boolean;
+  // Optional secondary field props
+  secondaryValue?: string;
+  secondaryValuePlaceholder?: string;
+  secondaryLabel?: string;
+  maxSecondaryLength?: number;
+  onSecondaryChange?: (value: string) => void;
+  showSecondaryField?: boolean;
 }
 
 /**
  * A component for adding custom items like frameworks or databases
- * Includes input fields for name and a secondary value (like language or description)
+ * Optionally includes a secondary field (e.g., for language input with frameworks)
  */
 export function CustomItemInput({
   itemName,
   itemNamePlaceholder,
-  secondaryValue,
-  secondaryValuePlaceholder,
-  secondaryLabel,
   maxNameLength = 20,
-  maxSecondaryLength = 100,
   onNameChange,
-  onSecondaryChange,
   onAddItem,
   isAddDisabled = false,
+  // Optional secondary field props with defaults
+  secondaryValue = "",
+  secondaryValuePlaceholder = "",
+  secondaryLabel = "",
+  maxSecondaryLength = 100,
+  onSecondaryChange = () => {},
+  showSecondaryField = false,
 }: CustomItemInputProps) {
   return (
     <div className="flex flex-col space-y-2">
@@ -55,15 +59,17 @@ export function CustomItemInput({
         </div>
       </div>
 
-      <div className="flex flex-col space-y-1">
-        <label className="text-xs text-muted-foreground">{secondaryLabel} (optional)</label>
-        <Input
-          value={secondaryValue}
-          onChange={(e) => onSecondaryChange(e.target.value.slice(0, maxSecondaryLength))}
-          placeholder={secondaryValuePlaceholder}
-          className="text-sm"
-        />
-      </div>
+      {showSecondaryField && (
+        <div className="flex flex-col space-y-1">
+          <label className="text-xs text-muted-foreground">{secondaryLabel} (optional)</label>
+          <Input
+            value={secondaryValue}
+            onChange={(e) => onSecondaryChange(e.target.value.slice(0, maxSecondaryLength))}
+            placeholder={secondaryValuePlaceholder}
+            className="text-sm"
+          />
+        </div>
+      )}
     </div>
   );
 } 
