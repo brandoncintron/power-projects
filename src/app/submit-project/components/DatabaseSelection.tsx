@@ -42,38 +42,38 @@ export function DatabaseSelectionStep({
   onSubmit,
 }: DatabaseSelectionStepProps) {
   const { scrollToSection } = useScrollTo();
-  
+
   // We don't use these directly, but we need to derive other values from them
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const selectedFrameworks = form.watch("frameworks") || [];
   const selectedDatabases = form.watch("databases") || [];
-  
+
   // Additional derived state
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hasSelectedDatabases = selectedDatabases.length > 0;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const dbOptions = getDbOptions();
-  
+
   // Handle back navigation with smooth scroll
   const handleBackNavigation = useCallback(() => {
     // Store current scroll position before navigation
     const currentScrollPosition = window.scrollY;
-    
+
     // First navigate back to frameworks
     onBackToFrameworks();
-    
+
     // Immediately restore scroll position to prevent jumping
     window.scrollTo({
       top: currentScrollPosition,
       behavior: 'auto'
     });
-    
+
     // Then use the scrollToSection function to scroll to tech-stack-selection
-    setTimeout(() => {
-      scrollToSection('tech-stack-selection');
-    }, 50); // Reduced delay for faster response
+
+    scrollToSection('tech-stack-selection');
+
   }, [onBackToFrameworks, scrollToSection]);
-  
+
   return (
     <>
       {/* DATABASE HEADER - Title and navigation buttons */}
@@ -89,8 +89,8 @@ export function DatabaseSelectionStep({
             >
               <ChevronLeft /> Back to Frameworks
             </Button>
-            <Button 
-              type="button" 
+            <Button
+              type="button"
               size="sm"
               className="text-xs"
               onClick={() => form.handleSubmit(onSubmit)()}
@@ -119,7 +119,7 @@ export function DatabaseSelectionStep({
 
                   // If it's a custom framework (not found in options)
                   const isCustomFramework = !framework && frameworkName !== "Custom";
-                  
+
                   return (
                     <div
                       key={frameworkName}
@@ -160,7 +160,7 @@ export function DatabaseSelectionStep({
                   {(form.watch("databases") || []).map((databaseName: string) => {
                     // Check if this is a custom database
                     const isCustomDatabase = customDatabases.includes(databaseName);
-                    
+
                     return (
                       <div
                         key={databaseName}
@@ -190,7 +190,7 @@ export function DatabaseSelectionStep({
         </div>
       </div>
 
-      
+
 
       {/* DATABASE OPTIONS HEADER */}
       <div className="mb-3">
@@ -202,8 +202,8 @@ export function DatabaseSelectionStep({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {getDbOptions().map((database) => {
           const selectedDatabases = form.watch("databases") || [];
-          const isSelected = selectedDatabases.includes(database.name) || 
-                             (database.name === "None" && selectedDatabases.length === 0);
+          const isSelected = selectedDatabases.includes(database.name) ||
+            (database.name === "None" && selectedDatabases.length === 0);
           // Check if this is a custom database
           const isCustomDatabase = customDatabases.includes(database.name);
 
@@ -302,7 +302,7 @@ export function DatabaseSelectionStep({
         >
           <ChevronLeft /> Back to Frameworks
         </Button>
-        <Button 
+        <Button
           type="button"
           onClick={() => form.handleSubmit(onSubmit)()}
         >

@@ -4,8 +4,21 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { GitBranch, LayoutGrid, MessageSquare } from "lucide-react";
 
+/**
+ * Features
+ * 
+ * This component applies a horizontal slide-in animation to its children
+ * when they come into view during scrolling. Animation delay is determined
+ * by the index
+ * 
+ * @param {React.ReactNode} children - Content to be animated
+ * @param {number} index - Used to stagger animation delays
+ */
+
 const FeatureSection = ({ children, index }: { children: React.ReactNode, index: number }) => {
+  // Reference to track when element is in viewport
   const ref = useRef(null);
+  // Hook to detect when element is in view
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   return (
@@ -20,6 +33,11 @@ const FeatureSection = ({ children, index }: { children: React.ReactNode, index:
     </div>
   );
 };
+
+/**
+ * The Actual Features Component - Displays the features
+ * This component showcases the main features of Power Projects
+ */
 
 export default function Features() {
   return (

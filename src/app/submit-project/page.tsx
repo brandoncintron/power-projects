@@ -1,8 +1,6 @@
 "use client"
 
 import React, { useMemo, Suspense } from "react"
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 import { Form } from "@/components/ui/form"
 import { ProjectInfoSection } from "./components/ProjectInfoSection"
 import { ProjectSettingsSection } from "./components/ProjectSettingsSection"
@@ -85,13 +83,6 @@ export default function ProjectSubmissionPage() {
 
   return (
     <>
-      <Suspense fallback={<div className="py-4 px-8 w-full">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl font-bold">Power Projects</div>
-        </div>
-      </div>}>
-        <Navbar />
-      </Suspense>
       <main>
         <div className="container px-4 sm:px-6 mx-auto py-10">
           <div className="max-w-3xl mx-auto">
@@ -150,13 +141,6 @@ export default function ProjectSubmissionPage() {
           </div>
         </div>
       </main>
-      <Suspense fallback={<div className="py-8 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">Loading...</div>
-        </div>
-      </div>}>
-        <Footer />
-      </Suspense>
     </>
   )
 } 

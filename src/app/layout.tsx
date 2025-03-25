@@ -3,6 +3,12 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { auth } from "@/auth";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/navbar/Navbar";
+import { AuthDialog } from "@/components/authStuff/AuthDialog";
+import { AuthDialogProvider } from "@/hooks/useAuthDialog";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,18 +22,22 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Power Projects",
-  description: "Empower your development workflow",
+  description: "Build project, and connections.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+  console.log(session)
+  
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      <body id="top"
+        className={`${geistSans.variable} ${geistMono.variable} antialiased` }
       >
         <ThemeProvider
           attribute="class"
@@ -35,8 +45,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster richColors />
+          <AuthDialogProvider>
+            <Navbar session={session} />
+            {children}
+            <AuthDialog />
+            <Toaster richColors />
+            <Footer />
+          </AuthDialogProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -44,13 +44,13 @@ export function useScrollTo() {
 
   /**
    * Effect to handle scroll behavior when the page loads
-   * This is particularly important for cross-page navigation
+   * This is made for cross-page navigation
    */
   useEffect(() => {
     // Only apply scroll behavior on home pages
-    if (pathname === '/' || pathname === '/home') {
+    if (pathname === '/') {
       // Check if this is a navigation from another page with section target
-      const fromNavigation = searchParams.get('fromNavigation');
+      const fromNavigation = searchParams.get('foreignPage');
       const targetSection = searchParams.get('section');
       
       if (fromNavigation === 'true' && targetSection) {

@@ -36,28 +36,28 @@ export function FrameworkSelectionStep({
 }: FrameworkSelectionStepProps) {
   // Get scrollToSection function from the useScrollTo hook
   const { scrollToSection } = useScrollTo();
-  
+
   // Handle proceed to database with smooth scroll (only for bottom button)
   const handleProceedToDatabase = useCallback(() => {
-    
+
     // Store current scroll position before navigation
     const currentScrollPosition = window.scrollY;
-    
+
     // First navigate to database step
     onProceedToDatabase();
-    
+
     // Immediately restore scroll position to prevent jumping
     window.scrollTo({
       top: currentScrollPosition,
       behavior: 'auto'
     });
-    
+
     // Use requestAnimationFrame for smoother scrolling
-    requestAnimationFrame(() => {
-      scrollToSection('tech-stack-selection');
-    });
+
+    scrollToSection('tech-stack-selection');
+
   }, [onProceedToDatabase, scrollToSection]);
-  
+
   // Memoize the framework options for the selected app type to prevent unnecessary re-renders
   const availableFrameworkOptions = useMemo(() => {
     return frameworkOptions[selectedAppType as keyof typeof frameworkOptions] || [];
@@ -69,7 +69,7 @@ export function FrameworkSelectionStep({
       category => category.options.some(opt => opt.name === frameworkName)
     ) || false;
   }, [selectedAppType]);
-  
+
   // Function to get custom frameworks (those not in the predefined options)
   const getCustomFrameworks = useCallback(() => {
     return form.watch("frameworks").filter((fw: string) => !isPredefinedFramework(fw));

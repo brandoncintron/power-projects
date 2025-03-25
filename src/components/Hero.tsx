@@ -4,13 +4,22 @@ import { Button } from "@/components/ui/button";
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { ChevronRight, Users, Sparkles, Compass } from "lucide-react";
 import Link from "next/link";
+import { useAuthDialog } from "@/hooks/useAuthDialog";
 
+/**
+ * Hero Component - Main landing section of the application
+ * Display the CTA and feature highlights.
+ */
 export default function Hero() {
+  // Hook to enable scrolling to different sections of the page
   const { scrollToSection } = useScrollTo();
+  // Hook to control the auth dialog (sign-in/sign-up)
+  const { open } = useAuthDialog();
 
   return (
     <section className="pt-26 pb-16 px-4">
       <div className="max-w-7xl mx-auto text-center">
+        {/* Main heading and subheading */}
         <h1 className="text-5xl md:text-7xl font-bold mb-6">
           Code, Collaborate, Learn.
         </h1>
@@ -20,24 +29,30 @@ export default function Hero() {
         <p className="text-xl md:text-xl max-w-2xl mx-auto mb-10 opacity-80">
           Power Projects provides a collaborative, efficient environment for building projects with others.
         </p>
+        
+        {/* Hero buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
-          <Link href="/submit-project">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
-              Create a Project <ChevronRight />
-            </Button>
-          </Link>
+          <Button 
+            size="lg" 
+            className="bg-blue-600 hover:bg-blue-700 text-white sm:mx-0 mx-auto"
+            onClick={() => open("signup")}
+          >
+            Create a Project <ChevronRight />
+          </Button>
           <Button
             variant="outline"
             size="lg"
-            className="border-gray-600 hover:text-white hover:bg-gray-800"
+            className="border-gray-600 hover:text-white hover:bg-gray-800 sm:mx-0 mx-auto"
             onClick={() => scrollToSection('about')}
           >
             Learn More <ChevronRight />
           </Button>
+          
         </div>
 
         {/* Feature highlights */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left px-4 pt-6 max-w-5xl mx-auto">
+          {/* Feature 1 */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Compass className="h-5 w-5 text-blue-400" />
@@ -48,6 +63,7 @@ export default function Hero() {
             </p>
           </div>
 
+          {/* Feature 2 */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="h-5 w-5 text-blue-400" />
@@ -58,6 +74,7 @@ export default function Hero() {
             </p>
           </div>
 
+          {/* Feature 3 */}
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Users className="h-5 w-5 text-blue-400" />

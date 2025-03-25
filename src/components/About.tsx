@@ -4,9 +4,15 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useAuthDialog } from "@/hooks/useAuthDialog";
 
+/**
+ * About
+ */
 const AboutSection = ({ children, index }: { children: React.ReactNode, index: number }) => {
+  // Reference to track when an element is in viewport
   const ref = useRef(null);
+  // Hook to detect when element is in view
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   return (
@@ -22,10 +28,18 @@ const AboutSection = ({ children, index }: { children: React.ReactNode, index: n
   );
 };
 
+/**
+ * About Component - Displays the "About Power Projects" section
+ * Contains the mission and purpose of the platform
+ */
 export default function About() {
+  // Hook to control the authentication dialog (sign-in/sign-up)
+  const { open } = useAuthDialog();
+  
   return (
     <section className="py-24 px-4 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-7xl mx-auto">
+        {/* About heading section */}
         <AboutSection index={0}>
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold mb-6">About Power Projects</h2>
@@ -35,7 +49,9 @@ export default function About() {
           </div>
         </AboutSection>
 
+        {/* About mission and image grid section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-20">
+          {/* About mission description */}
           <AboutSection index={1}>
             <div>
               <h3 className="text-3xl font-bold mb-6 text-blue-400">The Mission</h3>
@@ -50,6 +66,7 @@ export default function About() {
             </div>
           </AboutSection>
 
+          {/* Image placeholder */}
           <AboutSection index={2}>
             <div className="rounded-lg shadow-xl overflow-hidden border border-gray-700 h-[400px]">
               Image placeholder4
@@ -57,6 +74,7 @@ export default function About() {
           </AboutSection>
         </div>
 
+        {/* About sign up section */}
         <AboutSection index={3}>
           <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-8 md:p-12">
             <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center">Join The Community</h3>
@@ -64,10 +82,11 @@ export default function About() {
               Ready to start building? Sign up and submit your idea to start creating and collaborating on Power Projects.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer" onClick={() => toast.warning("This feature is not yet implemented. Check back soon!", {
-              duration: 3000,
-              position: "bottom-right",
-            })}>
+              <Button 
+                size="lg" 
+                className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer" 
+                onClick={() => open("signup")}
+              >
                 Sign Up Now
               </Button>
             </div>
