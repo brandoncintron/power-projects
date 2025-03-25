@@ -33,9 +33,9 @@ export default function SignInForm() {
 
     // ✅ Type-safe and validated.
     try{
-      const result = await handleCredentialsSignin(values);
+      await handleCredentialsSignin(values);
     } catch (error) {
-      console.log("An unexpected error has occurred. Please try again.")
+      console.log("An unexpected error has occurred: ", error)
     }
   }
 
