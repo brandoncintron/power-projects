@@ -3,7 +3,6 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { useAuthDialog } from "@/hooks/useAuthDialog";
 
 /**

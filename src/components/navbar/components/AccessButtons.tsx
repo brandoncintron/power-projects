@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import Link from "next/link"
 import { Session } from "next-auth"
 import { useAuthDialog } from "@/hooks/useAuthDialog";
 

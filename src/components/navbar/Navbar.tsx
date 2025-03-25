@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Github, User, LogOut, Settings } from 'lucide-react';
+import { Github } from 'lucide-react';
 import { useScrollTo } from '../../hooks/useScrollTo';
 import { useScrollDetection } from '../../hooks/useScrollDetection';
 import { NavLinkType } from '@/types/navigation';
@@ -57,8 +57,12 @@ const Navbar = ({ session }: { session: Session | null }) => {
    */
   
   const handleNavigation = (sectionId: string) => {
-    // If on home page, otherwise navigate to home with query params
-    pathname === '/' ? scrollToSection(sectionId) : router.push(`/?section=${sectionId}&foreignPage=true`);
+    // If on home page, scroll to section, otherwise navigate to home with query params
+    if (pathname === '/') {
+      scrollToSection(sectionId);
+    } else {
+      router.push(`/?section=${sectionId}&foreignPage=true`);
+    }
   };
 
   return (

@@ -1,5 +1,5 @@
 import { Settings, User } from "lucide-react";
-import { LogOut, Link as LinkIcon } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { Session } from "next-auth";
 import { logout } from '@/lib/actions/auth';

@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { useScrollTo } from '@/hooks/useScrollTo';
 import { ChevronRight, Users, Sparkles, Compass } from "lucide-react";
-import Link from "next/link";
 import { useAuthDialog } from "@/hooks/useAuthDialog";
 
 /**
