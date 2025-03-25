@@ -8,6 +8,7 @@ import Navbar from "@/components/navbar/Navbar";
 import { AuthDialog } from "@/components/authStuff/AuthDialog";
 import { AuthDialogProvider } from "@/hooks/useAuthDialog";
 import { auth } from "@/lib/auth";
+import AuthToastHandler from "@/components/AuthToastHandler";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,6 +50,7 @@ export default async function RootLayout({
             {children}
             <AuthDialog />
             <Toaster richColors />
+            <AuthToastHandler />
             <Footer />
           </AuthDialogProvider>
         </ThemeProvider>
