@@ -16,8 +16,8 @@ import {
     SheetDescription
 } from "../../ui/sheet";
 import MobileNavItem from "./MobileNavItem";
-import { logout } from '@/lib/actions/auth';
 import { useAuthDialog } from "@/hooks/useAuthDialog";
+import { logout } from '@/lib/actions/auth';
 
 /**
  * Props for the MobileHamburger component

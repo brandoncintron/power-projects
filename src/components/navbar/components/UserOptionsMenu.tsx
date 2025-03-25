@@ -2,7 +2,6 @@ import { Settings, User } from "lucide-react";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { Session } from "next-auth";
-import { logout } from '@/lib/actions/auth';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,11 +11,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from 'next/image';
+import { logout } from "@/lib/actions/auth";
 
 const UserOptionsMenu = ({ session }: { session: Session | null }) => {
     // If no session, return null
     if (!session) return null;
     
+    // If there is a session, show the user options menu
     return (
         <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center gap-2 outline-none">

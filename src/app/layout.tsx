@@ -3,12 +3,11 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { auth } from "@/auth";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
 import { AuthDialog } from "@/components/authStuff/AuthDialog";
 import { AuthDialogProvider } from "@/hooks/useAuthDialog";
-
+import { auth } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +29,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   const session = await auth();
   console.log(session)
-  
 
   return (
     <html lang="en" suppressHydrationWarning>
