@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
 import { AuthDialog } from "@/components/authStuff/AuthDialog";
 import { AuthDialogProvider } from "@/hooks/useAuthDialog";
-import { auth } from "@/lib/auth";
+import { auth } from "@/auth";
 import AuthToastHandler from "@/components/AuthToastHandler";
 
 const geistSans = Geist({
@@ -30,14 +30,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const session = await auth();
-  console.log(session)
+  console.log(session);
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body id="top"
-        className={`${geistSans.variable} ${geistMono.variable} antialiased` }
+      <body
+        id="top"
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

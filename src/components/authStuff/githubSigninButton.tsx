@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { login } from "@/lib/actions/auth";
+import { login } from "@/lib/actions/authActions";
 /**
  * GithubSigninButton - Sign in with Github button
  */

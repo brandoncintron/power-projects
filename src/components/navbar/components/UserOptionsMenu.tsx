@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from 'next/image';
-import { logout } from "@/lib/actions/auth";
+import { logout } from "@/lib/actions/authActions";
 
 const UserOptionsMenu = ({ session }: { session: Session | null }) => {
     // If no session, return null
@@ -38,7 +38,7 @@ const UserOptionsMenu = ({ session }: { session: Session | null }) => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href={`/${session.user?.name}/dashboard`} className="cursor-pointer flex w-full items-center">
+                    <Link href={'/dashboard'} className="cursor-pointer flex w-full items-center">
                       <User className="mr-2 h-4 w-4" />
                       <span>Dashboard</span>
                     </Link>

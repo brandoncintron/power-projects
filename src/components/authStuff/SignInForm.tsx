@@ -1,65 +1,88 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
+
+import {
+  Form,
+  FormField,
+  FormLabel,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-
-/**
- * Zod schema for sign-in form validation
- */
-const signinSchema = z.object({
-  username: z.string(),
-  password: z.string(),
-});
-
-// Type inferred from the Zod schema
-type SigninFormData = z.infer<typeof signinSchema>;
+import { signInSchema } from "@/lib/zod";
+import { Button } from "@/components/ui/button";
+import { handleCredentialsSignin } from "@/lib/actions/authActions";
 
 /**
  * Sign In Component - Handles user authentication
  */
 export default function SignInForm() {
-  // Initialize form with react-hook-form and zod validation
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SigninFormData>({
-    resolver: zodResolver(signinSchema),
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  /**
-   * Form submission handler
-   */
+  async function onSubmit(values: z.infer<typeof signInSchema>) {
 
-  const onSubmit = async (data: SigninFormData) => {
-    console.log('Form submitted with:', data);
-
-  };
+    // ✅ Type-safe and validated.
+    try{
+      const result = await handleCredentialsSignin(values);
+    } catch (error) {
+      console.log("An unexpected error has occurred. Please try again.")
+    }
+  }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      {/* Username field */}
-      <div className="space-y-1">
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" {...register("username")} />
-        {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
-      </div>
+    <Form {...form}>
+      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="Enter email address"
+                  autoComplete="off"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      {/* Password field */}
-      <div className="space-y-1">
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register("password")} />
-        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
-      </div>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Enter password"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      {/* Submit button */}
-      <Button type="submit" className="w-full">
-        Sign In
-      </Button>
-    </form>
+        <Button className="w-full mt-4" type="submit">
+          Sign in
+        </Button>
+      </form>
+    </Form>
   );
 }
