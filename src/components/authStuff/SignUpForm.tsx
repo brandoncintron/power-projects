@@ -1,65 +1,128 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
+
+import {
+  Form,
+  FormField,
+  FormLabel,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { signUpSchema } from "@/lib/zod";
+import { Button } from "@/components/ui/button";
+import { handleCredentialsSignupTest } from "@/lib/actions/authActions";
 
-const signupSchema = z.object({
-  username: z.string().min(10, "Username must be at least 3 characters"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(10, "Password must be at least 10 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
 
-type SignupFormData = z.infer<typeof signupSchema>;
-
+/**
+ * Sign Up Component - Handles user creation
+ */
 export default function SignUpForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      username: "",
+      email: "",  
+      password: "",
+      confirmPassword: "",
+    },
   });
 
-  const onSubmit = (data: SignupFormData) => {
-    console.log("Sign up data:", data);
-    // TODO: send to API securely
-  };
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+    // ✅ Type-safe and validated.
+    try{
+      // await handleCredentialsSignupTest(values);
+      console.log(values)
+    } catch (error) {
+      console.log("An unexpected error has occurred: ", error)
+    }
+  }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      <div className="space-y-1">
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" {...register("username")} />
-        {errors.username && <p className="text-sm text-red-500">{errors.username.message}</p>}
-      </div>
+    <Form {...form}>
+      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="Enter a username"
+                  autoComplete="off"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="space-y-1">
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" {...register("email")} />
-        {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
-      </div>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="Enter email address"
+                  autoComplete="off"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="space-y-1">
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register("password")} />
-        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
-      </div>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Enter password"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="space-y-1">
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
-        <Input id="confirmPassword" type="password" {...register("confirmPassword")} />
-        {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>}
-      </div>
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Confirm password"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <Button type="submit" className="w-full">Sign Up</Button>
-    </form>
+        <Button className="w-full mt-4" type="submit">
+          Sign up
+        </Button>
+      </form>
+    </Form>
   );
 }

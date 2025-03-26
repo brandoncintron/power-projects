@@ -33,7 +33,8 @@ export default function SignInForm() {
 
     // ✅ Type-safe and validated.
     try{
-      await handleCredentialsSignin(values);
+      // await handleCredentialsSignin(values);
+      console.log(values)
     } catch (error) {
       console.log("An unexpected error has occurred: ", error)
     }
