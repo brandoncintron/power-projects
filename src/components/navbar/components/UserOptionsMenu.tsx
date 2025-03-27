@@ -1,7 +1,7 @@
 import { Settings, User } from "lucide-react";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from 'next/image';
 import { signOut } from "next-auth/react";
-const UserOptionsMenu = ({ session }: { session: Session | null }) => {
+const UserOptionsMenu = () => {
+    const { data: session } = useSession();
     // If no session, return null
     if (!session) return null;
     

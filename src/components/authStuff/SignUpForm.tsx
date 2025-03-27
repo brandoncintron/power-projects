@@ -19,8 +19,6 @@ import { registerUser } from "@/lib/actions/register";
 import { useTransition, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useAuthDialog } from "@/hooks/useAuthDialog";
 
 /**
  * Sign Up Component - Handles user creation
@@ -54,7 +52,7 @@ export default function SignUpForm() {
             password: result.password,
             redirectTo: "/dashboard",
           });
-        } catch (error) {
+        } catch {
           setError("An error occurred during sign in.");
         }
       }

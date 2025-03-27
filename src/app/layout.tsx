@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/navbar/Navbar";
 import { AuthDialog } from "@/components/authStuff/AuthDialog";
 import { AuthDialogProvider } from "@/hooks/useAuthDialog";
-import { auth } from "@/auth";
 import AuthToastHandler from "@/components/AuthToastHandler";
 import { SessionProvider } from "next-auth/react";
 

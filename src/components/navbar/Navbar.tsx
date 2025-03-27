@@ -9,7 +9,7 @@ import { NavLinkType } from '@/components/navbar/components/types/navigation';
 import { useSession } from 'next-auth/react';
 
 
-import MobileHamburger from './components/MobileNavbar';
+import MobileNavbar from './MobileNavbar';
 import ThemeSelector from './components/ThemeSelector';
 import DevelopmentBanner from './components/DevelopmentBanner';
 import AccessButtons from './components/AccessButtons';
@@ -84,7 +84,7 @@ const Navbar = () => {
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex gap-8">
             {navLinks.map((link) => (
-              <NavLinkItem key={link.label} link={link} session={session} />
+              <NavLinkItem key={link.label} link={link} />
             ))}
           </div>
 
@@ -94,7 +94,7 @@ const Navbar = () => {
             {!session ? (
               <AccessButtons />
             ) : (
-              <UserOptionsMenu session={session} />
+              <UserOptionsMenu/>
             )}
 
             {/* GitHub repository link */}
@@ -112,10 +112,9 @@ const Navbar = () => {
 
           {/* Mobile Navigation */}
           <div className="lg:hidden">
-            <MobileHamburger
+            <MobileNavbar
               handleNavigation={handleNavigation}
               navLinks={navLinks}
-              session={session}
             />
           </div>
         </div>

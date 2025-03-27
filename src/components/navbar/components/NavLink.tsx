@@ -5,14 +5,14 @@ import { NavLinkType } from "@/components/navbar/components/types/navigation";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 import { useScrollTo } from "@/hooks/useScrollTo";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 
 interface NavLinkItemProps {
   link: NavLinkType;
-  session?: Session | null;
 }
 
-const NavLinkItem = ({ link, session }: NavLinkItemProps) => {
+const NavLinkItem = ({ link }: NavLinkItemProps) => {
+  const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
   const { scrollToSection } = useScrollTo();
