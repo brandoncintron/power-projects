@@ -9,6 +9,7 @@ import { AuthDialog } from "@/components/authStuff/AuthDialog";
 import { AuthDialogProvider } from "@/hooks/useAuthDialog";
 import { auth } from "@/auth";
 import AuthToastHandler from "@/components/AuthToastHandler";
+import { SessionProvider } from "next-auth/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +31,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -44,16 +44,16 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-         
+          <SessionProvider>
             <AuthDialogProvider>
-              <Navbar session={session} />
+              <Navbar />
               {children}
               <AuthDialog />
               <Toaster richColors />
               <AuthToastHandler />
               <Footer />
             </AuthDialogProvider>
-          
+            </SessionProvider>
         </ThemeProvider>
       </body>
     </html>
