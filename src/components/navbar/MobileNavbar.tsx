@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { Menu, Github, User, Settings, LogOut, Moon, Sun } from 'lucide-react';
-import { Button } from "../../ui/button";
+import { Button } from "../ui/button";
 import { NavLinkType } from '@/components/navbar/components/types/navigation';
 import Image from 'next/image';
 import { useTheme } from "next-themes";
@@ -13,11 +13,11 @@ import {
     SheetTrigger,
     SheetTitle,
     SheetDescription
-} from "../../ui/sheet";
-import MobileNavItem from "./MobileNavItem";
+} from "../ui/sheet";
+import MobileNavItem from "./components/MobileNavItem";
 import { useAuthDialog } from "@/hooks/useAuthDialog";
 import { signOut } from 'next-auth/react';
-import { Session } from 'next-auth';
+import { useSession } from 'next-auth/react';
 /**
  * Props for the MobileHamburger component
  * 
@@ -28,7 +28,6 @@ import { Session } from 'next-auth';
 type MobileHamburgerProps = {
     handleNavigation: (sectionId: string) => void;
     navLinks: NavLinkType[];
-    session: Session | null;
 };
 
 /**
@@ -37,8 +36,8 @@ type MobileHamburgerProps = {
  * This component provides a responsive hamburger menu for mobile devices.
  * It displays all the content from the navbar in a slide-out sheet when the hamburger icon is clicked.
  */
-const MobileHamburger = ({ handleNavigation, navLinks, session }: MobileHamburgerProps) => {
-
+const MobileHamburger = ({ handleNavigation, navLinks }: MobileHamburgerProps) => {
+    const { data: session } = useSession();
     
     // State to control sheet open/close
     const [isOpen, setIsOpen] = useState(false);
@@ -81,13 +80,16 @@ const MobileHamburger = ({ handleNavigation, navLinks, session }: MobileHamburge
                     <div className="flex-grow">
                         <div className="flex flex-col divide-y">
                             {/* Main navigation links */}
-                            {navLinks.map((link) => (
+                            {navLinks
+                              .filter(link => 
+                                !session || (link.label !== "Features" && link.label !== "About")
+                              )
+                              .map((link) => (
                                 <MobileNavItem
                                     key={link.label}
                                     link={link}
                                     onNavigate={handleNavigation}
                                     closeMenu={() => setIsOpen(false)}
-                                    session={session}
                                 />
                             ))}
 

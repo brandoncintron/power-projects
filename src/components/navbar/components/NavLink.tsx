@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { NavLinkType } from "@/types/navigation";
+import { NavLinkType } from "@/components/navbar/components/types/navigation";
 import { toast } from "sonner";
 import { usePathname, useRouter } from "next/navigation";
 import { useScrollTo } from "@/hooks/useScrollTo";

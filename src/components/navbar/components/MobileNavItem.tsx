@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { toast } from "sonner";
-import { NavLinkType } from "@/types/navigation";
+import { NavLinkType } from "@/components/navbar/components/types/navigation";
 import { Session } from "next-auth";
 
 interface MobileNavItemProps {

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { FaGithub } from 'react-icons/fa';
 import { useScrollTo } from '../../hooks/useScrollTo';
 import { useScrollDetection } from '../../hooks/useScrollDetection';
-import { NavLinkType } from '@/types/navigation';
+import { NavLinkType } from '@/components/navbar/components/types/navigation';
 import { Session } from 'next-auth';
 
 
