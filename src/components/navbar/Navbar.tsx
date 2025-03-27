@@ -6,7 +6,7 @@ import { FaGithub } from 'react-icons/fa';
 import { useScrollTo } from '../../hooks/useScrollTo';
 import { useScrollDetection } from '../../hooks/useScrollDetection';
 import { NavLinkType } from '@/components/navbar/components/types/navigation';
-import { Session } from 'next-auth';
+import { useSession } from 'next-auth/react';
 
 
 import MobileHamburger from './components/MobileNavbar';
@@ -41,7 +41,8 @@ const navLinks: NavLinkType[] = [
  * @param {Session | null} session - The user's authentication session
  */
 
-const Navbar = ({ session }: { session: Session | null }) => {
+const Navbar = () => {
+  const { data: session } = useSession();
   const { scrolled } = useScrollDetection(); // Check if user scrolled
   const { scrollToSection } = useScrollTo(); // Scroll to a part on the page
   const pathname = usePathname(); // Get current path
