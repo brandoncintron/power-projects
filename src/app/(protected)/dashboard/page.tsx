@@ -3,18 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { redirect } from "next/navigation";
-import DashboardAuthDialogCloser from "@/app/dashboard/components/DashboardAuthDialogCloser";
+import DashboardAuthDialogCloser from "./components/DashboardAuthDialogCloser";
 
 export default async function DashboardPage() {
   const session = await auth();
-  
-  // Redirect to home if not authenticated
-  if (!session || !session.user) {
-    redirect("/");
-  }
-  
-  const user = session.user;
+  const user = session?.user;
   
   return (
     <main className="container mx-auto py-10 px-4 md:px-6">
@@ -24,12 +17,12 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-8">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
           <Avatar className="h-20 w-20">
-            <AvatarImage src={user.image || ""} alt={user.name || "User"} />
-            <AvatarFallback>{user.name?.charAt(0) || user.email?.charAt(0) || "U"}</AvatarFallback>
+            <AvatarImage src={user?.image || ""} alt={user?.name || "User"} />
+            <AvatarFallback>{user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-3xl font-bold">{user.name || "Dashboard"}</h1>
-            <p className="text-muted-foreground">{user.email}</p>
+            <h1 className="text-3xl font-bold">{user?.name || "Dashboard"}</h1>
+            <p className="text-muted-foreground">{user?.email}</p>
           </div>
         </div>
         
@@ -52,15 +45,15 @@ export default async function DashboardPage() {
                   <dl className="space-y-2">
                     <div className="flex justify-between">
                       <dt className="font-medium text-muted-foreground">Name</dt>
-                      <dd>{user.name || "Not set"}</dd>
+                      <dd>{user?.name || "Not set"}</dd>
                     </div>
                     <div className="flex justify-between">
                       <dt className="font-medium text-muted-foreground">Email</dt>
-                      <dd>{user.email}</dd>
+                      <dd>{user?.email}</dd>
                     </div>
                     <div className="flex justify-between">
                       <dt className="font-medium text-muted-foreground">User ID</dt>
-                      <dd className="truncate max-w-[180px]">{user.id}</dd>
+                      <dd className="truncate max-w-[180px]">{user?.id}</dd>
                     </div>
                   </dl>
                 </CardContent>

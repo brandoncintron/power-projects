@@ -11,13 +11,14 @@ import { useAuthDialog } from "@/hooks/useAuthDialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import GithubSigninButton from "@/components/authStuff/githubSigninButton";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import SignInForm from "@/components/authStuff/SignInForm";
 import SignUpForm from "@/components/authStuff/SignUpForm";
+import OAuthButtons from "@/components/authStuff/OAuthButtons";
+import { FormError } from "@/components/authStuff/FormError";
 
 export function AuthDialog() {
-  const { isOpen, close, view, setView } = useAuthDialog();
+  const { isOpen, close, view, setView, error } = useAuthDialog();
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
@@ -33,6 +34,8 @@ export function AuthDialog() {
             Sign in or create your account
           </p>
         </DialogHeader>
+
+        {error && <FormError message={error} />}
 
         <Tabs
           value={view}
@@ -51,7 +54,7 @@ export function AuthDialog() {
           {/* --- Sign In Tab --- */}
           <TabsContent value="signin">
             <Card className="border-none shadow-none">
-              <CardContent className="space-y-2 p-0">
+              <CardContent className="space-y-4 p-0">
                 <SignInForm />
 
                 <div className="flex items-center gap-4">
@@ -60,9 +63,7 @@ export function AuthDialog() {
                   <Separator className="flex-1" />
                 </div>
 
-                <div className="flex justify-center">
-                  <GithubSigninButton />
-                </div>
+                <OAuthButtons />
               </CardContent>
             </Card>
           </TabsContent>
@@ -70,7 +71,7 @@ export function AuthDialog() {
           {/* --- Sign Up Tab --- */}
           <TabsContent value="signup">
             <Card className="border-none shadow-none">
-              <CardContent className="space-y-5 p-0">
+              <CardContent className="space-y-4 p-0">
                 <SignUpForm />
 
                 <div className="flex items-center gap-4">
@@ -79,9 +80,7 @@ export function AuthDialog() {
                   <Separator className="flex-1" />
                 </div>
 
-                <div className="flex justify-center cursor-pointer">
-                  <GithubSigninButton />
-                </div>
+                <OAuthButtons />
               </CardContent>
             </Card>
           </TabsContent>

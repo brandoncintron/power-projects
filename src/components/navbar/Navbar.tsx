@@ -2,14 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Github } from 'lucide-react';
+import { FaGithub } from 'react-icons/fa';
 import { useScrollTo } from '../../hooks/useScrollTo';
 import { useScrollDetection } from '../../hooks/useScrollDetection';
 import { NavLinkType } from '@/types/navigation';
 import { Session } from 'next-auth';
 
 
-import MobileHamburger from './components/MobileHamburger';
+import MobileHamburger from './components/MobileNavbar';
 import ThemeSelector from './components/ThemeSelector';
 import DevelopmentBanner from './components/DevelopmentBanner';
 import AccessButtons from './components/AccessButtons';
@@ -102,7 +102,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
               target="_blank"
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
-              <Github size={20} />
+              <FaGithub size={20} />
             </Link>
 
             {/* Theme selector (light/dark mode) */}

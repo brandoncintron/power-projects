@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { Menu, Github, User, Settings, LogOut, Moon, Sun } from 'lucide-react';
 import { Button } from "../../ui/button";
 import { NavLinkType } from '@/types/navigation';
-import { Session } from 'next-auth';
 import Image from 'next/image';
 import { useTheme } from "next-themes";
 import {
@@ -17,20 +16,19 @@ import {
 } from "../../ui/sheet";
 import MobileNavItem from "./MobileNavItem";
 import { useAuthDialog } from "@/hooks/useAuthDialog";
-import { logout } from '@/lib/actions/authActions';
-
+import { signOut } from 'next-auth/react';
+import { Session } from 'next-auth';
 /**
  * Props for the MobileHamburger component
  * 
  * @property {function} handleNavigation - Function to handle navigation to sections
  * @property {NavLinkType[]} navLinks - Array of navigation link objects
- * @property {Session | null} session - User's authentication session
  */
 
 type MobileHamburgerProps = {
     handleNavigation: (sectionId: string) => void;
     navLinks: NavLinkType[];
-    session?: Session | null;
+    session: Session | null;
 };
 
 /**
@@ -40,6 +38,8 @@ type MobileHamburgerProps = {
  * It displays all the content from the navbar in a slide-out sheet when the hamburger icon is clicked.
  */
 const MobileHamburger = ({ handleNavigation, navLinks, session }: MobileHamburgerProps) => {
+
+    
     // State to control sheet open/close
     const [isOpen, setIsOpen] = useState(false);
     // Hook to control the authentication dialog (sign-in/sign-up)
@@ -198,7 +198,7 @@ const MobileHamburger = ({ handleNavigation, navLinks, session }: MobileHamburge
                                     className="w-full py-6 text-base font-medium"
                                     onClick={() => {
                                         setIsOpen(false);
-                                        logout();
+                                        signOut({ redirectTo: "/" });
                                     }}
                                 >
                                     <LogOut className="mr-2 h-4 w-4" />

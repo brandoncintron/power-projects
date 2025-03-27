@@ -15,18 +15,25 @@ import {
 import { Input } from "@/components/ui/input";
 import { signUpSchema } from "@/lib/zod";
 import { Button } from "@/components/ui/button";
-import { handleCredentialsSignupTest } from "@/lib/actions/authActions";
-
+import { registerUser } from "@/lib/actions/register";
+import { useTransition, useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useAuthDialog } from "@/hooks/useAuthDialog";
 
 /**
  * Sign Up Component - Handles user creation
  */
 export default function SignUpForm() {
+  const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: "",
-      email: "",  
+      email: "",
       password: "",
       confirmPassword: "",
     },
@@ -34,17 +41,38 @@ export default function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof signUpSchema>) {
     // ✅ Type-safe and validated.
-    try{
-      // await handleCredentialsSignupTest(values);
-      console.log(values)
-    } catch (error) {
-      console.log("An unexpected error has occurred: ", error)
-    }
+    startTransition(async () => {
+      setError("");
+      const result = await registerUser(values);
+
+      if (result && result.error) {
+        setError(result.error);
+      } else if (result && result.success) {
+        try {
+          await signIn("credentials", {
+            email: result.email,
+            password: result.password,
+            redirectTo: "/dashboard",
+          });
+        } catch (error) {
+          setError("An error occurred during sign in.");
+        }
+      }
+    });
   }
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+      <form
+        className="space-y-4"
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+      >
+        {error && (
+          <Alert className="mb-4 bg-red-500">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
         <FormField
           control={form.control}
           name="username"
@@ -63,7 +91,6 @@ export default function SignUpForm() {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="email"
@@ -82,7 +109,6 @@ export default function SignUpForm() {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="password"
@@ -100,7 +126,6 @@ export default function SignUpForm() {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="confirmPassword"
@@ -119,8 +144,8 @@ export default function SignUpForm() {
           )}
         />
 
-        <Button className="w-full mt-4" type="submit">
-          Sign up
+        <Button className="w-full mt-4 cursor-pointer" type="submit" disabled={isPending}>
+          {isPending ? "Signing up..." : "Sign up"}
         </Button>
       </form>
     </Form>

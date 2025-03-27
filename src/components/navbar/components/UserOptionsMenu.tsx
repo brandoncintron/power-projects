@@ -11,8 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Image from 'next/image';
-import { logout } from "@/lib/actions/authActions";
-
+import { signOut } from "next-auth/react";
 const UserOptionsMenu = ({ session }: { session: Session | null }) => {
     // If no session, return null
     if (!session) return null;
@@ -52,7 +51,7 @@ const UserOptionsMenu = ({ session }: { session: Session | null }) => {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem 
                     variant="destructive"
-                    onClick={() => logout()}
+                    onClick={() => signOut({ redirectTo: "/" })}
                     className="cursor-pointer"
                   >
                     <LogOut className="mr-2 h-4 w-4" />

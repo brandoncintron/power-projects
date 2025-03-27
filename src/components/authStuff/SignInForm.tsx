@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTransition, useState } from "react";
 
 import {
   Form,
@@ -15,12 +16,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { signInSchema } from "@/lib/zod";
 import { Button } from "@/components/ui/button";
-import { handleCredentialsSignin } from "@/lib/actions/authActions";
+import { login } from "@/lib/actions/login";
+import { FormError } from "./FormError";
 
 /**
  * Sign In Component - Handles user authentication
  */
 export default function SignInForm() {
+  const [error, setError] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -30,19 +35,27 @@ export default function SignInForm() {
   });
 
   async function onSubmit(values: z.infer<typeof signInSchema>) {
-
     // ✅ Type-safe and validated.
-    try{
-      // await handleCredentialsSignin(values);
-      console.log(values)
-    } catch (error) {
-      console.log("An unexpected error has occurred: ", error)
-    }
+    setError("");
+    startTransition(async () => {
+      login(values)
+        .then((data) => {
+          setError(data?.error);
+        })
+      
+    });
   }
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+      <form
+        className="space-y-4"
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+      >
+        {/* auth error here */}
+        <FormError message={error}/>
+
         <FormField
           control={form.control}
           name="email"
@@ -80,8 +93,8 @@ export default function SignInForm() {
           )}
         />
 
-        <Button className="w-full mt-4" type="submit">
-          Sign in
+        <Button className="w-full mt-4 cursor-pointer" type="submit" disabled={isPending}>
+          {isPending ? "Signing in..." : "Sign in"}
         </Button>
       </form>
     </Form>

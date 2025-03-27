@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Power Projects",
-  description: "Build project, and connections.",
+  description: "Build projects, and connections.",
 };
 
 export default async function RootLayout({
@@ -31,7 +31,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  console.log(session);
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -45,14 +44,16 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthDialogProvider>
-            <Navbar session={session} />
-            {children}
-            <AuthDialog />
-            <Toaster richColors />
-            <AuthToastHandler />
-            <Footer />
-          </AuthDialogProvider>
+         
+            <AuthDialogProvider>
+              <Navbar session={session} />
+              {children}
+              <AuthDialog />
+              <Toaster richColors />
+              <AuthToastHandler />
+              <Footer />
+            </AuthDialogProvider>
+          
         </ThemeProvider>
       </body>
     </html>

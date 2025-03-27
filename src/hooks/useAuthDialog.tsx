@@ -7,9 +7,11 @@ type View = "signin" | "signup";
 type AuthDialogContextType = {
   isOpen: boolean;
   view: View;
-  open: (view?: View) => void;
+  error: string | null;
+  open: (view?: View, error?: string | null) => void;
   close: () => void;
   setView: (view: View) => void;
+  setError: (error: string | null) => void;
 };
 
 const AuthDialogContext = createContext<AuthDialogContextType | undefined>(undefined);
@@ -17,16 +19,21 @@ const AuthDialogContext = createContext<AuthDialogContextType | undefined>(undef
 export function AuthDialogProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState<View>("signin");
+  const [error, setError] = useState<string | null>(null);
 
-  const open = (view: View = "signin") => {
+  const open = (view: View = "signin", error: string | null = null) => {
     setView(view);
+    setError(error);
     setIsOpen(true);
   };
 
-  const close = () => setIsOpen(false);
+  const close = () => {
+    setIsOpen(false);
+    setError(null);
+  };
 
   return (
-    <AuthDialogContext.Provider value={{ isOpen, view, open, close, setView }}>
+    <AuthDialogContext.Provider value={{ isOpen, view, error, open, close, setView, setError }}>
       {children}
     </AuthDialogContext.Provider>
   );

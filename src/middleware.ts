@@ -1,25 +1,44 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { auth } from "@/auth";
+import NextAuth from "next-auth";
+import authConfig from "./auth.config";
+import {
+  apiAuthPrefix,
+  protectedRoutes,
+} from "./routes";
 
-const protectedRoutes = ["/submit-project", "/dashboard"];
+const { auth } = NextAuth(authConfig);
 
-export default async function middleware(request: NextRequest) {
-  const session = await auth();
+export default auth((req) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
 
-  const { pathname } = request.nextUrl;
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isProtectedRoute = protectedRoutes.includes(nextUrl.pathname);
 
-  const isProtected = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
-  );
-
-  if (isProtected && !session) {
-    // Instead of redirecting, add a custom header that will be used
-    // to trigger a toast on the client side
-    const response = NextResponse.rewrite(new URL("/", request.url));
-    response.headers.set("x-auth-required", "true");
-    return response;
+  // Handle OAuth errors
+  if (nextUrl.pathname === "/api/auth/signin" && nextUrl.search.includes("error=")) {
+    // Extract the error query param
+    const errorType = new URLSearchParams(nextUrl.search).get("error");
+    // Redirect to our custom error handler page with the error
+    return Response.redirect(new URL(`/auth-error?error=${errorType}`, nextUrl));
   }
 
-  return NextResponse.next();
-}
+  if(isApiAuthRoute){
+    return;
+  }
+
+  if (!isLoggedIn && isProtectedRoute) {
+    return Response.redirect(new URL("/", nextUrl));
+  }
+
+  return;
+});
+
+// Don't invoke middleware on these paths
+export const config = {
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
+};
