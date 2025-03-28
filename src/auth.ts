@@ -26,6 +26,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           where: {
             email,
           },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+            password: true,
+          },
         })
 
         if (!user) {
