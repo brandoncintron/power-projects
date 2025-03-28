@@ -54,6 +54,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.0.14",
     "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
     "eslint": "^9",
