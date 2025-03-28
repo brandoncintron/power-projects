@@ -1,32 +1,29 @@
 "use client";
 
+import { useTransition } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useTransition, useState } from "react";
+import { LuLoader } from "react-icons/lu";
+import { toast } from "sonner";
 
+import { login } from "@/lib/actions/auth";
+import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormField,
-  FormLabel,
-  FormItem,
   FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signInSchema } from "@/lib/zod";
-import { Button } from "@/components/ui/button";
-import { login } from "@/lib/actions/login";
-import { FormError } from "./FormError";
+import { signInSchema, signInSchemaType } from "@/lib/zod";
 
-/**
- * Sign In Component - Handles user authentication
- */
-export default function SignInForm() {
-  const [error, setError] = useState<string | undefined>("");
+const SignInForm = () => {
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof signInSchema>>({
+  const form = useForm<signInSchemaType>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -34,28 +31,23 @@ export default function SignInForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof signInSchema>) {
-    // ✅ Type-safe and validated.
-    setError("");
-    startTransition(async () => {
-      login(values)
-        .then((data) => {
-          setError(data?.error);
-        })
-      
-    });
-  }
+  const onSubmit = async (values: signInSchemaType) => {
+    const res = await login(values);
+    if (res && "error" in res) {
+      toast.error(res.error);
+    }
+  };
 
   return (
     <Form {...form}>
       <form
+        onSubmit={form.handleSubmit((values) => {
+          startTransition(() => {
+            onSubmit(values);
+          });
+        })}
         className="space-y-4"
-        onSubmit={form.handleSubmit(onSubmit)}
-        noValidate
       >
-        {/* auth error here */}
-        <FormError message={error}/>
-
         <FormField
           control={form.control}
           name="email"
@@ -64,17 +56,16 @@ export default function SignInForm() {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  type="email"
-                  placeholder="Enter email address"
-                  autoComplete="off"
                   {...field}
+                  type="email"
+                  disabled={isPending}
+                  placeholder="name@example.com"
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="password"
@@ -83,9 +74,10 @@ export default function SignInForm() {
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
-                  type="password"
-                  placeholder="Enter password"
                   {...field}
+                  type="password"
+                  disabled={isPending}
+                  placeholder="******"
                 />
               </FormControl>
               <FormMessage />
@@ -93,10 +85,13 @@ export default function SignInForm() {
           )}
         />
 
-        <Button className="w-full mt-4 cursor-pointer" type="submit" disabled={isPending}>
-          {isPending ? "Signing in..." : "Sign in"}
+        <Button disabled={isPending} className="w-full">
+          {isPending && <LuLoader className="mr-2 size-4 animate-spin" />}
+          Sign in
         </Button>
       </form>
     </Form>
   );
-}
+};
+
+export default SignInForm;

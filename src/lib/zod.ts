@@ -27,3 +27,6 @@ export const signUpSchema = z.object({
     message: "Passwords do not match.",
     path: ["confirmPassword"],
 })
+
+export type signInSchemaType = z.infer<typeof signInSchema>
+export type signUpSchemaType = z.infer<typeof signUpSchema>

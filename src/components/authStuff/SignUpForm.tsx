@@ -1,33 +1,30 @@
 "use client";
 
+import { useTransition } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { LuLoader } from "react-icons/lu";
+import { toast } from "sonner";
+import { signIn } from "next-auth/react";
 
+import { registerUser } from "@/lib/actions/auth";
+import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormField,
-  FormLabel,
-  FormItem,
   FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUpSchema } from "@/lib/zod";
-import { Button } from "@/components/ui/button";
-import { registerUser } from "@/lib/actions/register";
-import { useTransition, useState } from "react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { signIn } from "next-auth/react";
+import { signUpSchema, signUpSchemaType } from "@/lib/zod";
 
-/**
- * Sign Up Component - Handles user creation
- */
-export default function SignUpForm() {
-  const [error, setError] = useState("");
+const SignUpForm = () => {
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof signUpSchema>>({
+  const form = useForm<signUpSchemaType>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: "",
@@ -37,53 +34,37 @@ export default function SignUpForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof signUpSchema>) {
-    // ✅ Type-safe and validated.
-    startTransition(async () => {
-      setError("");
-      const result = await registerUser(values);
-
-      if (result && result.error) {
-        setError(result.error);
-      } else if (result && result.success) {
-        try {
-          await signIn("credentials", {
-            email: result.email,
-            password: result.password,
-            redirectTo: "/dashboard",
-          });
-        } catch {
-          setError("An error occurred during sign in.");
-        }
-      }
-    });
-  }
+  const onSubmit = async (values: signUpSchemaType) => {
+    const res = await registerUser(values);
+    if (res && "error" in res) {
+      toast.error(res.error);
+    } else {
+      signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirectTo: "/dashboard",
+      });
+    }
+  };
 
   return (
     <Form {...form}>
       <form
+        onSubmit={form.handleSubmit((values) => {
+          startTransition(() => {
+            onSubmit(values);
+          });
+        })}
         className="space-y-4"
-        onSubmit={form.handleSubmit(onSubmit)}
-        noValidate
       >
-        {error && (
-          <Alert className="mb-4 bg-red-500">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
         <FormField
           control={form.control}
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  placeholder="Enter a username"
-                  autoComplete="off"
-                  {...field}
-                />
+                <Input {...field} disabled={isPending} placeholder="username" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,10 +78,10 @@ export default function SignUpForm() {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  type="email"
-                  placeholder="Enter email address"
-                  autoComplete="off"
                   {...field}
+                  type="email"
+                  disabled={isPending}
+                  placeholder="name@example.com"
                 />
               </FormControl>
               <FormMessage />
@@ -115,9 +96,10 @@ export default function SignUpForm() {
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input
-                  type="password"
-                  placeholder="Enter password"
                   {...field}
+                  type="password"
+                  disabled={isPending}
+                  placeholder="******"
                 />
               </FormControl>
               <FormMessage />
@@ -132,9 +114,10 @@ export default function SignUpForm() {
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
                 <Input
-                  type="password"
-                  placeholder="Confirm password"
                   {...field}
+                  type="password"
+                  disabled={isPending}
+                  placeholder="******"
                 />
               </FormControl>
               <FormMessage />
@@ -142,10 +125,13 @@ export default function SignUpForm() {
           )}
         />
 
-        <Button className="w-full mt-4 cursor-pointer" type="submit" disabled={isPending}>
-          {isPending ? "Signing up..." : "Sign up"}
+        <Button disabled={isPending} className="w-full">
+          {isPending && <LuLoader className="mr-2 size-4 animate-spin" />}
+          Sign Up
         </Button>
       </form>
     </Form>
   );
-}
+};
+
+export default SignUpForm;

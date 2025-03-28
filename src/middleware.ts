@@ -1,44 +1,33 @@
-import NextAuth from "next-auth";
-import authConfig from "./auth.config";
-import {
-  apiAuthPrefix,
-  protectedRoutes,
-} from "./routes";
-
-const { auth } = NextAuth(authConfig);
+import { auth } from '@/auth'
 
 export default auth((req) => {
-  const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
+  const { pathname, origin } = req.nextUrl
+  const isAuthenticated = !!req.auth
 
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isProtectedRoute = protectedRoutes.includes(nextUrl.pathname);
-
-  // Handle OAuth errors
-  if (nextUrl.pathname === "/api/auth/signin" && nextUrl.search.includes("error=")) {
-    // Extract the error query param
-    const errorType = new URLSearchParams(nextUrl.search).get("error");
-    // Redirect to our custom error handler page with the error
-    return Response.redirect(new URL(`/auth-error?error=${errorType}`, nextUrl));
+  // Public route
+  if (pathname === '/') {
+    return // allow access
   }
 
-  if(isApiAuthRoute){
-    return;
+  // Protected routes
+  const protectedRoutes = ['/submit-project', '/dashboard']
+
+  if (protectedRoutes.includes(pathname)) {
+    if (!isAuthenticated) {
+      // Redirect unauthenticated users to home
+      return Response.redirect(new URL('/', origin))
+    }
+    return // allow access to authenticated users
   }
 
-  if (!isLoggedIn && isProtectedRoute) {
-    return Response.redirect(new URL("/", nextUrl));
+  // Deny all other routes to unauthenticated users
+  if (!isAuthenticated) {
+    return Response.redirect(new URL('/', origin))
   }
 
-  return;
-});
+  // Authenticated users can access anything else
+})
 
-// Don't invoke middleware on these paths
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
-  ],
-};
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+}

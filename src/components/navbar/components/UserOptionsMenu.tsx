@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Image from 'next/image';
 import { signOut } from "next-auth/react";
+
 const UserOptionsMenu = () => {
     const { data: session } = useSession();
     // If no session, return null
