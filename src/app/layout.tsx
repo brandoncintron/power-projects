@@ -9,6 +9,7 @@ import { AuthDialog } from "@/components/authStuff/AuthDialog";
 import { AuthDialogProvider } from "@/hooks/useAuthDialog";
 import AuthToastHandler from "@/components/AuthToastHandler";
 import { SessionProvider } from "next-auth/react";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default async function RootLayout({
         id="top"
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Suspense>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -54,6 +56,7 @@ export default async function RootLayout({
             </AuthDialogProvider>
             </SessionProvider>
         </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   );
