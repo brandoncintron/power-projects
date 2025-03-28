@@ -7,7 +7,6 @@ import { useScrollTo } from '../../hooks/useScrollTo';
 import { useScrollDetection } from '../../hooks/useScrollDetection';
 import { NavLinkType } from '@/components/navbar/components/types/navigation';
 import { useSession } from 'next-auth/react';
-import { auth } from '@/auth';
 
 
 import MobileNavbar from './MobileNavbar';
