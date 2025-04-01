@@ -1,9 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
 import { LuLoader } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,42 +15,50 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signUpSchema, signUpSchemaType } from "@/schema/authSchema";
-
+import { DialogError } from "./DialogError";
+import { register } from "@/actions/register";
 const SignUpForm = () => {
   const [isPending, startTransition] = useTransition();
-
+  const [error, setError] = useState<string | undefined >("");
   const form = useForm<signUpSchemaType>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      username: "",
       email: "",
+      name: "",
       password: "",
       confirmPassword: "",
     },
   });
 
   const onSubmit = async (values: signUpSchemaType) => {
-    console.log(values);
+    setError("");
+
+    startTransition(() => {
+      register(values)
+        .then((data) => {
+        setError(data?.error);
+      });
+    });
   };
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((values) => {
-          startTransition(() => {
-            onSubmit(values);
-          });
-        })}
-        className="space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <DialogError message={error} />
+
         <FormField
           control={form.control}
-          name="username"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input {...field} disabled={isPending} placeholder="username" />
+                <Input
+                  {...field}
+                  type="text"
+                  disabled={isPending}
+                  placeholder="Username"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,7 +121,7 @@ const SignUpForm = () => {
 
         <Button disabled={isPending} className="w-full">
           {isPending && <LuLoader className="mr-2 size-4 animate-spin" />}
-          Sign Up
+          Create an account
         </Button>
       </form>
     </Form>

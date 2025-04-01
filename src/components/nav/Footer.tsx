@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 
-import { Separator } from './ui/separator';
-import { useScrollTo } from '../hooks/useScrollTo';
+import { Separator } from '../ui/separator';
+import { useNavigation } from '../../hooks/useNavigation';
 
 export default function Footer() {
-  const { scrollToSection } = useScrollTo();
+  const { handleNavigation } = useNavigation();
   
   return (
     <footer className="py-8 px-4">
@@ -15,7 +15,7 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Product</h3>
             <ul className="space-y-2">
-              <li><button className="opacity-70 hover:opacity-100" onClick={() => scrollToSection('top')}>Home</button></li>
+              <li><button className="opacity-70 hover:opacity-100" onClick={() => handleNavigation('top')}>Home</button></li>
               <li><Link href="https://github.com/brandoncintron/power-projects" className="opacity-70 hover:opacity-100">GitHub Repository</Link></li>
               <li><Link href="/submit-project" className="opacity-70 hover:opacity-100">Submit a Project</Link></li>
               <li><Link href="#" className="opacity-70 hover:opacity-100">Browse Projects</Link></li>
@@ -25,7 +25,7 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">About</h3>
             <ul className="space-y-2">
-              <li><button className="opacity-70 hover:opacity-100" onClick={() => scrollToSection('about')}>About</button></li>
+              <li><button className="opacity-70 hover:opacity-100" onClick={() => handleNavigation('about')}>About</button></li>
             </ul>
           </div>
           

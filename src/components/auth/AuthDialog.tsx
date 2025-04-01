@@ -15,13 +15,48 @@ import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { DialogError } from "@/components/auth/DialogError";
 import { useAuthDialog } from "@/hooks/useAuthDialog";
+import OAuthButtons from "@/components/auth/OAuthButtons";
+import { useEffect, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function AuthDialog() {
-  const { isOpen, close, view, setView, error } = useAuthDialog();
+  const { isOpen, close, view, setView, error, open } = useAuthDialog();
+  const searchParams = useSearchParams();
+  const errorCheckedRef = useRef(false);
+  const router = useRouter();
+
+  // Check for auth errors in URL params once on component mount
+  useEffect(() => {
+    // Skip if we've already checked for errors
+    if (errorCheckedRef.current) return;
+    
+    const authError = searchParams.get("error");
+    if (authError === "OAuthAccountNotLinked") {
+      open("signin", "Email has already been used with a different provider. Please sign in using the original provider.");
+      // Mark error as checked and remove error from URL
+      errorCheckedRef.current = true;
+      // Use replace to remove the error parameter from URL
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("error");
+        router.replace(url.pathname + url.search);
+      }
+    } else if (authError) {
+      open("signin", "An authentication error occurred. Please try again.");
+      // Mark error as checked and remove error from URL
+      errorCheckedRef.current = true;
+      // Use replace to remove the error parameter from URL
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("error");
+        router.replace(url.pathname + url.search);
+      }
+    }
+  }, [searchParams, open, router]);
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="sm:max-w-[400px] rounded-2xl p-6 shadow-xl border bg-white dark:bg-zinc-900">
+      <DialogContent className="sm:max-w-[400px] rounded-2xl p-6 pb-2 shadow-xl border bg-white dark:bg-zinc-900">
         <VisuallyHidden>
           <DialogDescription />
         </VisuallyHidden>
@@ -58,11 +93,11 @@ export function AuthDialog() {
 
                 <div className="flex items-center gap-4">
                   <Separator className="flex-1" />
-                  <span className="text-xs text-muted-foreground">or</span>
+                  <span className="text-xs text-muted-foreground">or login with:</span>
                   <Separator className="flex-1" />
                 </div>
 
-                {/* <OAuthButtons /> */}
+                <OAuthButtons />
               </CardContent>
             </Card>
           </TabsContent>
@@ -75,11 +110,11 @@ export function AuthDialog() {
 
                 <div className="flex items-center gap-4">
                   <Separator className="flex-1" />
-                  <span className="text-xs text-muted-foreground">or</span>
+                  <span className="text-xs text-muted-foreground">or login with:</span>
                   <Separator className="flex-1" />
                 </div>
 
-                {/* <OAuthButtons /> */}
+                <OAuthButtons />
               </CardContent>
             </Card>
           </TabsContent>

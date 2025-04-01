@@ -1,7 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['logo.clearbit.com'],
+    remotePatterns: [
+      {
+        hostname: 'logo.clearbit.com',
+      },
+      {
+        hostname: 'avatars.githubusercontent.com',
+      },
+      {
+        hostname: 'lh3.googleusercontent.com',
+      },
+    ],
   },
 }
 

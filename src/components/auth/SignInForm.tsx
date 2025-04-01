@@ -1,9 +1,8 @@
 "use client";
 
-import { useTransition } from "react";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
 import { LuLoader } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +15,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signInSchema, signInSchemaType } from "@/schema/authSchema";
+import { DialogError } from "./DialogError";
+import { login } from "@/actions/login";
 
 const SignInForm = () => {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
 
   const form = useForm<signInSchemaType>({
     resolver: zodResolver(signInSchema),
@@ -29,19 +31,22 @@ const SignInForm = () => {
   });
 
   const onSubmit = async (values: signInSchemaType) => {
-    console.log(values);
+    setError("");
+
+    startTransition(() => {
+      login(values).then((data) => {
+        if (data?.error) {
+          setError(data.error);
+        }
+      });
+    });
   };
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((values) => {
-          startTransition(() => {
-            onSubmit(values);
-          });
-        })}
-        className="space-y-4"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <DialogError message={error} />
+
         <FormField
           control={form.control}
           name="email"

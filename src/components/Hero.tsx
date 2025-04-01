@@ -1,12 +1,18 @@
-"use client"
+"use client";
 
 import { Button } from "@/components/ui/button";
-import { useScrollTo } from '@/hooks/useScrollTo';
+import { useNavigation } from "@/hooks/useNavigation";
 import { ChevronRight, Users, Sparkles, Compass } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useAuthDialog } from "@/hooks/useAuthDialog";
 
 export default function Hero() {
-  const { scrollToSection } = useScrollTo();
+  const { handleNavigation } = useNavigation();
+  const { open } = useAuthDialog();
+  const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <section className="pt-26 pb-16 px-4">
@@ -18,11 +24,22 @@ export default function Hero() {
           All in One Place.
         </h2>
         <p className="text-xl md:text-xl max-w-2xl mx-auto mb-10 opacity-80">
-          Power Projects provides a collaborative, efficient environment for building projects with others.
+          Power Projects provides a collaborative, efficient environment for
+          building projects with others.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
           <Link href="/submit-project">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+            <Button
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white sm:mx-0 mx-auto"
+              onClick={() => {
+                if (session) {
+                  router.push("/submit-project");
+                } else {
+                  open("signup");
+                }
+              }}
+            >
               Create a Project <ChevronRight />
             </Button>
           </Link>
@@ -30,7 +47,7 @@ export default function Hero() {
             variant="outline"
             size="lg"
             className="border-gray-600 hover:text-white hover:bg-gray-800"
-            onClick={() => scrollToSection('about')}
+            onClick={() => handleNavigation("about")}
           >
             Learn More <ChevronRight />
           </Button>
@@ -41,36 +58,48 @@ export default function Hero() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Compass className="h-5 w-5 text-blue-400" />
-              <h3 className="text-xl font-semibold text-blue-400">Discover Projects</h3>
+              <h3 className="text-xl font-semibold text-blue-400">
+                Discover Projects
+              </h3>
             </div>
             <p className="text-gray-400">
-              Find projects that match your skill level or explore new technologies. Connect with students from your university or collaborate on open-source projects.
+              Find projects that match your skill level or explore new
+              technologies. Connect with students from your university or
+              collaborate on open-source projects.
             </p>
           </div>
 
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Sparkles className="h-5 w-5 text-blue-400" />
-              <h3 className="text-xl font-semibold text-blue-400">Create or Contribute</h3>
+              <h3 className="text-xl font-semibold text-blue-400">
+                Create or Contribute
+              </h3>
             </div>
             <p className="text-gray-400">
-            <span className="font-bold">Build your portfolio while making connections. </span>Launch your own project and recruit collaborators, or join existing teams to build great things together. 
+              <span className="font-bold">
+                Build your portfolio while making connections.{" "}
+              </span>
+              Launch your own project and recruit collaborators, or join
+              existing teams to build great things together.
             </p>
           </div>
 
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Users className="h-5 w-5 text-blue-400" />
-              <h3 className="text-xl font-semibold text-blue-400">For All Skill Levels</h3>
+              <h3 className="text-xl font-semibold text-blue-400">
+                For All Skill Levels
+              </h3>
             </div>
             <p className="text-gray-400">
-              Whether you&apos;re creating your first project or building a complex one, there&apos;s a place for you here. Learn from experienced developers or mentor newcomers.
+              Whether you&apos;re creating your first project or building a
+              complex one, there&apos;s a place for you here. Learn from
+              experienced developers or mentor newcomers.
             </p>
           </div>
-
-
         </div>
       </div>
     </section>
   );
-} 
+}
