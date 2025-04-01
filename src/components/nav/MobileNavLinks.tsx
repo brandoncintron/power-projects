@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { useNavigation } from "@/hooks/useNavigation";
 import { ChevronRight } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 
-export default function MobileNavLinks({ setIsOpen }: { setIsOpen: (isOpen: boolean) => void }) {
+interface MobileNavLinksProps {
+  setIsOpen: (isOpen: boolean) => void;
+  session: Session | null;
+}
+
+export default function MobileNavLinks({ setIsOpen, session }: MobileNavLinksProps) {
     const { handleNavigation } = useNavigation();
-    const { data: session } = useSession();
 
     return (
         <div>
