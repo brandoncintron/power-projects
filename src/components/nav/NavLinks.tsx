@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { useNavigation } from "../../hooks/useNavigation";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
+interface NavLinksProps {
+  session: Session | null;
+}
 
-export default function NavLinks() {
+export default function NavLinks({ session }: NavLinksProps) {
     const { handleNavigation } = useNavigation(); // Use the new navigation hook
-    const { data: session } = useSession();
 
     return (
         <div className="hidden md:flex gap-8">

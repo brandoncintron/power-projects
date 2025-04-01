@@ -38,7 +38,7 @@ const Navbar = ({ session }: NavbarProps) => {
           </div>
 
           {/* Desktop Navbar Links */}
-          <NavLinks />
+          <NavLinks session={session} />
 
           {/* Desktop Navbar Right Side */}
           <div className="hidden lg:flex items-center gap-6">
