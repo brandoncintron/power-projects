@@ -40,7 +40,7 @@ export default function Hero() {
                 }
               }}
             >
-              Create a Project <ChevronRight />
+              Get Started <ChevronRight />
             </Button>
           </Link>
           <Button
