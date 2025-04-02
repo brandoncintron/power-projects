@@ -28,7 +28,6 @@ export default function Hero() {
           building projects with others.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
-          <Link href="/submit-project">
             <Button
               size="lg"
               className="bg-blue-600 hover:bg-blue-700 text-white sm:mx-0 mx-auto"
@@ -42,7 +41,6 @@ export default function Hero() {
             >
               Get Started <ChevronRight />
             </Button>
-          </Link>
           <Button
             variant="outline"
             size="lg"
