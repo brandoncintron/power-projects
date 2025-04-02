@@ -47,7 +47,7 @@ export default function NavLinks({ session }: NavLinksProps) {
                 href="/submit-project"
                 className="no-underline cursor-pointer"
             >
-              <span className="text-base">Submit Project</span>
+              <span className="text-base">Launch a Project</span>
             </Link>
             )}
 

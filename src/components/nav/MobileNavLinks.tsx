@@ -51,7 +51,7 @@ export default function MobileNavLinks({ setIsOpen, session }: MobileNavLinksPro
                   onClick={() => setIsOpen(false)}
                   className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
-                  <span className="text-lg font-medium">Submit Project</span>
+                  <span className="text-lg font-medium">Launch a Project</span>
                   <ChevronRight size={20} className="text-gray-400" />
                 </Link>
                 )}

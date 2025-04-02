@@ -61,7 +61,7 @@ const MobileNavbar = ({ session }: MobileNavbarProps) => {
             {/* Mobile navigation links */}
             <div className="flex-grow">
               <div className="flex flex-col divide-y">
-                <MobileNavLinks setIsOpen={setIsOpen} />
+                <MobileNavLinks setIsOpen={setIsOpen} session={session} />
               </div>
             </div>
 
@@ -151,7 +151,7 @@ const MobileNavbar = ({ session }: MobileNavbarProps) => {
                   </Link>
 
                   {/* Profile settings link */}
-                  <Link href="/profile" className="block">
+                  <Link href="/profile/edit" className="block">
                     <Button
                       variant="outline"
                       className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
