@@ -3,14 +3,14 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'logo.clearbit.com',
-      },
-      {
         hostname: 'avatars.githubusercontent.com',
       },
       {
         hostname: 'lh3.googleusercontent.com',
       },
+      {
+        hostname: 'github.com',
+      }
     ],
   },
 }
