@@ -1,40 +1,37 @@
 "use client"
 
 import { useCallback, useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 /**
- * useScrollTo - Custom hook for smooth scrolling to page sections
- * 
- * This hook provides functionality to smoothly scroll to specific sections of a page
- * either directly or after navigation from another page. It handles:
- * 
- * 1. Direct in-page scrolling to elements by ID
- * 2. Scrolling with URL parameters (for cross-page navigation)
- * 3. Hash-based navigation (#section)
- * 
- * @returns {Object} An object containing the scrollToSection function
+ * Manages the mechanics of scrolling, including calculating offsets and handling
+ * scroll triggers upon page load or navigation.
  */
 export function useScrollTo() {
+  // Get the current URL pathname (e.g., '/', '/about')
   const pathname = usePathname();
+  // Get the current URL search parameters (e.g., '?section=features')
   const searchParams = useSearchParams();
-  
+  const router = useRouter();
+
   /**
-   * Scrolls the window to a specific section identified by its ID
-   * 
-   * @param {string} sectionId - The ID of the element to scroll to
-   * @param {number} additionalOffset - Optional extra offset (in pixels) to add to the base navbar height
+   * Scrolls the window smoothly to a specific section identified by its ID.
+   * Accounts for a base offset (e.g., navbar height) and an optional additional offset.
    */
   const scrollToSection = useCallback((sectionId: string, additionalOffset = 0) => {
+    // Find the target element in the DOM
     const section = document.getElementById(sectionId);
     if (section) {
-      const scrollOffset = 64 + additionalOffset; // Base navbar height + optional offset for other components
+      // Define the base offset (height of the navbar)
+      const baseOffset = 64;
+      // Add up the total offset
+      const scrollOffset = baseOffset + additionalOffset;
 
-      // Calculate the position accounting for scroll and offset
+      // Calculate the target scroll position
       const elementPosition = section.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - scrollOffset;
 
-      // Perform the smooth scroll
+      // Perform the smooth scroll animation to the calculated position
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
@@ -43,45 +40,50 @@ export function useScrollTo() {
   }, []);
 
   /**
-   * Effect to handle scroll behavior when the page loads
-   * This is particularly important for cross-page navigation
+   * Effect hook to handle scroll behavior when the page loads and user comes from a different page.
    */
   useEffect(() => {
-    // Only apply scroll behavior on home pages
-    if (pathname === '/' || pathname === '/home') {
-      // Check if this is a navigation from another page with section target
-      const fromNavigation = searchParams.get('fromNavigation');
-      const targetSection = searchParams.get('section');
-      
+    // Only apply this automatic scroll behavior on home page for now
+    // If I need to add scrolling from another page functionality, add the pathname below
+    if (pathname === '/') {
+      const fromNavigation = searchParams.get('fromNavigation'); // Flag indicating cross-page nav
+      const targetSection = searchParams.get('section'); // The ID of the target section
+
       if (fromNavigation === 'true' && targetSection) {
-        // First scroll to top instantly to provide better UX
+        // If a user comes in from another page and needs to scroll to something, do this:
+
+        // Instantly scroll to the top on page load for better UX
         window.scrollTo(0, 0);
-        
-        // Then scroll to the target section after a short delay
-        // The delay ensures the page has time to fully render
+
+        // Short delay before scrolling to the target section for better UX
+        const scrollDelay = 300;
         setTimeout(() => {
+          // Get the section to scroll to if it exists
           const section = document.getElementById(targetSection);
           if (section) {
-            const scrollOffset = 64; // Base navbar height
+            // Calculate the scroll offset (only base navbar height needed here)
+            const scrollOffset = 64;
             const elementPosition = section.getBoundingClientRect().top + window.scrollY;
             const offsetPosition = elementPosition - scrollOffset;
-            
-            // Perform smooth scroll to the target section
+
+            // Perform the smooth scroll to the target section
             window.scrollTo({
               top: offsetPosition,
               behavior: 'smooth'
             });
           }
-        }, 300); // Slight delay for better visual transition
+        }, scrollDelay);
+
+        router.replace("/")
       } else {
-        // Handle regular hash-based navigation (#section)
-        const hash = window.location.hash.replace('#', '');
+        // If the user is on the current page, just scroll to that section instead
+        const hash = window.location.hash.replace('#', ''); // Get the hash(section id) value without the '#'
         if (hash) {
           scrollToSection(hash);
         }
       }
     }
-  }, [pathname, searchParams, scrollToSection]);
+  }, [pathname, searchParams, scrollToSection, router]);
 
   return { scrollToSection };
-} 
+}
