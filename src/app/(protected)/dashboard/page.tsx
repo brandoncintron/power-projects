@@ -4,10 +4,40 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { DialogCloser } from "@/components/auth/DialogCloser";
+import { LuLoader } from "react-icons/lu";
+import { db } from "@/lib/db";
 
 export default async function DashboardPage() {
   const session = await auth();
   const user = session?.user;
+
+  if (!session || !user) {
+    return (
+      <Card className="w-full max-w-2xl mx-auto my-8">
+        <CardHeader>
+          <CardTitle>Dashboard</CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center justify-center p-8">
+          <LuLoader className="h-8 w-8 animate-spin text-muted-foreground" />
+          <span className="ml-2 text-muted-foreground">Loading dashboard...</span>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  let projectCount = 0; // Default count
+  if (user.id) { // Ensure user ID exists
+    try {
+      projectCount = await db.project.count({
+        where: {
+          ownerId: user.id, // Filter projects owned by the current user
+        },
+      });
+    } catch (error) {
+      console.error("Failed to fetch project count:", error);
+      // projectCount remains 0 in case of error
+    }
+  }
   
   return (
     <main className="container mx-auto py-10 px-4 md:px-6">
@@ -90,7 +120,7 @@ export default async function DashboardPage() {
                   <div className="flex flex-col gap-2">
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Active projects</span>
-                      <span className="text-xl font-semibold">0</span>
+                      <span className="text-xl font-semibold">{projectCount}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Completed</span>
