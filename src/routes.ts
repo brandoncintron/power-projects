@@ -1,6 +1,8 @@
 export const publicRoutes = [
-    "/settings",
     "/",
+    "/about",
+    "/projects/browse",
+    "/projects/[projectId]"
 ]
 
 export const apiAuthPrefix = "/api/auth";
