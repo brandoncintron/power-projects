@@ -3,13 +3,12 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { Suspense } from "react";
-import { AuthDialogProvider } from "@/hooks/useAuthDialog";
+import { AuthDialogProvider } from "@/components/auth/hooks/useAuthDialog";
 import Navbar from "@/components/nav/Navbar";
 import Footer from "@/components/nav/Footer";
 import { AuthDialog } from "@/components/auth/AuthDialog";
 import { SessionProvider } from "next-auth/react"
 import { auth } from "@/auth";
-
 
 
 export const metadata: Metadata = {
@@ -23,6 +22,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body id="top">
