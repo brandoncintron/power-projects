@@ -7,7 +7,6 @@ import { getFrameworkIcon, getDatabaseIcon } from "@/lib/language-icons";
 import { SelectableCard } from "./SelectableCard";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { FrameworkOption } from "../utils/types";
-import { SubmitButton } from "./SubmitButton";
 import { useProjectForm } from "../context/ProjectFormContext";
 import { CustomDatabaseCard } from "./CustomDatabaseCard";
 
@@ -31,7 +30,6 @@ export function DatabaseSelection() {
   const { applicationType: selectedAppType } = state;
   const { scrollToSection } = useScrollTo();
   
-  // For UI display, use the state from context which includes None if selected
   const selectedDatabasesForDisplay = state.selectedDatabases;
   
   const dbOptions = getDatabaseOptions();
@@ -53,7 +51,7 @@ export function DatabaseSelection() {
     // Then use the scrollToSection function to scroll to tech-stack-selection
     setTimeout(() => {
       scrollToSection('tech-stack-selection');
-    }, 50); // Reduced delay for faster response
+    }, 50);
   }, [goToFrameworkStep, scrollToSection]);
   
   return (
@@ -183,7 +181,6 @@ export function DatabaseSelection() {
           // Use the isDatabaseSelected function which has been updated to handle "None" correctly
           const isSelected = isDatabaseSelected(database.name);
 
-          // Special styling for "None" option
           const isNoneOption = database.name === "None";
           
           return (
@@ -220,10 +217,14 @@ export function DatabaseSelection() {
 
       {/* SUBMIT SECTION */}
       <div className="mt-8">
-        <SubmitButton 
-          form={form} 
-          onSubmit={onSubmit} 
-        />
+      <Button 
+              type="button" 
+              size="sm"
+              className="text-xs"
+              onClick={() => form.handleSubmit(onSubmit)()}
+            >
+              Submit Project
+            </Button>
       </div>
     </>
   );
