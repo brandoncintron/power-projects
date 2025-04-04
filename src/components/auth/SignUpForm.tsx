@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { signUpSchema, signUpSchemaType } from "@/schema/authSchema";
 import { DialogError } from "./DialogError";
 import { register } from "@/actions/register";
+
 const SignUpForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined >("");
