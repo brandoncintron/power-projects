@@ -14,7 +14,7 @@ import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { DialogError } from "@/components/auth/DialogError";
-import { useAuthDialog } from "@/hooks/useAuthDialog";
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 import OAuthButtons from "@/components/auth/OAuthButtons";
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
