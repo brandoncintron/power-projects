@@ -12,7 +12,6 @@ import { projectFormSchema, ProjectFormData } from "../utils/projectFormSchema";
 import { createProject } from "../actions/createProject";
 import { SubmissionStatus } from "../utils/types";
 import { useRouter } from "next/navigation";
-import { ProjectVisibility } from "@prisma/client";
 
 // Context interface
 interface FormCoreContextType {
