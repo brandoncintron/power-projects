@@ -210,7 +210,7 @@ export function TechnologySelectionProvider({ children }: TechnologySelectionPro
   // Get database options based on selected frameworks
   const getDatabaseOptions = useCallback(() => {
     const frameworks = form.watch("frameworks") || [];
-    let options: DatabaseOption[] = [];
+    const options: DatabaseOption[] = [];
     
     // Add "None" option as the first option
     options.push({ name: "None", description: "No database needed for this project" });
