@@ -13,8 +13,7 @@ interface SelectableCardProps {
 }
 
 /**
- * A card component that can be selected (highlighted when clicked)
- * Used for framework and database selection
+ * Component used to display framework or database details
  */
 export function SelectableCard({
   title,

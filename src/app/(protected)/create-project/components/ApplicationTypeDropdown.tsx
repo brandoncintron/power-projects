@@ -1,5 +1,4 @@
 import React from "react";
-import { UseFormReturn } from "react-hook-form";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import {
   Select,
@@ -8,19 +7,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { applicationTypes } from "../form-data";
-import { ProjectFormData } from "../hooks/useProjectForm";
-
-interface ApplicationTypeSectionProps {
-  form: UseFormReturn<ProjectFormData>;
-  onApplicationTypeChange: (value: string) => void;
-}
+import { applicationTypes } from "../utils/form-data";
+import { useProjectForm } from "../context/ProjectFormContext";
 
 /**
- * Application type selection section
- * Allows selecting from predefined application types
+ * Component for the application type dropdown
  */
-export function ApplicationTypeSection({ form, onApplicationTypeChange }: ApplicationTypeSectionProps) {
+export function ApplicationTypeDropdown() {
+  // Get values from context
+  const { form, setApplicationType } = useProjectForm();
+  
   return (
     <FormField
       control={form.control}
@@ -31,7 +27,7 @@ export function ApplicationTypeSection({ form, onApplicationTypeChange }: Applic
           <Select
             onValueChange={(value) => {
               field.onChange(value);
-              onApplicationTypeChange(value);
+              setApplicationType(value);
             }}
             defaultValue={field.value}
           >

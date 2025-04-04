@@ -1,17 +1,3 @@
-// Define types for framework options
-export interface FrameworkOption {
-  name: string;
-  description: string;
-  primaryLanguage?: string;
-  primaryLanguages?: string[];
-}
-
-export interface CategoryOption {
-  category: string;
-  description: string;
-  options: FrameworkOption[];
-}
-
 // Application types
 export const applicationTypes = [
   "Web Application",
@@ -50,7 +36,7 @@ export const frameworkOptions = {
       options: [
         { name: "Flask", description: "A lightweight Python framework for quickly building APIs and web applications.", primaryLanguages: ["Python"] },
         { name: "Express.js", description: "A fast, unopinionated, minimalist web framework for Node.js.", primaryLanguages: ["JavaScript"] },
-        { name: "FastAPI", description: "A modern, high-performance web framework for building APIs with Python.", primaryLanguages: ["Python"] },
+        { name: "Spring Boot", description: "A modern, high-performance web framework for building the backend with Java.", primaryLanguages: ["Java"] },
       ]
     }
   ],
@@ -61,7 +47,7 @@ export const frameworkOptions = {
       options: [
         { name: "Tkinter", description: "A built-in Python library for creating simple GUI applications.", primaryLanguages: ["Python"] },
         { name: "Electron", description: "Build cross-platform desktop apps with JavaScript, HTML, and CSS.", primaryLanguages: ["JavaScript"] },
-        { name: "Qt", description: "A C++ framework for developing native-looking desktop applications with a GUI.", primaryLanguages: ["C++", "Python"] },
+        { name: "Qt", description: "A C++ framework for developing native-looking desktop applications with a GUI.", primaryLanguages: ["C++"] },
       ]
     }
   ],
@@ -89,7 +75,7 @@ export const frameworkOptions = {
       category: "Computer Vision",
       description: "Technologies that enable computers to derive meaningful information from digital images, videos and other visual inputs.",
       options: [
-        { name: "TensorFlow", description: "An end-to-end open source platform for machine learning developed by Google.", primaryLanguages: ["Python", "C++"] },
+        { name: "TensorFlow", description: "An end-to-end open source platform for machine learning developed by Google.", primaryLanguages: ["Python"] },
         { name: "OpenCV", description: "An open-source computer vision and machine learning software library.", primaryLanguages: ["Python"] }
       ]
     },
@@ -97,7 +83,7 @@ export const frameworkOptions = {
       category: "Natural Language Processing",
       description: "Technologies enabling computers to understand, interpret, and generate human language.",
       options: [
-        { name: "PyTorch", description: "An open source machine learning framework that accelerates the path from research to production.", primaryLanguages: ["Python", "C++"] },
+        { name: "PyTorch", description: "An open source machine learning framework that accelerates the path from research to production.", primaryLanguages: ["Python"] },
         { name: "NLTK", description: "A leading platform for building Python programs to work with human language data.", primaryLanguages: ["Python"] }
       ]
     }

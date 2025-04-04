@@ -1,39 +1,27 @@
 import React, { useCallback, useMemo } from "react";
-import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { frameworkOptions, FrameworkOption } from "../form-data";
+import { frameworkOptions } from "../utils/form-data";
 import { getFrameworkIcon, getLanguageIcon } from "@/lib/language-icons";
 import { SelectableCard } from "./SelectableCard";
-import { CustomItemInput } from "./CustomItemInput";
-import { CustomItemsList } from "./CustomItemsList";
 import { useScrollTo } from "@/hooks/useScrollTo";
-import { ProjectFormData } from "../hooks/useProjectForm";
-
-interface FrameworkSelectionStepProps {
-  form: UseFormReturn<ProjectFormData>;
-  selectedAppType: string;
-  customFramework: string;
-  onCustomFrameworkChange: (value: string) => void;
-  onAddCustomFramework: () => void;
-  onRemoveCustomFramework: (framework: string) => void;
-  onToggleFramework: (framework: string) => void;
-  onProceedToDatabase: () => void;
-}
+import { FrameworkOption } from "../utils/types";
+import { useProjectForm } from "../context/ProjectFormContext";
+import { CustomFrameworkCard } from "./CustomFrameworkCard";
 
 /**
- * Framework selection step component
  * Shows available frameworks and custom framework input based on selected app type
  */
-export function FrameworkSelectionStep({
-  form,
-  selectedAppType,
-  customFramework,
-  onCustomFrameworkChange,
-  onAddCustomFramework,
-  onRemoveCustomFramework,
-  onToggleFramework,
-  onProceedToDatabase,
-}: FrameworkSelectionStepProps) {
+export function FrameworkSelection() {
+  // Get values from context
+  const {
+    form,
+    state,
+    toggleFramework,
+    goToDatabaseStep
+  } = useProjectForm();
+  
+  const { applicationType: selectedAppType } = state;
+  
   // Get scrollToSection function from the useScrollTo hook
   const { scrollToSection } = useScrollTo();
   
@@ -44,7 +32,7 @@ export function FrameworkSelectionStep({
     const currentScrollPosition = window.scrollY;
     
     // First navigate to database step
-    onProceedToDatabase();
+    goToDatabaseStep();
     
     // Immediately restore scroll position to prevent jumping
     window.scrollTo({
@@ -56,7 +44,7 @@ export function FrameworkSelectionStep({
     requestAnimationFrame(() => {
       scrollToSection('tech-stack-selection');
     });
-  }, [onProceedToDatabase, scrollToSection]);
+  }, [goToDatabaseStep, scrollToSection]);
   
   // Memoize the framework options for the selected app type to prevent unnecessary re-renders
   const availableFrameworkOptions = useMemo(() => {
@@ -69,11 +57,7 @@ export function FrameworkSelectionStep({
       category => category.options.some(opt => opt.name === frameworkName)
     ) || false;
   }, [selectedAppType]);
-  
-  // Function to get custom frameworks (those not in the predefined options)
-  const getCustomFrameworks = useCallback(() => {
-    return form.watch("frameworks").filter((fw: string) => !isPredefinedFramework(fw));
-  }, [form, isPredefinedFramework]);
+
 
   return (
     <>
@@ -84,7 +68,7 @@ export function FrameworkSelectionStep({
           <p className="text-sm text-muted-foreground">Select framework(s) or technology for your project</p>
         </div>
         <Button
-          onClick={onProceedToDatabase}
+          onClick={goToDatabaseStep}
           disabled={form.watch("frameworks").length === 0}
           className="self-end"
         >
@@ -92,7 +76,7 @@ export function FrameworkSelectionStep({
         </Button>
       </div>
 
-      {/* FRAMEWORK CATEGORIES - Maps through different framework categories */}
+      {/* FRAMEWORK CATEGORIES - Maps through different framework categories (e.g. Full-stack web, NLP, Cross-platform, etc. */}
       <div className="space-y-6 sm:space-y-8">
         {availableFrameworkOptions.map((category) => (
           <div key={category.category} className="space-y-3 sm:space-y-4">
@@ -104,7 +88,7 @@ export function FrameworkSelectionStep({
               )}
             </div>
 
-            {/* FRAMEWORK OPTIONS GRID - Displays available frameworks as cards */}
+            {/* FRAMEWORK OPTIONS GRID - Displays available frameworks as cards for each category */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
               {category.options.map((framework: FrameworkOption) => {
                 const isSelected = form.watch("frameworks").includes(framework.name);
@@ -122,7 +106,7 @@ export function FrameworkSelectionStep({
                     }
                     description={framework.description}
                     isSelected={isSelected}
-                    onClick={() => onToggleFramework(framework.name)}
+                    onClick={() => toggleFramework(framework.name)}
                   >
                     {/* LANGUAGE BADGES - Shows primary languages used with framework */}
                     <div className="flex flex-wrap gap-1 justify-start sm:justify-end mt-2">
@@ -158,59 +142,12 @@ export function FrameworkSelectionStep({
         ))}
       </div>
 
-      {/* CUSTOM FRAMEWORK SECTION - Available for all application types */}
-      <div className="mt-4 sm:mt-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-          <SelectableCard
-            title={
-              <div className="flex items-center gap-2">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center">
-                  <svg className="h-5 w-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
-                    <line x1="12" y1="8" x2="12" y2="16"></line>
-                    <line x1="8" y1="12" x2="16" y2="12"></line>
-                  </svg>
-                </div>
-                <span>Custom Framework</span>
-              </div>
-            }
-            isSelected={getCustomFrameworks().length > 0}
-          >
-            <div className="mt-3">
-              <CustomItemInput
-                itemName={customFramework}
-                itemNamePlaceholder="Enter framework name..."
-                onNameChange={onCustomFrameworkChange}
-                onAddItem={onAddCustomFramework}
-              />
+      {/* CUSTOM FRAMEWORK CARD - Available for all application types */}
+      <CustomFrameworkCard isPredefinedFramework={isPredefinedFramework} />
 
-              {/* CUSTOM FRAMEWORKS LIST - Shows user-added custom frameworks */}
-              {getCustomFrameworks().length > 0 && (
-                <div className="pt-2">
-                  <CustomItemsList
-                    items={getCustomFrameworks()}
-                    renderItemContent={(fw) => (
-                      <div className="flex items-center gap-1.5">
-                        <div className="flex h-5 w-5 shrink-0 items-center justify-center">
-                          <svg className="h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M12 2v6M12 22v-6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M22 12h-6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24" />
-                          </svg>
-                        </div>
-                        <span>{fw}</span>
-                      </div>
-                    )}
-                    onRemoveItem={onRemoveCustomFramework}
-                  />
-                </div>
-              )}
-            </div>
-          </SelectableCard>
-        </div>
-      </div>
-
-      {/* Add a new Next button at the bottom right of the framework section */}
-      <div className="mt-8 flex justify-end">
-        <Button
+      {/* NAVIGATION BUTTON - Bottom nav button for smooth scroll experience */}
+      <div className="flex mt-8 justify-end">
+        <Button 
           onClick={handleProceedToDatabase}
           disabled={form.watch("frameworks").length === 0}
         >
