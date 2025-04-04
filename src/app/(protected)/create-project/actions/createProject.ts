@@ -12,7 +12,6 @@ export async function createProject(values: ProjectFormData) {
     return { error: "Invalid fields" };
   }
 
-  console.log(validatedFields);
   const data = validatedFields.data;
 
   // Get the users session to attach the userId to project
@@ -21,7 +20,6 @@ export async function createProject(values: ProjectFormData) {
     throw new Error("User not authenticated.");
   }
   const ownerId = session.user.id;
-  console.log(`owner id: ${ownerId}`);
 
   let prismaVisibility: ProjectVisibility;
   switch (data.visibility) {
@@ -52,14 +50,9 @@ export async function createProject(values: ProjectFormData) {
     const newProject = await db.project.create({
       data: dataForPrisma,
     });
-    console.log("Project created successfully:", newProject);
     return { success: true, project: newProject };
   } catch (error) {
-    console.error("Failed to create project in database:", error);
     // Handle database errors
     throw new Error("Database error: Could not create project.");
-    // Or return a specific error object
   }
-
-  return { success: "Project created successfully." };
 }
