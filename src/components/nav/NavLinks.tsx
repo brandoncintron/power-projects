@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useNavigation } from "../../hooks/useNavigation";
-import { toast } from "sonner";
 import { Session } from "next-auth";
 interface NavLinksProps {
   session: Session | null;
@@ -28,26 +27,17 @@ export default function NavLinks({ session }: NavLinksProps) {
 
             {/* Temporary toast for project board */}
             <Link
-              href="#"
-              onClick={() =>
-                toast.warning(
-                  "This feature is not yet implemented. Check back soon!",
-                  {
-                    duration: 3000,
-                    position: "bottom-right",
-                  }
-                )
-              }
+              href="/projects/browse"
               className="no-underline cursor-pointer"
             >
               <span className="text-base">Browse Projects</span>
             </Link>
             {session && (
               <Link
-                href="/submit-project"
+                href="/create-project"
                 className="no-underline cursor-pointer"
             >
-              <span className="text-base">Launch a Project</span>
+              <span className="text-base">Create a Project</span>
             </Link>
             )}
 
