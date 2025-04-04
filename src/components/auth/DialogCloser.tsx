@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useAuthDialog } from "@/hooks/useAuthDialog";
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 
 export function DialogCloser() {
   const { close } = useAuthDialog();

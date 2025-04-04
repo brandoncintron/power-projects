@@ -3,10 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { useNavigation } from "@/hooks/useNavigation";
 import { ChevronRight, Users, Sparkles, Compass } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useAuthDialog } from "@/hooks/useAuthDialog";
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 
 export default function Hero() {
   const { handleNavigation } = useNavigation();
@@ -33,18 +32,19 @@ export default function Hero() {
               className="bg-blue-600 hover:bg-blue-700 text-white sm:mx-0 mx-auto"
               onClick={() => {
                 if (session) {
-                  router.push("/submit-project");
+                  router.push("/create-project");
                 } else {
                   open("signup");
                 }
               }}
             >
-              Get Started <ChevronRight />
+              {session ? "Create a Project" : "Get Started"} <ChevronRight />
             </Button>
+
           <Button
             variant="outline"
             size="lg"
-            className="border-gray-600 hover:text-white hover:bg-gray-800"
+            className="border-gray-600 hover:text-white hover:bg-gray-800 sm:mx-0 mx-auto"
             onClick={() => handleNavigation("about")}
           >
             Learn More <ChevronRight />

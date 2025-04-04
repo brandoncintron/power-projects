@@ -11,7 +11,7 @@ import {
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import MobileNavLinks from "@/components/nav/MobileNavLinks";
-import { useAuthDialog } from "@/hooks/useAuthDialog";
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";

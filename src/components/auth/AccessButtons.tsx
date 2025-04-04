@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { useAuthDialog } from "@/hooks/useAuthDialog";
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 
 const AccessButtons = () => {
     const { open } = useAuthDialog();
