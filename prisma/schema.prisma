@@ -8,6 +8,12 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum ProjectVisibility {
+  PUBLIC
+  PRIVATE
+  UNIVERSITY
+}
+
 model User {
   id            String          @id @default(cuid())
   name          String?
@@ -18,6 +24,24 @@ model User {
   accounts      Account[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  // Profile fields
+  bio           String?
+  location      String?
+  pronouns      String?
+  preferredLanguage String?
+  github        String?
+  linkedin      String?
+  website       String?
+  otherSocial   String?
+
+  // --- Relationships to Project ---
+  // Projects owned by the user
+  ownedProjects     Project[]       @relation("OwnedProjects")
+  // Projects the user is collaborating on
+  collaborations    ProjectCollaborator[]
+  // Applications submitted by the user
+  applications      ProjectApplication[]
 }
 
 model Account {
@@ -39,4 +63,65 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@id([provider, providerAccountId])
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  projectName     String
+  description     String   @db.VarChar(500)
+  visibility      ProjectVisibility
+  completionDate  DateTime?
+  teamName        String?
+  applicationType String
+  frameworks      String[]
+  databases       String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // --- Relationships ---
+  // Relation to the owner (User)
+  ownerId         String
+  owner           User     @relation("OwnedProjects", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // Relation to collaborators (many-to-many)
+  collaborators   ProjectCollaborator[]
+
+  // Relation to applicants (many-to-many)
+  applicants      ProjectApplication[]
+
+  @@index([ownerId]) // Index for faster lookups by owner
+}
+
+// --- Join Table for Project Collaborators (Many-to-Many User <-> Project) ---
+model ProjectCollaborator {
+  userId    String
+  projectId String
+  assignedAt DateTime @default(now()) // When the user became a collaborator
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([userId, projectId]) // Composite primary key
+  @@index([projectId])      // Index for faster lookups by project
+}
+
+// --- Join Table for Project Applications (Many-to-Many User <-> Project) ---
+model ProjectApplication {
+  id          String   @id @default(cuid()) // Optional: Use CUID if you need a unique ID per application itself
+  userId      String
+  projectId   String
+  status      String   @default("pending") // e.g., pending, accepted, rejected
+  message     String?  // Optional message from the applicant
+  appliedAt   DateTime @default(now()) // When the user applied
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  // If not using CUID for id, use a composite primary key:
+  // @@id([userId, projectId])
+  // Add unique constraint if a user can only apply once per project
+  @@unique([userId, projectId])
+  @@index([projectId])      // Index for faster lookups by project
+  @@index([userId])         // Index for faster lookups by user
 }
