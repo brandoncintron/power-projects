@@ -87,7 +87,7 @@ const EditProfileForm = () => {
         otherSocial: user.otherSocial || "",
       });
     }
-  }, [user, form.reset]);
+  }, [user, form.reset, form]);
 
   // --- Data ---
   const pronounOptions = [
