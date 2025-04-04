@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 const AboutSection = ({ children, index }: { children: React.ReactNode, index: number }) => {
   const ref = useRef(null);
@@ -23,6 +24,8 @@ const AboutSection = ({ children, index }: { children: React.ReactNode, index: n
 };
 
 export default function About() {
+  const { data: session } = useSession();
+
   return (
     <section className="py-24 px-4 bg-slate-50 dark:bg-slate-900">
       <div className="max-w-7xl mx-auto">
@@ -57,6 +60,7 @@ export default function About() {
           </AboutSection>
         </div>
 
+        {!session && (
         <AboutSection index={3}>
           <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-8 md:p-12">
             <h3 className="text-2xl md:text-3xl font-bold mb-6 text-center">Join The Community</h3>
@@ -71,8 +75,9 @@ export default function About() {
                 Sign Up Now
               </Button>
             </div>
-          </div>
-        </AboutSection>
+            </div>
+          </AboutSection>
+        )}
       </div>
     </section>
   );
