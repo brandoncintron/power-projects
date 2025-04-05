@@ -255,8 +255,8 @@ const EditProfileForm = () => {
                 <FormItem>
                   <FormLabel>Pronouns</FormLabel>
                   <Select
-                    onValueChange={field.onChange} // Use field.onChange to update form state
-                    defaultValue={field.value} // Control the selected value
+                    onValueChange={field.onChange}
+                    value={field.value}
                     disabled={isPending}
                   >
                     <FormControl>
@@ -286,7 +286,7 @@ const EditProfileForm = () => {
                   <FormLabel>Preferred Language</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                     disabled={isPending}
                   >
                     <FormControl>
