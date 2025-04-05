@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { BiSolidCustomize } from "react-icons/bi";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader } from "lucide-react";
 import { frameworkOptions } from "../utils/form-data";
 import { getFrameworkIcon, getDatabaseIcon } from "@/lib/language-icons";
 import { SelectableCard } from "./SelectableCard";
@@ -15,6 +15,9 @@ import { CustomDatabaseCard } from "./CustomDatabaseCard";
  * Shows available database options based on selected frameworks
  */
 export function DatabaseSelection() {
+  // Add useTransition hook
+  const [isPending, startTransition] = useTransition();
+  
   // Get values from context
   const {
     form,
@@ -33,6 +36,13 @@ export function DatabaseSelection() {
   const selectedDatabasesForDisplay = state.selectedDatabases;
   
   const dbOptions = getDatabaseOptions();
+  
+  // Handle form submission with transition
+  const handleSubmit = useCallback(() => {
+    startTransition(() => {
+      form.handleSubmit(onSubmit)();
+    });
+  }, [form, onSubmit]);
   
   // Handle back navigation with smooth scroll
   const handleBackNavigation = useCallback(() => {
@@ -66,6 +76,7 @@ export function DatabaseSelection() {
               size="sm"
               onClick={handleBackNavigation}
               className="text-xs"
+              disabled={isPending}
             >
               <ChevronLeft /> Back to Frameworks
             </Button>
@@ -73,9 +84,17 @@ export function DatabaseSelection() {
               type="button" 
               size="sm"
               className="text-xs"
-              onClick={() => form.handleSubmit(onSubmit)()}
+              onClick={handleSubmit}
+              disabled={isPending}
             >
-              Submit Project
+              {isPending ? (
+                <>
+                  <Loader className="h-3 w-3 mr-1 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Submit Project"
+              )}
             </Button>
           </div>
         </div>
@@ -221,9 +240,17 @@ export function DatabaseSelection() {
               type="button" 
               size="sm"
               className="text-xs"
-              onClick={() => form.handleSubmit(onSubmit)()}
+              onClick={handleSubmit}
+              disabled={isPending}
             >
-              Submit Project
+              {isPending ? (
+                <>
+                  <Loader className="h-3 w-3 mr-1 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                "Submit Project"
+              )}
             </Button>
       </div>
     </>
