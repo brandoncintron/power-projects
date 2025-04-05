@@ -1,6 +1,5 @@
 export const publicRoutes = [
     "/",
-    "/about",
     "/projects/browse",
     "/projects/[projectId]"
 ]
