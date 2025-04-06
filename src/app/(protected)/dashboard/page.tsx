@@ -6,6 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import { DialogCloser } from "@/components/auth/DialogCloser";
 import { LuLoader } from "react-icons/lu";
 import { db } from "@/lib/db";
+import { HideLoading } from "./HideLoading";
+
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -43,7 +45,10 @@ export default async function DashboardPage() {
     <main className="container mx-auto py-10 px-4 md:px-6">
       {/* This component will close the auth dialog when dashboard loads */}
       <DialogCloser />
-      
+
+      {/* This component will disable the loading page when dashboard loads */}
+      <HideLoading />
+
       <div className="flex flex-col gap-8">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
           <Avatar className="h-20 w-20">
