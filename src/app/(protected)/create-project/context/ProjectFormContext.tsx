@@ -31,8 +31,6 @@ export function useProjectForm() {
   return {
     // Form Core
     form: formCore.form,
-    submissionStatus: formCore.submissionStatus,
-    isSubmitting: formCore.isSubmitting,
     charCount: formCore.charCount,
     handleDescriptionChange: formCore.handleDescriptionChange,
     onSubmit: formCore.onSubmit,
