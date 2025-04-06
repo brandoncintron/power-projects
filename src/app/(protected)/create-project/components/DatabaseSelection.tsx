@@ -1,7 +1,8 @@
-import React, { useCallback, useTransition } from "react";
+import React, { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { BiSolidCustomize } from "react-icons/bi";
-import { ChevronLeft, Loader } from "lucide-react";
+import { MdOutlineCancel } from "react-icons/md";
+import { ChevronLeft } from "lucide-react";
 import { frameworkOptions } from "../utils/form-data";
 import { getFrameworkIcon, getDatabaseIcon } from "@/lib/language-icons";
 import { SelectableCard } from "./SelectableCard";
@@ -15,9 +16,6 @@ import { CustomDatabaseCard } from "./CustomDatabaseCard";
  * Shows available database options based on selected frameworks
  */
 export function DatabaseSelection() {
-  // Add useTransition hook
-  const [isPending, startTransition] = useTransition();
-  
   // Get values from context
   const {
     form,
@@ -27,43 +25,41 @@ export function DatabaseSelection() {
     goToFrameworkStep,
     getDatabaseOptions,
     onSubmit,
-    isDatabaseSelected
+    isDatabaseSelected,
   } = useProjectForm();
-  
+
   const { applicationType: selectedAppType } = state;
   const { scrollToSection } = useScrollTo();
-  
+
   const selectedDatabasesForDisplay = state.selectedDatabases;
-  
+
   const dbOptions = getDatabaseOptions();
-  
+
   // Handle form submission with transition
   const handleSubmit = useCallback(() => {
-    startTransition(() => {
-      form.handleSubmit(onSubmit)();
-    });
+    form.handleSubmit(onSubmit)();
   }, [form, onSubmit]);
-  
+
   // Handle back navigation with smooth scroll
   const handleBackNavigation = useCallback(() => {
     // Store current scroll position before navigation
     const currentScrollPosition = window.scrollY;
-    
+
     // First navigate back to frameworks
     goToFrameworkStep();
-    
+
     // Immediately restore scroll position to prevent jumping
     window.scrollTo({
       top: currentScrollPosition,
-      behavior: 'auto'
+      behavior: "auto",
     });
-    
+
     // Then use the scrollToSection function to scroll to tech-stack-selection
     setTimeout(() => {
-      scrollToSection('tech-stack-selection');
+      scrollToSection("tech-stack-selection");
     }, 50);
   }, [goToFrameworkStep, scrollToSection]);
-  
+
   return (
     <>
       {/* DATABASE HEADER - Title and navigation buttons */}
@@ -76,25 +72,16 @@ export function DatabaseSelection() {
               size="sm"
               onClick={handleBackNavigation}
               className="text-xs"
-              disabled={isPending}
             >
               <ChevronLeft /> Back to Frameworks
             </Button>
-            <Button 
-              type="button" 
+            <Button
+              type="button"
               size="sm"
               className="text-xs"
               onClick={handleSubmit}
-              disabled={isPending}
             >
-              {isPending ? (
-                <>
-                  <Loader className="h-3 w-3 mr-1 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                "Submit Project"
-              )}
+              Submit Project
             </Button>
           </div>
         </div>
@@ -105,20 +92,33 @@ export function DatabaseSelection() {
             {/* Frameworks column */}
             <div className="flex-1 min-w-[45%]">
               <div className="w-full flex items-center mb-1">
-                <span className="text-sm font-medium mr-1">Selected Frameworks:</span>
+                <span className="text-sm font-medium mr-1">
+                  Selected Frameworks:
+                </span>
               </div>
-              <div className={form.watch("frameworks").length > 3 ? "grid grid-cols-1 sm:grid-cols-2 gap-2 w-full" : "flex flex-wrap gap-2"}>
+              <div
+                className={
+                  form.watch("frameworks").length > 3
+                    ? "grid grid-cols-1 sm:grid-cols-2 gap-2 w-full"
+                    : "flex flex-wrap gap-2"
+                }
+              >
                 {form.watch("frameworks").map((frameworkName: string) => {
                   // Find the framework in the options to get its languages
                   let framework: FrameworkOption | undefined;
-                  frameworkOptions[selectedAppType as keyof typeof frameworkOptions]?.forEach(category => {
-                    const found = category.options.find(f => f.name === frameworkName);
+                  frameworkOptions[
+                    selectedAppType as keyof typeof frameworkOptions
+                  ]?.forEach((category) => {
+                    const found = category.options.find(
+                      (f) => f.name === frameworkName
+                    );
                     if (found) framework = found;
                   });
 
                   // If it's a custom framework (not found in options)
-                  const isCustomFramework = !framework && frameworkName !== "Custom";
-                  
+                  const isCustomFramework =
+                    !framework && frameworkName !== "Custom";
+
                   return (
                     <div
                       key={frameworkName}
@@ -150,14 +150,24 @@ export function DatabaseSelection() {
             {selectedDatabasesForDisplay.length > 0 && (
               <div className="flex-1 min-w-[45%]">
                 <div className="w-full flex items-center mb-1">
-                  <span className="text-sm font-medium mr-1">Selected Databases:</span>
+                  <span className="text-sm font-medium mr-1">
+                    Selected Databases:
+                  </span>
                 </div>
-                <div className={selectedDatabasesForDisplay.length > 3 ? "grid grid-cols-1 sm:grid-cols-2 gap-2 w-full" : "flex flex-wrap gap-2"}>
+                <div
+                  className={
+                    selectedDatabasesForDisplay.length > 3
+                      ? "grid grid-cols-1 sm:grid-cols-2 gap-2 w-full"
+                      : "flex flex-wrap gap-2"
+                  }
+                >
                   {selectedDatabasesForDisplay.map((database) => {
                     // Check if this is a custom database
-                    const isCustomDatabase = customDatabases.includes(database.name);
+                    const isCustomDatabase = customDatabases.includes(
+                      database.name
+                    );
                     const isNoneOption = database.name === "None";
-                    
+
                     return (
                       <div
                         key={database.name}
@@ -168,11 +178,7 @@ export function DatabaseSelection() {
                             // Use default icon for custom databases
                             <BiSolidCustomize />
                           ) : isNoneOption ? (
-                            <svg className="h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                              <circle cx="12" cy="12" r="9"></circle>
-                              <line x1="9" y1="9" x2="15" y2="15"></line>
-                              <line x1="15" y1="9" x2="9" y2="15"></line>
-                            </svg>
+                            <MdOutlineCancel />
                           ) : (
                             getDatabaseIcon(database.name)
                           )}
@@ -191,7 +197,10 @@ export function DatabaseSelection() {
       {/* DATABASE OPTIONS HEADER */}
       <div className="mb-3">
         <h4 className="text-sm font-medium">Available Database Options</h4>
-        <p className="text-sm text-muted-foreground">Click on databases below to select or deselect. Your selections will appear in the summary at the top.</p>
+        <p className="text-sm text-muted-foreground">
+          Click on databases below to select or deselect. Your selections will
+          appear in the summary at the top.
+        </p>
       </div>
 
       {/* DATABASE OPTIONS GRID - displays available database options as cards */}
@@ -201,19 +210,15 @@ export function DatabaseSelection() {
           const isSelected = isDatabaseSelected(database.name);
 
           const isNoneOption = database.name === "None";
-          
+
           return (
-            <SelectableCard 
+            <SelectableCard
               key={database.name}
               title={
                 <div className="flex items-center gap-2">
                   <div className="flex h-6 w-6 shrink-0 items-center justify-center">
                     {isNoneOption ? (
-                      <svg className="h-5 w-5 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <circle cx="12" cy="12" r="9"></circle>
-                        <line x1="9" y1="9" x2="15" y2="15"></line>
-                        <line x1="15" y1="9" x2="9" y2="15"></line>
-                      </svg>
+                      <MdOutlineCancel />
                     ) : (
                       getDatabaseIcon(database.name)
                     )}
@@ -225,8 +230,7 @@ export function DatabaseSelection() {
               isSelected={isSelected}
               onClick={() => toggleDatabase(database.name)}
               className={isNoneOption && !isSelected ? "border-dashed" : ""}
-            >
-            </SelectableCard>
+            ></SelectableCard>
           );
         })}
       </div>
@@ -236,23 +240,15 @@ export function DatabaseSelection() {
 
       {/* SUBMIT SECTION */}
       <div className="mt-8">
-      <Button 
-              type="button" 
-              size="sm"
-              className="text-xs"
-              onClick={handleSubmit}
-              disabled={isPending}
-            >
-              {isPending ? (
-                <>
-                  <Loader className="h-3 w-3 mr-1 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                "Submit Project"
-              )}
-            </Button>
+        <Button
+          type="button"
+          size="sm"
+          className="text-xs"
+          onClick={handleSubmit}
+        >
+          Submit Project
+        </Button>
       </div>
     </>
   );
-} 
+}
