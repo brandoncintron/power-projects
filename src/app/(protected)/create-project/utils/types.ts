@@ -29,9 +29,6 @@ export interface CustomFramework {
   language?: string;
 }
 
-// Form submission status
-export type SubmissionStatus = 'idle' | 'submitting' | 'success' | 'error';
-
 // Technology selection state
 export interface TechnologyState {
   applicationType: string;
