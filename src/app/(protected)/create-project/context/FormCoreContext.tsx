@@ -104,7 +104,7 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
         });
       }
     },
-    [router]
+    [router, hideLoading, showLoading]
   );
 
 

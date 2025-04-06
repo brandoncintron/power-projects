@@ -52,7 +52,6 @@ export async function createProject(values: ProjectFormData) {
     });
     return { success: true, project: newProject };
   } catch (error) {
-    // Handle database errors
-    throw new Error("Database error: Could not create project.");
+    return { error: true, message: error };
   }
 }
