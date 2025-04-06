@@ -80,13 +80,14 @@ export default function FilteredProjectList({
       </div>
 
       {/* Project List or Messages */}
+      {/* If there are no projects to show */}
       {filteredProjects.length === 0 && (
         <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-md">
-          <p>No public projects found matching your criteria.</p>
+          <p>No projects found.</p>
         </div>
       )}
 
-      {/* Render the filtered list */}
+      {/* ender the filtered list */}
       {filteredProjects.length > 0 && (
         <div className="space-y-4">
           {filteredProjects.map((project) => (
