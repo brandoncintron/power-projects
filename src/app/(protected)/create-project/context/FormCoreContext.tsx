@@ -10,17 +10,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { projectFormSchema, ProjectFormData } from "../utils/projectFormSchema";
 import { createProject } from "../actions/createProject";
-import { SubmissionStatus } from "../utils/types";
 import { useRouter } from "next/navigation";
+import { useLoading } from "@/components/ui/loading-context";
 
 // Context interface
 interface FormCoreContextType {
   // Form
   form: ReturnType<typeof useForm<ProjectFormData>>;
-
-  // Form submission
-  submissionStatus: SubmissionStatus;
-  isSubmitting: boolean;
 
   // Form helpers
   charCount: number;
@@ -44,8 +40,7 @@ interface FormCoreProviderProps {
 export function FormCoreProvider({ children }: FormCoreProviderProps) {
   const router = useRouter();
   const [charCount, setCharCount] = useState(0);
-  const [submissionStatus, setSubmissionStatus] =
-    useState<SubmissionStatus>("idle");
+  const { showLoading, hideLoading } = useLoading();
 
   // Initialize form
   const form = useForm<ProjectFormData>({
@@ -86,20 +81,20 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
   // Form submission handler
   const onSubmit = useCallback(
     async (values: ProjectFormData) => {
-      setSubmissionStatus("submitting");
+      showLoading("Submitting your project...");
 
       try {
         console.log(`Data being sent to createProject action:`, values);
         await createProject(values);
 
-        setSubmissionStatus("success");
         toast.success("Project submitted successfully", {
           description: "Your project has been created.",
         });
+
         router.push("/dashboard");
       } catch (error) {
         console.error("Project submission failed:", error);
-        setSubmissionStatus("error");
+        hideLoading();
         const errorMessage =
           error instanceof Error
             ? error.message
@@ -112,13 +107,10 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
     [router]
   );
 
-  const isSubmitting = submissionStatus === "submitting";
 
   // Context value
   const value = {
     form,
-    submissionStatus,
-    isSubmitting,
     charCount,
     handleDescriptionChange,
     onSubmit,
