@@ -9,7 +9,7 @@ import Footer from "@/components/nav/Footer";
 import { AuthDialog } from "@/components/auth/AuthDialog";
 import { SessionProvider } from "next-auth/react"
 import { auth } from "@/auth";
-
+import { LoadingProvider } from "@/components/ui/loading-context";
 
 export const metadata: Metadata = {
   title: "Power Projects",
@@ -35,11 +35,13 @@ export default async function RootLayout({
         >
             <AuthDialogProvider>
               <SessionProvider>
-                <Navbar session={session} />
-                {children}
-                <AuthDialog />
-                <Toaster richColors />
-                <Footer />
+                <LoadingProvider>
+                  <Navbar session={session} />
+                  {children}
+                  <AuthDialog />
+                  <Toaster richColors />
+                  <Footer />
+                </LoadingProvider>
               </SessionProvider>
             </AuthDialogProvider>
         </ThemeProvider>
