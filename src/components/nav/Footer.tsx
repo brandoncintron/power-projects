@@ -17,8 +17,8 @@ export default function Footer() {
             <ul className="space-y-2">
               <li><button className="opacity-70 hover:opacity-100" onClick={() => handleNavigation('top')}>Home</button></li>
               <li><Link href="https://github.com/brandoncintron/power-projects" className="opacity-70 hover:opacity-100">GitHub Repository</Link></li>
-              <li><Link href="/submit-project" className="opacity-70 hover:opacity-100">Submit a Project</Link></li>
-              <li><Link href="#" className="opacity-70 hover:opacity-100">Browse Projects</Link></li>
+              <li><Link href="/create-project" className="opacity-70 hover:opacity-100">Submit a Project</Link></li>
+              <li><Link href="/projects/browse" className="opacity-70 hover:opacity-100">Browse Projects</Link></li>
             </ul>
           </div>
           
