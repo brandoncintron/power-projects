@@ -5,8 +5,6 @@ export interface ProfileFormProps {
   session: Session | null;
 }
 
-export interface ProfileFormData extends EditProfileSchemaType {}
-
 export interface SelectOption {
   value: string;
   label: string;
