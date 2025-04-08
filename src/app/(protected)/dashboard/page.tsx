@@ -1,13 +1,19 @@
 import { auth } from "@/auth";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { DialogCloser } from "@/components/auth/DialogCloser";
-import { LuLoader } from "react-icons/lu";
 import { db } from "@/lib/db";
-import { HideLoading } from "./HideLoading";
-
+import { HideLoading } from "./components/HideLoading";
+import { LoadingSpinner } from "@/components/ui/loading";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -20,15 +26,15 @@ export default async function DashboardPage() {
           <CardTitle>Dashboard</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center p-8">
-          <LuLoader className="h-8 w-8 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-muted-foreground">Loading dashboard...</span>
+          <LoadingSpinner text="dashboard" />
         </CardContent>
       </Card>
     );
   }
 
   let projectCount = 0; // Default count
-  if (user.id) { // Ensure user ID exists
+  if (user.id) {
+    // Ensure user ID exists
     try {
       projectCount = await db.project.count({
         where: {
@@ -40,7 +46,7 @@ export default async function DashboardPage() {
       // projectCount remains 0 in case of error
     }
   }
-  
+
   return (
     <main className="container mx-auto py-10 px-4 md:px-6">
       {/* This component will close the auth dialog when dashboard loads */}
@@ -52,23 +58,30 @@ export default async function DashboardPage() {
       <div className="flex flex-col gap-8">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
           <Avatar className="h-20 w-20">
-            <AvatarImage src={user?.image || ""} alt={user?.name || "User"} />
-            <AvatarFallback>{user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}</AvatarFallback>
+            <AvatarImage
+              src={user?.image || ""}
+              alt={user?.username || "User"}
+            />
+            <AvatarFallback>
+              {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
+            </AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="text-3xl font-bold">{user?.name || "Dashboard"}</h1>
+            <h1 className="text-3xl font-bold">
+              {user?.username || "Username not set"}
+            </h1>
             <p className="text-muted-foreground">{user?.email}</p>
           </div>
         </div>
-        
+
         <Separator />
-        
+
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="grid w-full md:w-[400px] grid-cols-2">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="activity">Activity</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="overview" className="space-y-6 mt-6">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               <Card>
@@ -79,21 +92,27 @@ export default async function DashboardPage() {
                 <CardContent>
                   <dl className="space-y-2">
                     <div className="flex justify-between">
-                      <dt className="font-medium text-muted-foreground">Name</dt>
-                      <dd>{user?.name || "Not set"}</dd>
+                      <dt className="font-medium text-muted-foreground">
+                        Username
+                      </dt>
+                      <dd>{user?.username || "Not set"}</dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="font-medium text-muted-foreground">Email</dt>
+                      <dt className="font-medium text-muted-foreground">
+                        Email
+                      </dt>
                       <dd>{user?.email}</dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="font-medium text-muted-foreground">User ID</dt>
+                      <dt className="font-medium text-muted-foreground">
+                        User ID
+                      </dt>
                       <dd className="truncate max-w-[180px]">{user?.id}</dd>
                     </div>
                   </dl>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle>Session</CardTitle>
@@ -102,20 +121,24 @@ export default async function DashboardPage() {
                 <CardContent>
                   <dl className="space-y-2">
                     <div className="flex justify-between">
-                      <dt className="font-medium text-muted-foreground">Status</dt>
+                      <dt className="font-medium text-muted-foreground">
+                        Status
+                      </dt>
                       <dd className="flex items-center">
                         <span className="h-2 w-2 rounded-full bg-green-500 mr-2" />
                         Active
                       </dd>
                     </div>
                     <div className="flex justify-between">
-                      <dt className="font-medium text-muted-foreground">Auth Type</dt>
+                      <dt className="font-medium text-muted-foreground">
+                        Auth Type
+                      </dt>
                       <dd>NextAuth</dd>
                     </div>
                   </dl>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="pb-2">
                   <CardTitle>Projects</CardTitle>
@@ -124,8 +147,12 @@ export default async function DashboardPage() {
                 <CardContent>
                   <div className="flex flex-col gap-2">
                     <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Active projects</span>
-                      <span className="text-xl font-semibold">{projectCount}</span>
+                      <span className="text-muted-foreground">
+                        Active projects
+                      </span>
+                      <span className="text-xl font-semibold">
+                        {projectCount}
+                      </span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Completed</span>
@@ -136,17 +163,21 @@ export default async function DashboardPage() {
               </Card>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="activity" className="mt-6">
             <Card>
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Your recent actions and updates</CardDescription>
+                <CardDescription>
+                  Your recent actions and updates
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col gap-4">
                   <div className="text-center py-6">
-                    <p className="text-muted-foreground">No recent activity to show</p>
+                    <p className="text-muted-foreground">
+                      No recent activity to show
+                    </p>
                   </div>
                 </div>
               </CardContent>
