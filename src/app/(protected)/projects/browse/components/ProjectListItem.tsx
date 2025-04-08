@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FileCode2, Users, Clock } from "lucide-react";
 import { Project } from "@prisma/client";
 import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
+import { formatRelativeTime } from "@/utils/formatRelativeTime";
 
 // Extends base Project type with additional fields needed for the list item display
 export interface ProjectWithDetails extends Project {
@@ -17,29 +18,6 @@ export interface ProjectWithDetails extends Project {
   frameworks: string[];
   databases: string[];
   status: "OPEN" | "CLOSED";
-}
-
-// Formats a date into a human-readable relative time string (e.g., "2d ago", "3h ago")
-export function formatRelativeTime(date: Date | null | undefined): string {
-  if (!date) return "";
-  const now = new Date();
-  const past = new Date(date);
-  const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
-
-  if (diffInDays > 30) {
-    return `>30d ago`;
-  } else if (diffInDays > 0) {
-    return `${diffInDays}d ago`;
-  } else if (diffInHours > 0) {
-    return `${diffInHours}h ago`;
-  } else if (diffInMinutes > 0) {
-    return `${diffInMinutes}m ago`;
-  } else {
-    return `Just now`;
-  }
 }
 
 export default function ProjectListItem({
