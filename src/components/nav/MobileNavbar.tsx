@@ -15,13 +15,9 @@ import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
-interface MobileNavbarProps {
-  session: Session | null;
-}
-
-const MobileNavbar = ({ session }: MobileNavbarProps) => {
+const MobileNavbar = ({ session }: { session: Session | null }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { open } = useAuthDialog();
   const { theme, setTheme } = useTheme();
@@ -137,18 +133,6 @@ const MobileNavbar = ({ session }: MobileNavbarProps) => {
                       {session.user?.username || "Username not set"}
                     </span>
                   </div>
-
-                  {/* Dashboard link */}
-                  <Link href="/dashboard" className="block">
-                    <Button
-                      variant="outline"
-                      className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <User className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Button>
-                  </Link>
 
                   {/* Profile settings link */}
                   <Link href="/profile/edit" className="block">
