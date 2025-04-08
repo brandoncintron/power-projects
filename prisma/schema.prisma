@@ -14,6 +14,11 @@ enum ProjectVisibility {
   UNIVERSITY
 }
 
+enum ProjectStatus {
+  OPEN
+  CLOSED
+}
+
 model User {
   id            String          @id @default(cuid())
   name          String?
@@ -71,6 +76,7 @@ model Project {
   projectName     String
   description     String   @db.VarChar(500)
   visibility      ProjectVisibility
+  status          ProjectStatus @default(OPEN)
   completionDate  DateTime?
   teamName        String?
   applicationType String
