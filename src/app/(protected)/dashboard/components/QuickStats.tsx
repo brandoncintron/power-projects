@@ -14,6 +14,7 @@ interface QuickStatsProps {
   pendingInvites?: number;
 }
 
+/* Quick Stats - Displays summary statistics for the user's dashboard */
 export function QuickStats({
   projectCount,
   collaboratingCount = 0,

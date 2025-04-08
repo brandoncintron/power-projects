@@ -16,6 +16,7 @@ interface DashboardTabsProps {
   })[];
 }
 
+/* Dashboard Tabs - Main tab interface for dashboard with Overview and Projects sections */
 export function DashboardTabs({ projects }: DashboardTabsProps) {
   return (
     <Tabs defaultValue="overview" className="w-full">

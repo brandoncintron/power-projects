@@ -1,5 +1,6 @@
 /**
  * Formats a date into a human-readable relative time string
+ * Returns condensed format like "2d ago", "5h ago" for efficient display in UIs
  */
 export function formatRelativeTime(date: Date | null | undefined): string {
   if (!date) return '';

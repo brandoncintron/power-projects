@@ -15,6 +15,7 @@ interface ProjectCardProps {
   };
 }
 
+/* Project Card - Displays individual project summary with metadata */
 export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card key={project.id} className="relative">

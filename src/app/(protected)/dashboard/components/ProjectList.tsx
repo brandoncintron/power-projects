@@ -13,6 +13,7 @@ interface ProjectListProps {
   })[];
 }
 
+/* Project List - Renders grid of project cards or empty state placeholder */
 export function ProjectList({ projects }: ProjectListProps) {
   if (projects.length === 0) {
     return (

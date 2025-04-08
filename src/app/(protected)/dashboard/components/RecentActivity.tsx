@@ -8,6 +8,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
+/* Recent Activity - Displays user's recent activity (placeholder) */
 export function RecentActivity() {
   return (
     <Card>

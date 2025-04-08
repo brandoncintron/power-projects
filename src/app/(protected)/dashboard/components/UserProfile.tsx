@@ -11,6 +11,7 @@ interface UserProfileProps {
   } | null;
 }
 
+/* User Profile - Displays user's avatar and personal information */
 export function UserProfile({ user }: UserProfileProps) {
   if (!user) return null;
   

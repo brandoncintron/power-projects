@@ -9,6 +9,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
+/* Quick Actions - Provides shortcut buttons to common actions */
 export function QuickActions() {
   return (
     <Card>

@@ -15,10 +15,15 @@ interface ProjectWithDetails extends Project {
   };
 }
 
+/**
+ * Dashboard Page - Main user dashboard displaying projects and activity
+ * Serves as the central hub for user interaction with the application
+ */
 export default async function DashboardPage() {
   const session = await auth();
   const user = session?.user;
 
+  // Show loading state if not authenticated
   if (!session || !user) {
     return (
       <Card className="w-full max-w-2xl mx-auto my-8">
@@ -32,7 +37,7 @@ export default async function DashboardPage() {
     );
   }
 
-  // Fetch user's projects
+  // Fetch user's project data
   let userProjects: ProjectWithDetails[] = [];
   try {
     userProjects = await db.project.findMany({
@@ -50,10 +55,10 @@ export default async function DashboardPage() {
 
   return (
     <main className="container mx-auto py-10 px-4 md:px-6">
-      {/* This component will close the auth dialog when dashboard loads */}
+      {/* Close auth dialog on dashboard load */}
       <DialogCloser />
 
-      {/* This component will disable the loading page when dashboard loads */}
+      {/* Disable loading indicator when dashboard is ready */}
       <HideLoading />
       
       <div className="flex flex-col gap-8">
