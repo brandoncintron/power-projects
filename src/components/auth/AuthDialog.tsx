@@ -18,6 +18,7 @@ import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 import OAuthButtons from "@/components/auth/OAuthButtons";
 import { useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { handleAuthErrors } from "./utils/handleAuthErrors";
 
 export function AuthDialog() {
   const { isOpen, close, view, setView, error, open } = useAuthDialog();
@@ -25,33 +26,10 @@ export function AuthDialog() {
   const errorCheckedRef = useRef(false);
   const router = useRouter();
 
-  // Check for auth errors in URL params once on component mount
+  // Check for auth errors in URL params once on component mount (for duplicate OAuth email addresses)
   useEffect(() => {
-    // Skip if we've already checked for errors
-    if (errorCheckedRef.current) return;
-    
     const authError = searchParams.get("error");
-    if (authError === "OAuthAccountNotLinked") {
-      open("signin", "Email has already been used with a different provider. Please sign in using the original provider.");
-      // Mark error as checked and remove error from URL
-      errorCheckedRef.current = true;
-      // Use replace to remove the error parameter from URL
-      if (typeof window !== 'undefined') {
-        const url = new URL(window.location.href);
-        url.searchParams.delete("error");
-        router.replace(url.pathname + url.search);
-      }
-    } else if (authError) {
-      open("signin", "An authentication error occurred. Please try again.");
-      // Mark error as checked and remove error from URL
-      errorCheckedRef.current = true;
-      // Use replace to remove the error parameter from URL
-      if (typeof window !== 'undefined') {
-        const url = new URL(window.location.href);
-        url.searchParams.delete("error");
-        router.replace(url.pathname + url.search);
-      }
-    }
+    handleAuthErrors(authError, open, router, errorCheckedRef);
   }, [searchParams, open, router]);
 
   return (
@@ -85,7 +63,7 @@ export function AuthDialog() {
             </TabsTrigger>
           </TabsList>
 
-          {/* --- Sign In Tab --- */}
+          {/* Sign In Tab */}
           <TabsContent value="signin">
             <Card className="border-none shadow-none">
               <CardContent className="space-y-4 p-0">
@@ -102,7 +80,7 @@ export function AuthDialog() {
             </Card>
           </TabsContent>
 
-          {/* --- Sign Up Tab --- */}
+          {/* Sign Up Tab */}
           <TabsContent value="signup">
             <Card className="border-none shadow-none">
               <CardContent className="space-y-4 p-0">
