@@ -37,7 +37,7 @@ async function ProjectDetailPage(props: { params: Promise<{ projectId: string }>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {/* Visibility */}
-        <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+        <div className=" p-4 rounded-lg shadow-sm">
           <h2 className="text-sm font-semibold text-gray-500 mb-1 uppercase">Visibility</h2>
           <p className="text-md capitalize">{project.visibility.toLowerCase()}</p>
           {/* saving for later */}
@@ -45,14 +45,14 @@ async function ProjectDetailPage(props: { params: Promise<{ projectId: string }>
         </div>
 
         {/* Application Type */}
-        <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+        <div className="p-4 rounded-lg shadow-sm">
           <h2 className="text-sm font-semibold text-gray-500 mb-1 uppercase">Application Type</h2>
           <p className="text-md">{project.applicationType}</p>
         </div>
 
         {/* Completion Date */}
         {project.completionDate && (
-           <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+           <div className="p-4 rounded-lg shadow-sm">
              <h2 className="text-sm font-semibold text-gray-500 mb-1 uppercase">Target Completion</h2>
              <p className="text-md">
                {new Date(project.completionDate).toLocaleDateString('en-US', {
@@ -64,7 +64,7 @@ async function ProjectDetailPage(props: { params: Promise<{ projectId: string }>
 
          {/* Team Name */}
          {project.teamName && (
-           <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+           <div className="p-4 rounded-lg shadow-sm">
              <h2 className="text-sm font-semibold text-gray-500 mb-1 uppercase">Team Name</h2>
              <p className="text-md">{project.teamName}</p>
            </div>
