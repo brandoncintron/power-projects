@@ -1,5 +1,4 @@
 import type { Session } from "next-auth";
-import type { EditProfileSchemaType } from "@/schema/profileSchema";
 
 export interface ProfileFormProps {
   session: Session | null;
