@@ -1,16 +1,20 @@
 "use client";
 
+import type { Session } from "next-auth";
+
 import { Button } from "@/components/ui/button";
 import { useNavigation } from "@/hooks/useNavigation";
 import { ChevronRight, Users, Sparkles, Compass } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 
-export default function Hero() {
+interface HeroProps {
+  session: Session | null;
+}
+
+export default function Hero({ session }: HeroProps) {
   const { handleNavigation } = useNavigation();
   const { open } = useAuthDialog();
-  const { data: session } = useSession();
   const router = useRouter();
 
   return (
@@ -27,19 +31,19 @@ export default function Hero() {
           building projects with others.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
-            <Button
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white sm:mx-0 mx-auto"
-              onClick={() => {
-                if (session) {
-                  router.push("/create-project");
-                } else {
-                  open("signup");
-                }
-              }}
-            >
-              {session ? "Create a Project" : "Get Started"} <ChevronRight />
-            </Button>
+          <Button
+            size="lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white sm:mx-0 mx-auto"
+            onClick={() => {
+              if (session) {
+                router.push("/create-project");
+              } else {
+                open("signup");
+              }
+            }}
+          >
+            {session ? "Create a Project" : "Get Started"} <ChevronRight />
+          </Button>
 
           <Button
             variant="outline"

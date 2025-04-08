@@ -1,17 +1,21 @@
+import { auth } from "@/auth";
+
 import Hero from "../components/Hero";
 import Features from "../components/Features";
 import About from "../components/About";
 
-export default function Home() {
+export default async function Home() {
+const session = await auth();
+
   return (
     <main>
       <div>
-        <Hero />
+        <Hero session={session} />
         <div id="features">
           <Features />
         </div>
         <div id="about">
-          <About />
+          <About session={session}/>
         </div>
       </div>
     </main>

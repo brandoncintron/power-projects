@@ -1,6 +1,6 @@
 "use client";
 
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 
 import Link from "next/link";
 import { Github } from "lucide-react";
@@ -14,12 +14,7 @@ import NavLinks from "@/components/nav/NavLinks";
 import ThemeSelector from "@/components/nav/ThemeSelector";
 import AlertBanner from "@/components/AlertBanner";
 
-
-interface NavbarProps {
-  session: Session | null;
-}
-
-const Navbar = ({ session }: NavbarProps) => {
+const Navbar = ({ session }: { session: Session | null }) => {
   const { scrolled } = useScrollDetection(); // Check if user scrolled
 
   return (

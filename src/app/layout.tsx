@@ -7,7 +7,6 @@ import { AuthDialogProvider } from "@/components/auth/hooks/useAuthDialog";
 import Navbar from "@/components/nav/Navbar";
 import Footer from "@/components/nav/Footer";
 import { AuthDialog } from "@/components/auth/AuthDialog";
-import { SessionProvider } from "next-auth/react"
 import { auth } from "@/auth";
 import { LoadingProvider } from "@/components/ui/loading-context";
 import { SetUsernamePopup } from "@/components/auth/SetUsernamePopup";
@@ -23,20 +22,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  const user = session?.user
-  
+  const user = session?.user;
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body id="top">
-      <Suspense>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <Suspense>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             <AuthDialogProvider>
-              <SessionProvider session={session}>
                 <LoadingProvider>
                   <Navbar session={session} />
                   {user?.username === null ? <SetUsernamePopup /> : children}
@@ -44,9 +42,8 @@ export default async function RootLayout({
                   <Toaster richColors />
                   <Footer />
                 </LoadingProvider>
-              </SessionProvider>
             </AuthDialogProvider>
-        </ThemeProvider>
+          </ThemeProvider>
         </Suspense>
       </body>
     </html>
