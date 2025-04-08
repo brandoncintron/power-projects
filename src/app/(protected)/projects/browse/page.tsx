@@ -21,7 +21,7 @@ export default async function BrowseProjectsListPage() {
         visibility: ProjectVisibility.PUBLIC,
       },
       include: {
-        owner: { select: { name: true } },
+        owner: { select: { username: true } },
         _count: { select: { collaborators: true } },
       },
       orderBy: { createdAt: "desc" },

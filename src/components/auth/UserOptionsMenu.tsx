@@ -36,7 +36,7 @@ const UserOptionsMenu = ({ session }: UserOptionsMenuProps) => {
                   ) : (
                     <User className="h-5 w-5" />
                   )}
-                  <span className="text-sm">{session.user?.name}</span>
+                  <span className="text-sm">{session.user?.username || "Username not set"}</span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>

@@ -23,7 +23,7 @@ export const updateProfile = async (
   }
 
   const {
-    name,
+    username,
     bio,
     location,
     pronouns,
@@ -40,7 +40,7 @@ export const updateProfile = async (
         id: userId,
       },
       data: {
-        name,
+        username,
         bio,
         location,
         pronouns,
@@ -53,7 +53,7 @@ export const updateProfile = async (
     });
 
     console.log("Server Action: Profile update successful for user:", {
-      name,
+      username,
       bio,
     });
     return { success: "Profile updated successfully!" };

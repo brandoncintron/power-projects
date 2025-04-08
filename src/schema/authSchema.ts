@@ -10,7 +10,7 @@ export const signInSchema = z.object({
 })
 
 export const signUpSchema = z.object({
-    name: z.string({ required_error: "Username is required."})
+    username: z.string({ required_error: "Username is required."})
         .min(1, "Username is required.")
         .max(20, "Username must be less than 20 characters."),
     email: z.string({ required_error: "Email is required."})

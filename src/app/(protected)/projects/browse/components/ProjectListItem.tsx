@@ -7,7 +7,7 @@ import { Project } from '@prisma/client';
 // Define the structure of the project data we expect after including owner and collaborator count
 export interface ProjectWithDetails extends Project {
   owner: {
-    name: string | null;
+    username: string | null;
   } | null;
   _count: { // Include count of collaborators
     collaborators: number;
@@ -60,7 +60,7 @@ export default function ProjectListItem({ project }: { project: ProjectWithDetai
       {/* Middle Row: Title & Creator */}
       <h2 className="text-lg font-semibol mb-1">{project.projectName}</h2>
       <p className="text-sm mb-2">
-        by {project.owner?.name || 'Unknown User'}
+        by {project.owner?.username || 'Unknown User'}
       </p>
       {/* Description */}
       <p className="text-sm line-clamp-2 mb-3">{project.description}</p>

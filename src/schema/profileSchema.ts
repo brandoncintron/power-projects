@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const editProfileSchema = z.object({
-    name: z.string()
+    username: z.string()
         .min(1, "Username must be at least 1 character.")
         .max(20, "Username must be less than 20 characters.")
         .optional(),

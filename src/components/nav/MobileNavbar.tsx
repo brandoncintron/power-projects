@@ -134,7 +134,7 @@ const MobileNavbar = ({ session }: MobileNavbarProps) => {
                       <User className="h-10 w-10 p-2 bg-gray-100 dark:bg-gray-800 rounded-full" />
                     )}
                     <span className="text-lg font-medium">
-                      {session.user?.name || "User"}
+                      {session.user?.username || "Username not set"}
                     </span>
                   </div>
 
