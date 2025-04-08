@@ -67,7 +67,7 @@ export function PersonalInfoFields({
           className="bg-muted text-muted-foreground cursor-not-allowed"
         />
         <FormDescription>
-          Your email address can't be changed.
+          Your email address can&apos;t be changed.
         </FormDescription>
       </div>
 
@@ -81,7 +81,7 @@ export function PersonalInfoFields({
             <FormControl>
               <Textarea
                 {...field}
-                placeholder="Tell us a little about yourself"
+                placeholder="Tell others about yourself"
                 disabled={isPending}
                 rows={3}
               />
