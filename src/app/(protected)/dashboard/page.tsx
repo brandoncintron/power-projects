@@ -154,18 +154,18 @@ export default async function DashboardPage() {
                         <p className="text-xs text-muted-foreground">Find projects to join</p>
                       </div>
                     </Link>
-                    <Link href="/inbox">
+                    <button>
                       <div className="p-3 rounded-lg border hover:bg-muted transition-colors cursor-pointer">
                         <p className="text-sm font-medium">Inbox</p>
                         <p className="text-xs text-muted-foreground">Check messages</p>
                       </div>
-                    </Link>
-                    <Link href="/scrum-board">
+                    </button>
+                    <button>
                       <div className="p-3 rounded-lg border hover:bg-muted transition-colors cursor-pointer">
                         <p className="text-sm font-medium">Scrum Board</p>
                         <p className="text-xs text-muted-foreground">Manage tasks</p>
                       </div>
-                    </Link>
+                    </button>
                   </div>
                 </CardContent>
               </Card>
