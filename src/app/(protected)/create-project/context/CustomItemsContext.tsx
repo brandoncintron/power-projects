@@ -48,9 +48,6 @@ export function CustomItemsProvider({ children }: CustomItemsProviderProps) {
     const newFramework = customFramework.trim();
     const currentFrameworks = form.watch("frameworks") || [];
     
-    // Note: We're not enforcing the limit here since the UI component will handle it
-    // This is because we can't reliably determine custom vs predefined frameworks here
-    
     // Avoid duplicates
     if (currentFrameworks.includes(newFramework)) {
       toast.error("This framework is already added.");
