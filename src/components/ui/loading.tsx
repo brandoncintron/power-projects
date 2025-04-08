@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { LuLoader } from 'react-icons/lu'
 
 interface LoadingScreenProps {
   /**
@@ -87,10 +88,11 @@ export function LoadingScreen({
 /**
  * A simpler loading spinner component for in-page loading states
  */
-export function LoadingSpinner({ className }: { className?: string }) {
+export function LoadingSpinner({ className, text }: { className?: string, text?: string }) {
   return (
     <div className={cn('flex items-center justify-center', className)}>
-      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <LuLoader className="h-8 w-8 animate-spin text-muted-foreground" />
+      <span className="ml-2 text-muted-foreground">Loading {text}...</span>
     </div>
   )
 } 
