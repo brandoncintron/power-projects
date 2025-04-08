@@ -15,32 +15,30 @@ export default function FilteredProjectList({
   projects,
   filterTags,
 }: FilteredProjectListProps) {
-  const [activeFilter, setActiveFilter] = useState<string>("All"); // Active filter
-  const [searchQuery, setSearchQuery] = useState<string>(""); // Search query
+  const [activeFilter, setActiveFilter] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
-  // Memoize the filtered list to avoid re-calculating on every render
+  // Memoized filtered projects based on search query and active filter
   const filteredProjects = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
 
     const searchedProjects = projects.filter((p) => {
-      if (!query) return true; // If query is empty, don't filter by search yet
+      if (!query) return true;
       return (
         p.projectName.toLowerCase().includes(query) ||
-        (p.description && p.description.toLowerCase().includes(query)) ||
-        p.applicationType.toLowerCase().startsWith(query) // Optionally search type
+        (p.description && p.description.toLowerCase().includes(query))
       );
     });
 
     if (activeFilter === "All") {
-      return searchedProjects; // Show all projects if 'All' is selected
+      return searchedProjects;
     }
-    // Filter projects based on the active applicationType
     return searchedProjects.filter((p) => p.applicationType === activeFilter);
-  }, [projects, activeFilter, searchQuery]); // Dependencies: re-filter when projects or activeFilter change
+  }, [projects, activeFilter, searchQuery]);
 
   const handleFilterClick = (tag: string) => {
     setActiveFilter(tag);
@@ -53,7 +51,7 @@ export default function FilteredProjectList({
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
         <Input
           type="search"
-          placeholder="Search projects by name, description, owner..."
+          placeholder="Search projects by name or description..."
           className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
           value={searchQuery}
           onChange={handleSearchChange}
@@ -63,16 +61,15 @@ export default function FilteredProjectList({
       {/* Filter Tags Bar */}
       <div className="flex flex-wrap items-center gap-2 mb-8 pb-4 border-b">
         <span className="text-sm font-medium text-gray-600 mr-2">
-          Filter by:
+          Filter by application type:
         </span>
         {filterTags.map((tag) => (
           <Button
             key={tag}
-            // Change variant based on active filter
             variant={activeFilter === tag ? "default" : "outline"}
             size="sm"
-            onClick={() => handleFilterClick(tag)} // Set active filter on click
-            className="transition-colors duration-150" // Add transition
+            onClick={() => handleFilterClick(tag)}
+            className="transition-colors duration-150"
           >
             {tag}
           </Button>
@@ -87,7 +84,7 @@ export default function FilteredProjectList({
         </div>
       )}
 
-      {/* ender the filtered list */}
+      {/* Render the filtered list */}
       {filteredProjects.length > 0 && (
         <div className="space-y-4">
           {filteredProjects.map((project) => (

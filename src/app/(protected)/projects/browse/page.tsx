@@ -15,8 +15,8 @@ export default async function BrowseProjectsListPage() {
   let dynamicFilterTags: string[] = ["All"];
 
   try {
-    // Fetch all public projects initially
-    projects = await db.project.findMany({
+    // Fetch public projects sorted by creation date
+    projects = (await db.project.findMany({
       where: {
         visibility: ProjectVisibility.PUBLIC,
       },
@@ -25,9 +25,9 @@ export default async function BrowseProjectsListPage() {
         _count: { select: { collaborators: true } },
       },
       orderBy: { createdAt: "desc" },
-    });
+    })) as ProjectWithDetails[];
 
-    // Generate dynamic filter tags from fetched projects
+    // Extract unique application types for filter tags
     if (projects.length > 0) {
       const uniqueApplicationTypes = Array.from(
         new Set(projects.map((p) => p.applicationType))
@@ -43,10 +43,9 @@ export default async function BrowseProjectsListPage() {
   return (
     <div className="min-h-screen">
       <main className="container mx-auto py-6 px-4 md:px-6">
-        {/* Top Bar: Search and Create Button */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
           <h1 className="text-2xl font-semibold">Browse Projects</h1>
-
+          {/* Create project button */}
           {session && (
             <Button
               asChild
@@ -57,14 +56,13 @@ export default async function BrowseProjectsListPage() {
           )}
         </div>
 
-        {/* Render Error Message if fetch failed */}
         {fetchError && (
           <div className="text-center py-10 text-red-600 bg-red-50 rounded-md">
             <p>{fetchError}</p>
           </div>
         )}
 
-        {/* Render the Client Component for filters and list if no error */}
+        {/* Display the list of projects as a FilteredProjectList */}
         {!fetchError && (
           <FilteredProjectList
             projects={projects}
