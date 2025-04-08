@@ -28,6 +28,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         if (token && session.user) {
           // Step 2: Pass custom token fields to the session
+          session.user.username = token.username as string;
           session.user.bio = token.bio as string;
           session.user.location = token.location as string;
           session.user.pronouns = token.pronouns as string;
@@ -49,6 +50,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       
       // Steps to extend data from the database to the session:
       // Step 1: Create custom token fields ^
+      token.username = existingUser.username;
       token.bio = existingUser.bio;
       token.location = existingUser.location;
       token.pronouns = existingUser.pronouns;

@@ -1,6 +1,7 @@
 import { type DefaultSession } from "next-auth"
 
 export type ExtendedUser = DefaultSession["user"] & {
+    username: string
     bio: string
     location: string
     pronouns: string
