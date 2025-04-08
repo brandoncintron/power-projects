@@ -15,6 +15,7 @@ import type { Session } from "next-auth";
 const UserOptionsMenu = ({ session }: { session: Session | null }) => {
   // If no session, return null
   if (!session) return null;
+  console.log(session)
 
   // If there is a session, show the user options menu
   return (
