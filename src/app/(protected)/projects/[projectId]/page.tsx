@@ -12,8 +12,9 @@ import {
   Settings,
   Calendar,
 } from "lucide-react";
-import { getDatabaseIcon, getLanguageIcon } from "@/lib/language-icons";
+import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
 import { auth } from "@/auth";
+import { Separator } from "@/components/ui/separator";
 
 async function ProjectDetailPage(props: {
   params: Promise<{ projectId: string }>;
@@ -92,11 +93,18 @@ async function ProjectDetailPage(props: {
 
       {/* Main Content */}
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full md:w-[400px] grid-cols-3">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="tasks">Tasks</TabsTrigger>
-          <TabsTrigger value="chat">Chat</TabsTrigger>
-        </TabsList>
+        {isOwner ? (
+          <TabsList className={"grid w-full grid-cols-3 md:w-[400px]"}>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="tasks">Tasks</TabsTrigger>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
+          </TabsList>
+        ) : (
+          <>
+            <h2 className="text-2xl font-semibold mb-2">Project Overview</h2>
+            <Separator />
+          </>
+        )}
 
         <TabsContent value="overview" className="mt-6">
           <div className="grid gap-6">
@@ -129,7 +137,7 @@ async function ProjectDetailPage(props: {
                           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs"
                         >
                           <div className="flex h-4 w-4 shrink-0 items-center justify-center">
-                            {getLanguageIcon(fw.toLowerCase())}
+                            {getTechnologyIcon(fw.toLowerCase())}
                           </div>
                           <span className="font-medium">{fw}</span>
                         </div>

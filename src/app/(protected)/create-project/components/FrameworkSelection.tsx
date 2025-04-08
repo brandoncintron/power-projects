@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { frameworkOptions } from "../utils/form-data";
-import { getFrameworkIcon, getLanguageIcon } from "@/lib/language-icons";
+import { getTechnologyIcon } from "@/lib/language-icons";
 import { SelectableCard } from "./SelectableCard";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { FrameworkOption } from "../utils/types";
@@ -99,7 +99,7 @@ export function FrameworkSelection() {
                     title={
                       <div className="flex items-center gap-2">
                         <div className="flex h-6 w-6 shrink-0 items-center justify-center">
-                          {getFrameworkIcon(framework.name, framework.primaryLanguages?.[0])}
+                          {getTechnologyIcon(framework.name)}
                         </div>
                         <span>{framework.name}</span>
                       </div>
@@ -121,7 +121,7 @@ export function FrameworkSelection() {
                                 key={`${framework.name}-${language}`}
                                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs"
                               >
-                                {getLanguageIcon(language)}
+                                {getTechnologyIcon(language)}
                                 <span className="font-medium">{language}-based</span>
                               </div>
                             ))}
@@ -129,7 +129,7 @@ export function FrameworkSelection() {
                       ) : framework.primaryLanguage &&
                         framework.primaryLanguage.toLowerCase() !== framework.name.toLowerCase() ? (
                         <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs">
-                          {getLanguageIcon(framework.primaryLanguage)}
+                          {getTechnologyIcon(framework.primaryLanguage)}
                           <span className="font-medium">{framework.primaryLanguage}</span>
                         </div>
                       ) : null}

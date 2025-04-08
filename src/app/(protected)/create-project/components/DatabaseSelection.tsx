@@ -4,7 +4,7 @@ import { BiSolidCustomize } from "react-icons/bi";
 import { MdOutlineCancel } from "react-icons/md";
 import { ChevronLeft } from "lucide-react";
 import { frameworkOptions } from "../utils/form-data";
-import { getFrameworkIcon, getDatabaseIcon } from "@/lib/language-icons";
+import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
 import { SelectableCard } from "./SelectableCard";
 import { useScrollTo } from "@/hooks/useScrollTo";
 import { FrameworkOption } from "../utils/types";
@@ -128,7 +128,7 @@ export function DatabaseSelection() {
                         {isCustomFramework ? (
                           <BiSolidCustomize />
                         ) : (
-                          getFrameworkIcon(frameworkName)
+                          getTechnologyIcon(frameworkName)
                         )}
                         <span>{frameworkName}</span>
                       </div>

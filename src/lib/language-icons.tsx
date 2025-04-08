@@ -22,6 +22,7 @@ import DartOriginalIcon from "react-devicons/dart/original";
 import ClojureOriginalIcon from "react-devicons/clojure/original";
 import HaskellOriginalIcon from "react-devicons/haskell/original";
 
+
 // Frontend languages and frameworks
 import HtmlOriginalIcon from "react-devicons/html5/original";
 import CssOriginalIcon from "react-devicons/css3/original";
@@ -37,7 +38,6 @@ import QtOriginalIcon from "react-devicons/qt/original";
 import SpringOriginalIcon from "react-devicons/spring/original";
 import NextjsOriginalIcon from "react-devicons/nextjs/original";
 import ExpressOriginalIcon from "react-devicons/express/original";
-import WordpressOriginalIcon from "react-devicons/wordpress/original";
 import TensorflowOriginalIcon from "react-devicons/tensorflow/original";
 import OpencvOriginalIcon from "react-devicons/opencv/original";
 import PytorchOriginalIcon from "react-devicons/pytorch/original";
@@ -60,21 +60,20 @@ import MongodbOriginalIcon from "react-devicons/mongodb/original";
 import RedisOriginalIcon from "react-devicons/redis/original";
 import SqliteOriginalIcon from "react-devicons/sqlite/original";
 import FirebaseOriginalIcon from "react-devicons/firebase/original";
+import { AmazonwebservicesOriginalWordmark } from 'devicons-react';
 
 /**
  * Returns the language icon component for the specified language
  * @param language - Programming language name
  * @returns React component for the language icon
  */
-export const getLanguageIcon = (language: string) => {
-  switch(language.toLowerCase()) {
-    // JavaScript and TypeScript
+export const getTechnologyIcon = (tech: string) => {
+  switch(tech.toLowerCase()) {
+    // Core Programming Languages
     case "javascript":
       return <JavaScriptOriginalIcon className="h-4 w-4" />;
     case "typescript":
       return <TypeScriptOriginalIcon className="h-4 w-4" />;
-      
-    // Backend languages
     case "python":
       return <PythonOriginalIcon className="h-4 w-4" />;
     case "c#":
@@ -94,8 +93,9 @@ export const getLanguageIcon = (language: string) => {
       return <RustOriginalIcon className="h-4 w-4" />;
     case "java":
       return <JavaOriginalIcon className="h-4 w-4" />;
+    case "kotlin multiplatform":
     case "kotlin":
-      return <KotlinOriginalIcon className="h-4 w-4" />;
+      return <KotlinOriginalIcon className="h-4 w-4" />;      
     case "swift":
       return <SwiftOriginalIcon className="h-4 w-4" />;
     case "erlang":
@@ -110,8 +110,8 @@ export const getLanguageIcon = (language: string) => {
       return <ClojureOriginalIcon className="h-4 w-4" />;
     case "haskell":
       return <HaskellOriginalIcon className="h-4 w-4" />;
-      
-    // Frontend languages
+
+    // Frontend Technologies
     case "html":
     case "html5":
       return <HtmlOriginalIcon className="h-4 w-4" />;
@@ -120,9 +120,8 @@ export const getLanguageIcon = (language: string) => {
       return <CssOriginalIcon className="h-4 w-4" />;
     case "sass":
       return <SassOriginalIcon className="h-4 w-4" />;
-    
-    // Frontend frameworks
     case "react":
+    case "react native":
       return <ReactOriginalIcon className="h-4 w-4" />;
     case "angular":
     case "angularjs":
@@ -133,8 +132,25 @@ export const getLanguageIcon = (language: string) => {
       return <VueOriginalIcon className="h-4 w-4" />;
     case "svelte":
       return <SvelteOriginalIcon className="h-4 w-4" />;
-    
-    // Shell and scripting
+    case "next.js":
+      return <NextjsOriginalIcon className="h-4 w-4" />;
+
+    // Backend Frameworks
+    case "django":
+      return <DjangoOriginalIcon className="h-4 w-4" />;
+    case "flask":
+      return <FlaskOriginalIcon className="h-4 w-4" />;
+    case "fastapi":
+      return <FastAPIIcon className="h-4 w-4" />;
+    case "express.js":
+      return <ExpressOriginalIcon className="h-4 w-4" />;
+    case "spring boot":
+      return <SpringOriginalIcon className="h-4 w-4" />;
+    case "ruby on rails":
+    case "rails":
+      return <RubyOriginalIcon className="h-4 w-4" />;
+
+    // Shell and Scripting
     case "bash":
     case "shell":
       return <BashOriginalIcon className="h-4 w-4" />;
@@ -144,42 +160,41 @@ export const getLanguageIcon = (language: string) => {
       return <PerlOriginalIcon className="h-4 w-4" />;
     case "lua":
       return <LuaOriginalIcon className="h-4 w-4" />;
-      
-    // Framework specific icons
-    case "django":
-      return <DjangoOriginalIcon className="h-4 w-4" />;
-    case "flask":
-      return <FlaskOriginalIcon className="h-4 w-4" />;
-    case "fastapi":
-      return <FastAPIIcon className="h-4 w-4" />;
-    case "tkinter":
-      return <PythonOriginalIcon className="h-4 w-4 text-blue-500" />;
+
+    // UI Frameworks and Tools
     case "qt":
       return <QtOriginalIcon className="h-4 w-4" />;
-    case "kotlin multiplatform":
-      return <KotlinOriginalIcon className="h-4 w-4 text-purple-500" />;
-    case "micropython":
-      return <PythonOriginalIcon className="h-4 w-4 text-yellow-500" />;
-    case "express.js":
-      return <ExpressOriginalIcon className="h-4 w-4" />;
-    case "tensorflow":
-      return <TensorflowOriginalIcon className="h-4 w-4" />;
-    case "opencv":
-      return <OpencvOriginalIcon className="h-4 w-4" />;
-    case "pytorch":
-      return <PytorchOriginalIcon className="h-4 w-4" />;
-    case "arduino":
-      return <ArduinoOriginalIcon className="h-4 w-4" />;
-    case "raspberry pi":
-      return <RaspberrypiOriginalIcon className="h-4 w-4" />;
     case "electron":
       return <ElectronOriginalIcon className="h-4 w-4" />;
     case ".net":
       return <DotNetOriginalIcon className="h-4 w-4" />;
     case "flutter":
       return <FlutterOriginalIcon className="h-4 w-4" />;
-      
-    // Special cases
+    case "tkinter":
+      return <PythonOriginalIcon className="h-4 w-4" />;
+
+
+    // AI and Machine Learning
+    case "tensorflow":
+      return <TensorflowOriginalIcon className="h-4 w-4" />;
+    case "opencv":
+      return <OpencvOriginalIcon className="h-4 w-4" />;
+    case "pytorch":
+      return <PytorchOriginalIcon className="h-4 w-4" />;
+    case "nltk":
+      return <PythonOriginalIcon className="h-4 w-4 text-blue-500" />;
+
+    // IoT and Embedded
+    case "arduino":
+      return <ArduinoOriginalIcon className="h-4 w-4" />;
+    case "raspberry pi":
+      return <RaspberrypiOriginalIcon className="h-4 w-4" />;
+    case "esp32":
+      return <ArduinoOriginalIcon className="h-4 w-4 text-blue-400" />;
+    case "micropython":
+      return <PythonOriginalIcon className="h-4 w-4 text-yellow-500" />;
+
+    // Special Cases
     case "visual basic":
       return <CsharpOriginalIcon className="h-4 w-4 text-blue-700" />;
     case "f#":
@@ -203,137 +218,16 @@ export const getLanguageIcon = (language: string) => {
 };
 
 /**
- * Returns the framework icon component for the specified framework
- * Falls back to the primary language icon if the framework doesn't have a dedicated icon
- * @param framework - Framework name
- * @param primaryLanguage - Primary language of the framework (optional)
- * @returns React component for the framework icon
- */
-export const getFrameworkIcon = (framework: string, primaryLanguage?: string) => {
-  const frameworkLower = framework.toLowerCase();
-  
-  // First try to find a dedicated framework icon
-  switch(frameworkLower) {
-    case "react":
-    case "react native":
-      return <ReactOriginalIcon className="h-4 w-4" />;
-    case "angular":
-    case "angularjs":
-      return <AngularjsOriginalIcon className="h-4 w-4" />;
-    case "vue.js":
-    case "vuejs":
-    case "vue":
-      return <VueOriginalIcon className="h-4 w-4" />;
-    case "django":
-      return <DjangoOriginalIcon className="h-4 w-4" />;
-    case "flask":
-      return <FlaskOriginalIcon className="h-4 w-4" />;
-    case "fastapi":
-      return <FastAPIIcon className="h-4 w-4" />;
-    case "svelte":
-      return <SvelteOriginalIcon className="h-4 w-4" />;
-    case "qt":
-      return <QtOriginalIcon className="h-4 w-4" />;
-    case "next.js":
-      return <NextjsOriginalIcon className="h-4 w-4" />;
-    case "express.js":
-      return <ExpressOriginalIcon className="h-4 w-4" />;
-    case "woocommerce":
-      return <WordpressOriginalIcon className="h-4 w-4 text-purple-500" />;
-    case "wordpress":
-      return <WordpressOriginalIcon className="h-4 w-4" />;
-    case "strapi":
-      return <JavaScriptOriginalIcon className="h-4 w-4 text-purple-600" />;
-    case "tensorflow":
-      return <TensorflowOriginalIcon className="h-4 w-4" />;
-    case "opencv":
-      return <OpencvOriginalIcon className="h-4 w-4" />;
-    case "pytorch":
-      return <PytorchOriginalIcon className="h-4 w-4" />;
-    case "nltk":
-      return <PythonOriginalIcon className="h-4 w-4 text-blue-500" />;
-    case "arduino":
-      return <ArduinoOriginalIcon className="h-4 w-4" />;
-    case "home assistant":
-      return <RaspberrypiOriginalIcon className="h-4 w-4 text-green-600" />;
-    case "raspberry pi":
-      return <RaspberrypiOriginalIcon className="h-4 w-4" />;
-    case "esp32":
-      return <ArduinoOriginalIcon className="h-4 w-4 text-blue-400" />;
-    case "electron":
-      return <ElectronOriginalIcon className="h-4 w-4" />;
-    case ".net":
-      return <DotNetOriginalIcon className="h-4 w-4" />;
-    case "flutter":
-      return <FlutterOriginalIcon className="h-4 w-4" />;
-    case "ruby on rails":
-    case "rails":
-      return <RubyOriginalIcon className="h-4 w-4" />;
-    case "kotlin multiplatform":
-      return <KotlinOriginalIcon className="h-4 w-4 text-purple-500" />;
-    case "micropython":
-      return <PythonOriginalIcon className="h-4 w-4 text-yellow-500" />;
-    case "tkinter":
-      return <PythonOriginalIcon className="h-4 w-4 text-blue-500" />;
-    case "spring boot":
-      return <SpringOriginalIcon className="h-4 w-4" />;
-      
-    // Check for language/framework name matches
-    case "python":
-      return <PythonOriginalIcon className="h-4 w-4" />;
-    case "javascript":
-      return <JavaScriptOriginalIcon className="h-4 w-4" />;
-    case "typescript":
-      return <TypeScriptOriginalIcon className="h-4 w-4" />;
-    case "ruby":
-      return <RubyOriginalIcon className="h-4 w-4" />;
-    case "go":
-      return <GoOriginalIcon className="h-4 w-4" />;
-    case "rust":
-      return <RustOriginalIcon className="h-4 w-4" />;
-    case "java":
-      return <JavaOriginalIcon className="h-4 w-4" />;
-    case "kotlin":
-      return <KotlinOriginalIcon className="h-4 w-4" />;
-    case "swift":
-      return <SwiftOriginalIcon className="h-4 w-4" />;
-    case "c":
-      return <COriginalIcon className="h-4 w-4" />;
-    case "c++":
-    case "c/c++":
-      return <CplusplusOriginalIcon className="h-4 w-4" />;
-    case "c#":
-      return <CsharpOriginalIcon className="h-4 w-4" />;
-    case "php":
-      return <PhpOriginalIcon className="h-4 w-4" />;
-    case "bash":
-    case "shell":
-      return <BashOriginalIcon className="h-4 w-4" />;
-    case "powershell":
-      return <PowershellOriginalIcon className="h-4 w-4" />;
-    
-    // If no dedicated framework icon, fall back to the primary language icon
-    default:
-      if (primaryLanguage) {
-        return getLanguageIcon(primaryLanguage);
-      }
-      
-      // Default fallback icon
-      return (
-        <svg className="h-4 w-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 2v6M12 22v-6M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M22 12h-6M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24" />
-        </svg>
-      );
-  }
-};
-
-/**
  * Returns the database icon component for the specified database
  * @param database - Database name
  * @returns React component for the database icon
  */
 export const getDatabaseIcon = (database: string) => {
   const databaseLower = database.toLowerCase();
+
+  if(database.toLowerCase().includes('aws')){
+    return <AmazonwebservicesOriginalWordmark />
+  }
   
   switch(databaseLower) {
     case "postgresql":
