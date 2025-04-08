@@ -48,7 +48,7 @@ export function useProfileForm(session: Session | null) {
         otherSocial: user.otherSocial || "",
       });
     }
-  }, [user, form.reset]);
+  }, [user, form.reset, form]);
 
   const onSubmit = async (values: EditProfileSchemaType) => {
     startTransition(async () => {
