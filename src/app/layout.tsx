@@ -10,6 +10,7 @@ import { AuthDialog } from "@/components/auth/AuthDialog";
 import { SessionProvider } from "next-auth/react"
 import { auth } from "@/auth";
 import { LoadingProvider } from "@/components/ui/loading-context";
+import { SetUsernamePopup } from "@/components/auth/SetUsernamePopup";
 
 export const metadata: Metadata = {
   title: "Power Projects",
@@ -22,7 +23,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-
+  const user = session?.user
+  
   return (
     <html lang="en" suppressHydrationWarning>
       <body id="top">
@@ -34,10 +36,10 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
             <AuthDialogProvider>
-              <SessionProvider>
+              <SessionProvider session={session}>
                 <LoadingProvider>
                   <Navbar session={session} />
-                  {children}
+                  {user?.username === null ? <SetUsernamePopup /> : children}
                   <AuthDialog />
                   <Toaster richColors />
                   <Footer />
