@@ -115,19 +115,16 @@ model ProjectCollaborator {
 
 // --- Join Table for Project Applications (Many-to-Many User <-> Project) ---
 model ProjectApplication {
-  id          String   @id @default(cuid()) // Optional: Use CUID if you need a unique ID per application itself
+  id          String   @id @default(cuid())
   userId      String
   projectId   String
-  status      String   @default("pending") // e.g., pending, accepted, rejected
-  message     String?  // Optional message from the applicant
-  appliedAt   DateTime @default(now()) // When the user applied
+  status      String   @default("pending")
+  message     String?
+  appliedAt   DateTime @default(now())
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-  // If not using CUID for id, use a composite primary key:
-  // @@id([userId, projectId])
-  // Add unique constraint if a user can only apply once per project
   @@unique([userId, projectId])
   @@index([projectId])      // Index for faster lookups by project
   @@index([userId])         // Index for faster lookups by user
