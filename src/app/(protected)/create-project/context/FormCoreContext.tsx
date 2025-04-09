@@ -8,8 +8,8 @@ import React, {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { projectFormSchema, ProjectFormData } from "../utils/projectFormSchema";
-import { createProject } from "../actions/createProject";
+import { projectFormSchema, ProjectFormData } from "../../../../schema/projectFormSchema";
+import { createProject } from "@/actions/createProject";
 import { useRouter } from "next/navigation";
 import { useLoading } from "@/components/ui/loading-context";
 
@@ -84,7 +84,7 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
       showLoading("Submitting your project...");
 
       try {
-        console.log(`Data being sent to createProject action:`, values);
+        // debug - console.log(`Data being sent to createProject action:`, values);
         await createProject(values);
 
         toast.success("Project submitted successfully", {
