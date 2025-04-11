@@ -37,7 +37,6 @@ Power Projects is a collaborative platform designed to help developers of all sk
 * Student e-mail verification (TBD)
 4. **Database and Storage**
 * ![Supabase](https://img.shields.io/badge/-Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
-* ![AWS S3](https://img.shields.io/badge/-AWS%20S3-569A31?style=flat&logo=amazon-s3&logoColor=white)
 5. **Hosting**
 * ![Vercel](https://img.shields.io/badge/-Vercel-000000?style=flat&logo=vercel)
 
