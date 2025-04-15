@@ -6,11 +6,7 @@ import { Project } from '@prisma/client';
 import { ProjectCard } from "./ProjectCard";
 
 interface ProjectListProps {
-  projects: (Project & {
-    _count?: {
-      collaborators: number;
-    };
-  })[];
+  projects: Project[];
 }
 
 /* Project List - Renders grid of project cards or empty state placeholder */

@@ -10,15 +10,13 @@ import {
 
 interface QuickStatsProps {
   projectCount: number;
-  collaboratingCount?: number;
-  pendingInvites?: number;
+  projectApplications?: number;
 }
 
 /* Quick Stats - Displays summary statistics for the user's dashboard */
 export function QuickStats({
   projectCount,
-  collaboratingCount = 0,
-  pendingInvites = 0,
+  projectApplications = 0,
 }: QuickStatsProps) {
   return (
     <Card>
@@ -33,12 +31,8 @@ export function QuickStats({
             <span className="text-xl font-semibold">{projectCount}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Collaborating On</span>
-            <span className="text-xl font-semibold">{collaboratingCount}</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">Pending Invites</span>
-            <span className="text-xl font-semibold">{pendingInvites}</span>
+            <span className="text-muted-foreground">Project Applications</span>
+            <span className="text-xl font-semibold">{projectApplications}</span>
           </div>
         </div>
       </CardContent>
