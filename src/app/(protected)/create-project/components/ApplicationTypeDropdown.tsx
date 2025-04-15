@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { applicationTypes } from "../utils/form-data";
+import { applicationTypes } from "../utils/project-technology-data";
 import { useProjectForm } from "../context/ProjectFormContext";
 
 /**

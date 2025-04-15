@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { BiSolidCustomize } from "react-icons/bi";
 import { MdOutlineCancel } from "react-icons/md";
 import { ChevronLeft } from "lucide-react";
-import { frameworkOptions } from "../utils/form-data";
+import { frameworkOptions } from "../utils/project-technology-data";
 import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
 import { SelectableCard } from "./SelectableCard";
 import { useScrollTo } from "@/hooks/useScrollTo";

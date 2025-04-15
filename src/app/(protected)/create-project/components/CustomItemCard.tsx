@@ -15,7 +15,7 @@ interface CustomItemCardProps {
   onNameChange: (value: string) => void;
   onAddItem: () => void;
   onRemoveItem: (name: string) => void;
-  itemType: 'framework' | 'database';
+  itemType: "framework" | "database";
 }
 
 /**
@@ -31,7 +31,7 @@ export function CustomItemCard({
   onNameChange,
   onAddItem,
   onRemoveItem,
-  itemType
+  itemType,
 }: CustomItemCardProps) {
   // Handle adding item with limit check
   const handleAddItem = () => {
@@ -53,7 +53,8 @@ export function CustomItemCard({
           }
           isSelected={isSelected}
         >
-          <div className="mt-3">
+          <span className="text-xs text-gray-500">Don&apos;t see your framework, library, or database listed? Add it here!</span>
+          <div>
             <CustomItemInput
               itemName={itemName}
               itemNamePlaceholder={placeholder}
@@ -91,4 +92,4 @@ export function CustomItemCard({
       </div>
     </div>
   );
-} 
+}

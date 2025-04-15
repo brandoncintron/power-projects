@@ -25,7 +25,7 @@ export function CustomItemInput({
   return (
     <div className="flex flex-col space-y-2">
       <div className="flex flex-col space-y-1">
-        <label className="text-xs text-muted-foreground">{itemNamePlaceholder} (max {maxNameLength} chars)</label>
+        <label className="text-xs text-muted-foreground"></label>
         <div className="flex space-x-2">
           <Input
             value={itemName}

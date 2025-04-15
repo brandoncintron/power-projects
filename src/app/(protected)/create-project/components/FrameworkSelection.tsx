@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
-import { frameworkOptions } from "../utils/form-data";
+import { frameworkOptions } from "../utils/project-technology-data";
 import { getTechnologyIcon } from "@/lib/language-icons";
 import { SelectableCard } from "./SelectableCard";
 import { useScrollTo } from "@/hooks/useScrollTo";
