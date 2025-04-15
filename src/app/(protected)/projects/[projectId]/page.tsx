@@ -37,6 +37,19 @@ async function ProjectDetailPage(props: {
             image: true,
           },
         },
+        applicants: {
+          select: {
+            userId: true,
+            status: true,
+            appliedAt: true,
+            user: {
+              select: {
+                username: true,
+                image: true,
+              },
+            },
+          },
+        },
         _count: {
           select: {
             collaborators: true,
@@ -74,6 +87,7 @@ async function ProjectDetailPage(props: {
         description={project.description}
         completionDate={project.completionDate}
         owner={project.owner}
+        applicants={project.applicants}
       />
     </div>
   );

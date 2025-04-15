@@ -5,12 +5,9 @@ import { Separator } from "@/components/ui/separator";
 import { ProjectOverview } from "./ProjectOverview";
 import { ScrumBoardCard } from "./ScrumBoardCard";
 import { ProjectChatCard } from "./ProjectChatCard";
-
-interface Owner {
-  id: string;
-  username: string | null;
-  image: string | null;
-}
+import { ProjectApplicationsSection } from "./ProjectApplicationsSection";
+import { Owner } from "../types/ProjectTypes";
+import { Applicants } from "../types/ProjectTypes";
 
 interface ProjectTabsProps {
   isOwner: boolean;
@@ -20,6 +17,7 @@ interface ProjectTabsProps {
   description: string | null;
   completionDate: Date | null;
   owner: Owner;
+  applicants: Applicants[];
 }
 
 /* Project Tabs - Manages tabbed interface for project content with conditional rendering based on ownership */
@@ -31,6 +29,7 @@ export function ProjectTabs({
   description,
   completionDate,
   owner,
+  applicants
 }: ProjectTabsProps) {
   // Non-owner view shows only the overview without tabs
   if (!isOwner) {
@@ -55,10 +54,14 @@ export function ProjectTabs({
   // Owner view with tabs for different project management features
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList className={"grid w-full grid-cols-3 md:w-[400px]"}>
+      <TabsList className={`grid w-full ${!isOwner ? 'grid-cols-4 md:w-[450px]' : 'grid-cols-5 md:w-[600px]'}`}>
         <TabsTrigger value="overview">Overview</TabsTrigger>
-        <TabsTrigger value="tasks">Tasks</TabsTrigger>
-        <TabsTrigger value="chat">Chat</TabsTrigger>
+        <TabsTrigger value="tasks">Project Tasks</TabsTrigger>
+        <TabsTrigger value="scrum">Scrum Board</TabsTrigger>
+        <TabsTrigger value="chat">Team Chat</TabsTrigger>
+        {isOwner && (
+          <TabsTrigger value="applications">Applications</TabsTrigger>
+        )}
       </TabsList>
 
       <TabsContent value="overview" className="mt-6">
@@ -79,6 +82,13 @@ export function ProjectTabs({
       <TabsContent value="chat" className="mt-6">
         <ProjectChatCard />
       </TabsContent>
+
+      <TabsContent value="applications" className="mt-6">
+        <ProjectApplicationsSection
+          owner={owner}
+          applicants={applicants}
+        />
+      </TabsContent>
     </Tabs>
   );
-} 
+}

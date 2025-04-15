@@ -9,10 +9,12 @@ import { auth } from "@/auth";
 
 export default async function BrowseProjectsListPage() {
   const session = await auth();
+  const userId = session?.user?.id;
 
   let projects: ProjectWithDetails[] = [];
   let fetchError = null;
   let dynamicFilterTags: string[] = ["All"];
+  let userApplications: string[] = [];
 
   try {
     // Fetch public projects sorted by creation date
@@ -22,10 +24,19 @@ export default async function BrowseProjectsListPage() {
       },
       include: {
         owner: { select: { username: true } },
-        _count: { select: { collaborators: true } },
+        _count: { select: { collaborators: true, applicants: true } },
       },
       orderBy: { createdAt: "desc" },
     })) as ProjectWithDetails[];
+
+    // If user is logged in, fetch their applications to other projects
+    if (userId) {
+      const applications = await db.projectApplication.findMany({
+        where: { userId },
+        select: { projectId: true }
+      });
+      userApplications = applications.map(app => app.projectId);
+    }
 
     // Extract unique application types for filter tags
     if (projects.length > 0) {
@@ -67,6 +78,8 @@ export default async function BrowseProjectsListPage() {
           <FilteredProjectList
             projects={projects}
             filterTags={dynamicFilterTags}
+            userApplications={userApplications}
+            userId={userId}
           />
         )}
       </main>

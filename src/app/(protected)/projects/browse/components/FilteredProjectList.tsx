@@ -9,11 +9,15 @@ import ProjectListItem, { ProjectWithDetails } from "./ProjectListItem";
 interface FilteredProjectListProps {
   projects: ProjectWithDetails[];
   filterTags: string[];
+  userApplications?: string[];
+  userId?: string;
 }
 
 export default function FilteredProjectList({
   projects,
   filterTags,
+  userApplications = [],
+  userId,
 }: FilteredProjectListProps) {
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -89,7 +93,11 @@ export default function FilteredProjectList({
         <div className="space-y-4">
           {filteredProjects.map((project) => (
             <div key={project.id} className="relative">
-              <ProjectListItem project={project} />
+              <ProjectListItem 
+                project={project} 
+                hasApplied={userApplications.includes(project.id)} 
+                userId={userId}
+              />
             </div>
           ))}
         </div>
