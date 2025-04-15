@@ -8,6 +8,7 @@ import { ProjectChatCard } from "./ProjectChatCard";
 import { ProjectApplicationsSection } from "./ProjectApplicationsSection";
 import { Owner } from "../types/ProjectTypes";
 import { Applicants } from "../types/ProjectTypes";
+import { ProjectTasksCard } from "./ProjectTasks";
 
 interface ProjectTabsProps {
   isOwner: boolean;
@@ -76,6 +77,10 @@ export function ProjectTabs({
       </TabsContent>
 
       <TabsContent value="tasks" className="mt-6">
+        <ProjectTasksCard />
+      </TabsContent>
+      
+      <TabsContent value="scrum" className="mt-6">
         <ScrumBoardCard />
       </TabsContent>
 
