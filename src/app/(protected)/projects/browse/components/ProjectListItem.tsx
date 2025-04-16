@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useLoading } from "@/components/ui/loading-context";
 import { FileCode2, Users, Clock, Loader } from "lucide-react";
 import { Project } from "@prisma/client";
 import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
@@ -46,7 +47,7 @@ export default function ProjectListItem({
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-
+  const { showLoading } = useLoading();
   // Check if user is the owner of the project
   const isOwner = userId && project.ownerId === userId;
 
@@ -193,7 +194,13 @@ export default function ProjectListItem({
 
           <Link href={`/projects/${project.id}`} passHref legacyBehavior>
             <Button asChild size="sm" variant="default">
-              <a>View Details</a>
+              <a
+                onClick={() => {
+                  showLoading("Loading project details...");
+                }}
+              >
+                View Details
+              </a>
             </Button>
           </Link>
         </div>
