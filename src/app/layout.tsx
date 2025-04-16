@@ -10,6 +10,8 @@ import { AuthDialog } from "@/components/auth/AuthDialog";
 import { auth } from "@/auth";
 import { LoadingProvider } from "@/components/ui/loading-context";
 import { SetUsernamePopup } from "@/components/auth/SetUsernamePopup";
+import { AuthedNavMenu } from "@/components/nav/AuthedNavMenu";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 export const metadata: Metadata = {
   title: "Power Projects",
@@ -26,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body id="top">
+      <body id="top" className="flex min-h-screen flex-col">
         <Suspense>
           <ThemeProvider
             attribute="class"
@@ -35,13 +37,29 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <AuthDialogProvider>
-                <LoadingProvider>
-                  <Navbar session={session} />
-                  {user?.username === null ? <SetUsernamePopup /> : children}
-                  <AuthDialog />
-                  <Toaster richColors />
-                  <Footer />
-                </LoadingProvider>
+              <LoadingProvider>
+                {session ? (
+                  <SidebarProvider defaultOpen={true} >
+                    <AuthedNavMenu session={session} />
+                    <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out">
+                      <div className="flex-1 w-full px-4 py-6">
+                      <SidebarTrigger />
+                        {user?.username === null ? <SetUsernamePopup /> : children}
+                      </div>
+                      <Footer />
+                    </div>
+                    <AuthDialog />
+                    <Toaster richColors />
+                  </SidebarProvider>
+                ) : (
+                  <>
+                    <Navbar />
+                    <Footer />
+                    <AuthDialog />
+                    <Toaster richColors />
+                  </>
+                )}
+              </LoadingProvider>
             </AuthDialogProvider>
           </ThemeProvider>
         </Suspense>
