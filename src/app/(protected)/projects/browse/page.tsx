@@ -3,6 +3,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { ProjectVisibility } from "@prisma/client";
 import { Button } from "@/components/ui/button";
+import { HideLoading } from "@/components/HideLoading";
 import FilteredProjectList from "./components/FilteredProjectList";
 import { ProjectWithDetails } from "./components/ProjectListItem";
 import { auth } from "@/auth";
@@ -53,6 +54,7 @@ export default async function BrowseProjectsListPage() {
 
   return (
     <div className="min-h-screen">
+      <HideLoading />
       <main className="container mx-auto py-6 px-4 md:px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
           <h1 className="text-2xl font-semibold">Browse Projects</h1>

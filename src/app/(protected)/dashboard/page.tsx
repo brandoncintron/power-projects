@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { Separator } from "@/components/ui/separator";
 import { DialogCloser } from "@/components/auth/DialogCloser";
-import { HideLoading } from "./components/HideLoading";
+import { HideLoading } from "@/components/HideLoading";
 import { LoadingSpinner } from "@/components/ui/loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserProfile } from "./components/UserProfile";
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
   const applicationCount = appliedProjects.length;
 
   return (
-    <main className="container mx-auto py-10 px-4 md:px-6">
+    <main className="container mx-auto py-10 px-4 md:px-6 min-h-screen">
       <DialogCloser />
       <HideLoading />
 

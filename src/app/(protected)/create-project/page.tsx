@@ -5,6 +5,7 @@ import { Form } from "@/components/ui/form";
 import { ProjectNameField } from "./components/ProjectNameField";
 import { ProjectDescriptionField } from "./components/ProjectDescriptionField";
 import { TeamNameField } from "./components/TeamNameField";
+import { HideLoading } from "@/components/HideLoading";
 import { VisibilitySelection } from "./components/VisibilitySelection";
 import { CompletionDateField } from "./components/CompletionDateField";
 import { ApplicationTypeDropdown } from "./components/ApplicationTypeDropdown";
@@ -33,7 +34,8 @@ function ProjectSubmissionForm() {
 
   return (
     <main>
-      <div className="container px-4 sm:px-6 mx-auto py-10">
+      <HideLoading />
+      <div className="container px-4 sm:px-6 mx-auto py-10 min-h-screen">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Create Project</h1>
           <p className="text-muted-foreground mb-8">
