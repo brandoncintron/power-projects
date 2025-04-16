@@ -47,7 +47,7 @@ export function LoadingScreen({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           className={cn(
-            'fixed inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-sm'
+            'fixed inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-xs'
           )}
           style={{ zIndex }}
         >
@@ -73,7 +73,7 @@ export function LoadingScreen({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="text-lg font-medium text-foreground/80"
+                className="text-lg text-foreground/80"
               >
                 {text}
               </motion.p>
