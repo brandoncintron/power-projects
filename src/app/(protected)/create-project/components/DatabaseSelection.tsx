@@ -69,7 +69,7 @@ export function DatabaseSelection() {
           <div className="flex flex-wrap gap-2 sm:gap-3">
             <Button
               variant="outline"
-              size="sm"
+              size="md"
               onClick={handleBackNavigation}
               className="text-xs"
             >
@@ -77,7 +77,7 @@ export function DatabaseSelection() {
             </Button>
             <Button
               type="button"
-              size="sm"
+              size="md"
               className="text-xs"
               onClick={handleSubmit}
             >
@@ -242,7 +242,7 @@ export function DatabaseSelection() {
       <div className="mt-8">
         <Button
           type="button"
-          size="sm"
+          size="md"
           className="text-xs"
           onClick={handleSubmit}
         >

@@ -62,7 +62,7 @@ export function FrameworkSelection() {
   return (
     <>
       {/* FRAMEWORK HEADER - Title and navigation button */}
-      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row justify-between sm:items-center gap-3">
         <div>
           <h3 className="text-xl font-semibold">Frameworks</h3>
           <p className="text-sm text-muted-foreground">Select framework(s) or technology for your project</p>
@@ -70,7 +70,8 @@ export function FrameworkSelection() {
         <Button
           onClick={goToDatabaseStep}
           disabled={form.watch("frameworks").length === 0}
-          className="self-end"
+          className="self-end mb-2"
+          size="md"
         >
           Next: Database Selection
         </Button>
@@ -150,6 +151,7 @@ export function FrameworkSelection() {
         <Button 
           onClick={handleProceedToDatabase}
           disabled={form.watch("frameworks").length === 0}
+          size="md"
         >
           Next: Database Selection
         </Button>
