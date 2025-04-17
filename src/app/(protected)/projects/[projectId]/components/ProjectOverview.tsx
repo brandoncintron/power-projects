@@ -2,7 +2,7 @@
 
 import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
 import { TeamMembersCard } from "./TeamMembersCard";
-import { ProjectOverviewProps } from "../types/ProjectTypes";
+import { ProjectOverviewProps } from "../../ProjectTypes";
 import {
   FaCalendarAlt,
   FaCode,

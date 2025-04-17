@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { GitBranch, Settings, Users, Clock } from "lucide-react";
-
+import { GitBranch, Users, Clock, Pencil } from "lucide-react";
+import Link from "next/link";
 interface ProjectHeaderProps {
   projectName: string;
   memberCount: number;
+  projectId: string;
   createdAt: Date;
   isOwner: boolean;
 }
@@ -14,6 +15,7 @@ interface ProjectHeaderProps {
 export function ProjectHeader({
   projectName,
   memberCount,
+  projectId,
   createdAt,
   isOwner,
 }: ProjectHeaderProps) {
@@ -38,10 +40,12 @@ export function ProjectHeader({
             <GitBranch className="mr-2 h-4 w-4" />
             Connect GitHub
           </Button>
-          <Button variant="outline" size="sm">
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
-          </Button>
+          <Link href={`/projects/${projectId}/edit`}>
+            <Button variant="outline" size="sm" className="gap-1">
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit Project
+            </Button>
+          </Link>
         </div>
       )}
     </div>
