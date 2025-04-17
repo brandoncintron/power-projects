@@ -69,12 +69,13 @@ async function ProjectDetailPage(props: {
   const isOwner = currentUserId === project.owner.id;
 
   return (
-    <div className="container mx-auto p-4 md:p-8">
+    <div className="container mx-auto p-4 md:p-8 min-h-screen">
       <HideLoading />
       {/* Header Section */}
       <ProjectHeader
         projectName={project.projectName}
         memberCount={project._count.collaborators + 1}
+        projectId={project.id}
         createdAt={project.createdAt}
         isOwner={isOwner}
       />
