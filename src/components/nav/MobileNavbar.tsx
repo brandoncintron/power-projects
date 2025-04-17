@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Github, LogOut, Menu, Moon, Settings, Sun, User } from "lucide-react";
+import { Github, Menu, Moon, Sun } from "lucide-react";
 import {
   Sheet,
   SheetContent,

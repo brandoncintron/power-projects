@@ -24,11 +24,12 @@ import {
 } from "@/components/ui/sidebar";
 
 export function AuthedNavMenu({ session }: { session: Session | null }) {
-  if (!session) return null;
   const pathname = usePathname();
   const { showLoading } = useLoading();
   const { setOpenMobile } = useSidebar();
   const { theme, setTheme } = useTheme();
+  
+  if (!session) return null;
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");

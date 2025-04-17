@@ -11,7 +11,7 @@ import { auth } from "@/auth";
 import { LoadingProvider } from "@/components/ui/loading-context";
 import { SetUsernamePopup } from "@/components/auth/SetUsernamePopup";
 import { AuthedNavMenu } from "@/components/nav/AuthedNavMenu";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
 
 export const metadata: Metadata = {
   title: "Power Projects",

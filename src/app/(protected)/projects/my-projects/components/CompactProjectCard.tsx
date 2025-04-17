@@ -249,7 +249,7 @@ export default function CompactProjectCard({
           <DialogHeader>
             <DialogTitle>Delete Project</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{project.projectName}"? This action cannot be undone and will permanently remove the project, all applications, and collaborator associations.
+              Are you sure you want to delete &quot;{project.projectName}&quot;? This action cannot be undone and will permanently remove the project, all applications, and collaborator associations.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex flex-row justify-end gap-2 sm:gap-0">

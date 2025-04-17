@@ -102,7 +102,7 @@ export default async function MyProjectsPage() {
             </div>
             <h2 className="text-xl font-semibold mb-2">No projects yet</h2>
             <p className="text-muted-foreground max-w-md mb-6">
-              You haven't created any projects yet. Create your first project to start collaborating with others.
+              You haven&apos;t created any projects yet. Create your first project to start collaborating with others.
             </p>
             <Button asChild>
               <Link href="/create-project">Create Your First Project</Link>
