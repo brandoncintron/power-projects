@@ -6,8 +6,8 @@ import { ProjectOverview } from "./ProjectOverview";
 import { ScrumBoardCard } from "./ScrumBoardCard";
 import { ProjectChatCard } from "./ProjectChatCard";
 import { ProjectApplicationsSection } from "./ProjectApplicationsSection";
-import { Owner } from "../types/ProjectTypes";
-import { Applicants } from "../types/ProjectTypes";
+import { Owner } from "../../ProjectTypes";
+import { Applicants } from "../../ProjectTypes";
 import { ProjectTasksCard } from "./ProjectTasks";
 
 interface ProjectTabsProps {
@@ -36,8 +36,6 @@ export function ProjectTabs({
   if (!isOwner) {
     return (
       <>
-        <h2 className="text-2xl font-semibold mb-2">Project Overview</h2>
-        <Separator />
         <div className="mt-6">
           <ProjectOverview
             applicationType={applicationType}

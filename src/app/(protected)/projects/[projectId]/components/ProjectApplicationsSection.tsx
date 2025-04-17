@@ -1,8 +1,8 @@
 "use client";
 
 import { TeamMembersCard } from "./TeamMembersCard";
-import { Owner } from "../types/ProjectTypes";
-import { Applicants } from "../types/ProjectTypes";
+import { Owner } from "../../ProjectTypes";
+import { Applicants } from "../../ProjectTypes";
 import { ProjectApplicantsList } from "./ProjectApplicantsList";
 
 interface ProjectApplicationSectionProps {

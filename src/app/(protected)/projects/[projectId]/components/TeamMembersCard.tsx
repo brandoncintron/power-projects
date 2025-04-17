@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Owner } from "../types/ProjectTypes";
+import { Owner } from "../../ProjectTypes";
 
 interface TeamMembersCardProps {
   owner: Owner;
