@@ -52,11 +52,11 @@ export default function FilteredProjectList({
     <>
       {/* Search Input */}
       <div className="relative w-full md:w-1/2 lg:w-1/3 mb-6">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
         <Input
           type="search"
           placeholder="Search projects by name or description..."
-          className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+          className="w-full pl-10 pr-4 py-2 rounded-lg border"
           value={searchQuery}
           onChange={handleSearchChange}
         />
@@ -64,7 +64,7 @@ export default function FilteredProjectList({
 
       {/* Filter Tags Bar */}
       <div className="flex flex-wrap items-center gap-2 mb-8 pb-4 border-b">
-        <span className="text-sm font-medium text-gray-600 mr-2">
+        <span className="text-sm font-medium mr-2">
           Filter by application type:
         </span>
         {filterTags.map((tag) => (
@@ -73,7 +73,6 @@ export default function FilteredProjectList({
             variant={activeFilter === tag ? "default" : "outline"}
             size="sm"
             onClick={() => handleFilterClick(tag)}
-            className="transition-colors duration-150"
           >
             {tag}
           </Button>
@@ -83,14 +82,14 @@ export default function FilteredProjectList({
       {/* Project List or Messages */}
       {/* If there are no projects to show */}
       {filteredProjects.length === 0 && (
-        <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-md">
+        <div className="text-center py-10 text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
           <p>No projects found.</p>
         </div>
       )}
 
       {/* Render the filtered list */}
       {filteredProjects.length > 0 && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {filteredProjects.map((project) => (
             <div key={project.id} className="relative">
               <ProjectListItem 

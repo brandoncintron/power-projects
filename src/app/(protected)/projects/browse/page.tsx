@@ -55,14 +55,14 @@ export default async function BrowseProjectsListPage() {
   return (
     <div className="min-h-screen">
       <HideLoading />
-      <main className="container mx-auto py-6 px-4 md:px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-          <h1 className="text-2xl font-semibold">Browse Projects</h1>
+      <main className="container mx-auto py-8 px-4 md:px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+          <h1 className="text-3xl font-bold">Browse Projects</h1>
           {/* Create project button */}
           {session && (
             <Button
               asChild
-              className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full md:w-auto shadow-md transition-all hover:shadow-lg"
             >
               <Link href="/create-project">Create a project</Link>
             </Button>
@@ -70,7 +70,7 @@ export default async function BrowseProjectsListPage() {
         </div>
 
         {fetchError && (
-          <div className="text-center py-10 text-red-600 bg-red-50 rounded-md">
+          <div className="text-center py-10 text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm border border-red-200 dark:border-red-800/30">
             <p>{fetchError}</p>
           </div>
         )}
