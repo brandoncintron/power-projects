@@ -42,8 +42,7 @@ export default async function RootLayout({
                   <SidebarProvider defaultOpen={true} >
                     <AuthedNavMenu session={session} />
                     <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out">
-                      <div className="flex-1 w-full px-4 py-6">
-                      <SidebarTrigger />
+                      <div className="p-0 bg-[#f3f2f1] dark:bg-[#1a1a1a]">
                         {user?.username === null ? <SetUsernamePopup /> : children}
                       </div>
                       <Footer />
@@ -54,6 +53,7 @@ export default async function RootLayout({
                 ) : (
                   <>
                     <Navbar />
+                    {children}
                     <Footer />
                     <AuthDialog />
                     <Toaster richColors />
