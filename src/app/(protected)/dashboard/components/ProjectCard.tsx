@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { handleWithdrawApplication } from "../actions";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ProjectCardProps {
   project: Project;
@@ -59,10 +60,12 @@ export function ProjectCard({ project, applicationStatus, isApplication = false 
       const result = await handleWithdrawApplication(project.id);
       
       if (result.success) {
-        // Refresh the router to show changes
         router.refresh();
+        setIsWithdrawing(false);
+        toast.success("Application withdrawn successfully");
       } else {
         console.error("Error withdrawing application:", result.error);
+        toast.error("Failed to withdraw application");
       }
     } catch (error) {
       console.error("Failed to withdraw application:", error);
