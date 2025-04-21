@@ -17,6 +17,9 @@ export function ProjectOverview({
   description,
   completionDate,
   owner,
+  collaborators = [],
+  isOwner = false,
+  projectId = "",
 }: ProjectOverviewProps) {
   return (
     <div className="space-y-8">
@@ -116,7 +119,12 @@ export function ProjectOverview({
             </div>
 
             {/* Team Members Card */}
-            <TeamMembersCard owner={owner} />
+            <TeamMembersCard 
+              owner={owner} 
+              collaborators={collaborators} 
+              isOwner={isOwner}
+              projectId={projectId}
+            />
           </div>
         </div>
       </div>

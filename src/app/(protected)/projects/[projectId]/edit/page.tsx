@@ -2,13 +2,10 @@ import React from "react";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
-import { ProjectHeader } from "../components/ProjectHeader";
-import { ProjectTabs } from "../components/ProjectTabs";
 import { HideLoading } from "@/components/HideLoading";
-/**
- * Project Detail Page - Displays comprehensive information about a specific project
- * Handles data fetching, ownership verification, and rendering of the appropriate components
- */
+import { EditProjectForm } from "./components/EditProjectForm";
+
+
 async function ProjectEditPage(props: {
   params: Promise<{ projectId: string }>;
 }) {
@@ -71,26 +68,18 @@ async function ProjectEditPage(props: {
   return (
     <div className="container mx-auto p-4 md:p-8 min-h-screen">
       <HideLoading />
-      Editing Project: {project.id}
-      {/* Header Section */}
-      <ProjectHeader
+      <EditProjectForm
         projectName={project.projectName}
-        projectId={project.id}
-        memberCount={project._count.collaborators + 1}
-        createdAt={project.createdAt}
-        isOwner={isOwner}
-      />
-
-      {/* Main Content */}
-      <ProjectTabs
-        isOwner={isOwner}
         applicationType={project.applicationType}
         frameworks={project.frameworks}
         databases={project.databases}
         description={project.description}
         completionDate={project.completionDate}
         owner={project.owner}
-        applicants={project.applicants}
+        projectId={project.id}
+        memberCount={project._count.collaborators + 1}
+        createdAt={project.createdAt}
+        isOwner={isOwner}
       />
     </div>
   );

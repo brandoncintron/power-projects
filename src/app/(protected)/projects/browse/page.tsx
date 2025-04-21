@@ -5,7 +5,7 @@ import { ProjectVisibility } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { HideLoading } from "@/components/HideLoading";
 import FilteredProjectList from "./components/FilteredProjectList";
-import { ProjectWithDetails } from "./components/ProjectListItem";
+import { ProjectWithDetails } from "../ProjectTypes";
 import { auth } from "@/auth";
 
 export default async function BrowseProjectsListPage() {
@@ -16,6 +16,7 @@ export default async function BrowseProjectsListPage() {
   let fetchError = null;
   let dynamicFilterTags: string[] = ["All"];
   let userApplications: string[] = [];
+  let userCollaborations: string[] = [];
 
   try {
     // Fetch public projects sorted by creation date
@@ -37,6 +38,13 @@ export default async function BrowseProjectsListPage() {
         select: { projectId: true }
       });
       userApplications = applications.map(app => app.projectId);
+      
+      // Fetch projects where the user is a collaborator
+      const collaborations = await db.projectCollaborator.findMany({
+        where: { userId },
+        select: { projectId: true }
+      });
+      userCollaborations = collaborations.map(collab => collab.projectId);
     }
 
     // Extract unique application types for filter tags
@@ -81,6 +89,7 @@ export default async function BrowseProjectsListPage() {
             projects={projects}
             filterTags={dynamicFilterTags}
             userApplications={userApplications}
+            userCollaborations={userCollaborations}
             userId={userId}
           />
         )}

@@ -50,6 +50,19 @@ async function ProjectDetailPage(props: {
             },
           },
         },
+        collaborators: {
+          select: {
+            userId: true,
+            assignedAt: true,
+            user: {
+              select: {
+                id: true,
+                username: true,
+                image: true,
+              },
+            },
+          },
+        },
         _count: {
           select: {
             collaborators: true,
@@ -67,6 +80,11 @@ async function ProjectDetailPage(props: {
 
   // Determine if current user is the project owner
   const isOwner = currentUserId === project.owner.id;
+  
+  // Determine if current user is a collaborator
+  const isCollaborator = currentUserId ? 
+    project.collaborators.some(collab => collab.userId === currentUserId) : 
+    false;
 
   return (
     <div className="container mx-auto p-4 md:p-8 min-h-screen">
@@ -83,6 +101,7 @@ async function ProjectDetailPage(props: {
       {/* Main Content */}
       <ProjectTabs
         isOwner={isOwner}
+        isCollaborator={isCollaborator}
         applicationType={project.applicationType}
         frameworks={project.frameworks}
         databases={project.databases}
@@ -90,6 +109,8 @@ async function ProjectDetailPage(props: {
         completionDate={project.completionDate}
         owner={project.owner}
         applicants={project.applicants}
+        collaborators={project.collaborators}
+        projectId={project.id}
       />
     </div>
   );

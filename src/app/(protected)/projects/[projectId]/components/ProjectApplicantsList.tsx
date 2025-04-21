@@ -4,22 +4,27 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Applicants } from "../../ProjectTypes";
-
+import { Loader } from "lucide-react";
 
 interface ProjectApplicantsListProps {
   applicants: Applicants[];
-  // Placeholder functions for actions - implement logic in parent or here later
-  //onAccept: (userId: string) => void;
-  //onDeny: (userId: string) => void;
+  onAccept: (userId: string) => void;
+  onDeny: (userId: string) => void;
+  isPending?: boolean;
 }
 
 export function ProjectApplicantsList({
   applicants,
-  //onAccept,
-  //onDeny,
+  onAccept,
+  onDeny,
+  isPending = false,
 }: ProjectApplicantsListProps) {
+  // Filter to only show pending applications
+  const pendingApplicants = applicants.filter(
+    applicant => applicant.status?.toLowerCase() === 'pending'
+  );
 
-  if (!applicants || applicants.length === 0) {
+  if (!pendingApplicants || pendingApplicants.length === 0) {
     return (
       <Card>
         <CardHeader>
@@ -38,18 +43,18 @@ export function ProjectApplicantsList({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Applicants ({applicants.length})</CardTitle>
+        <CardTitle>Applicants ({pendingApplicants.length})</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {applicants.map((applicant) => (
+        {pendingApplicants.map((applicant) => (
           <div
-            key={applicant.userId}
-            className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 border rounded-md bg-card"
+          key={applicant.userId}
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 border rounded-md bg-card"
           >
             {/* Applicant Info */}
             <div className="mb-2 sm:mb-0">
               <p className="text-sm font-medium text-foreground">
-                {applicant.user.username} is requesting to collaborate on your project.
+                {applicant.user.username} is requesting to join your project.
               </p>
               <p className="text-xs text-muted-foreground">
                 Applied: {applicant.appliedAt.toLocaleDateString()}
@@ -60,27 +65,28 @@ export function ProjectApplicantsList({
             </div>
 
             {/* Action Buttons */}
-            {/* TODO: Conditionally render buttons based on status */}
-            {applicant.status?.toLowerCase() === 'pending' && ( // Example: Only show for pending
-                <div className="flex space-x-2 mt-2 sm:mt-0 self-end sm:self-center">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    //onClick={() => onAccept(applicant.userId)}
-                    aria-label={`Accept application from ${applicant.userId}`}
-                >
-                    Accept
-                </Button>
-                <Button
-                    variant="destructive"
-                    size="sm"
-                    //onClick={() => onDeny(applicant.userId)}
-                    aria-label={`Deny application from ${applicant.userId}`}
-                >
-                    Deny
-                </Button>
-                </div>
-             )}
+            <div className="flex space-x-2 mt-2 sm:mt-0 self-end sm:self-center">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onAccept(applicant.userId)}
+                disabled={isPending}
+                aria-label={`Accept application from ${applicant.user.username || applicant.userId}`}
+              >
+                {isPending && <Loader className="mr-2 h-3 w-3 animate-spin" />}
+                Accept
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => onDeny(applicant.userId)}
+                disabled={isPending}
+                aria-label={`Deny application from ${applicant.user.username || applicant.userId}`}
+              >
+                {isPending && <Loader className="mr-2 h-3 w-3 animate-spin" />}
+                Deny
+              </Button>
+            </div>
           </div>
         ))}
       </CardContent>

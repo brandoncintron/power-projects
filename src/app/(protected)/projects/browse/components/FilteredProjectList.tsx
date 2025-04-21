@@ -4,19 +4,14 @@ import React, { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import ProjectListItem, { ProjectWithDetails } from "./ProjectListItem";
-
-interface FilteredProjectListProps {
-  projects: ProjectWithDetails[];
-  filterTags: string[];
-  userApplications?: string[];
-  userId?: string;
-}
+import ProjectListItem from "./ProjectListItem";
+import { FilteredProjectListProps, ProjectWithDetails } from "../../ProjectTypes";
 
 export default function FilteredProjectList({
   projects,
   filterTags,
   userApplications = [],
+  userCollaborations = [],
   userId,
 }: FilteredProjectListProps) {
   const [activeFilter, setActiveFilter] = useState<string>("All");
@@ -30,7 +25,7 @@ export default function FilteredProjectList({
   const filteredProjects = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
 
-    const searchedProjects = projects.filter((p) => {
+    const searchedProjects = projects.filter((p: ProjectWithDetails) => {
       if (!query) return true;
       return (
         p.projectName.toLowerCase().includes(query) ||
@@ -41,7 +36,7 @@ export default function FilteredProjectList({
     if (activeFilter === "All") {
       return searchedProjects;
     }
-    return searchedProjects.filter((p) => p.applicationType === activeFilter);
+    return searchedProjects.filter((p: ProjectWithDetails) => p.applicationType === activeFilter);
   }, [projects, activeFilter, searchQuery]);
 
   const handleFilterClick = (tag: string) => {
@@ -67,7 +62,7 @@ export default function FilteredProjectList({
         <span className="text-sm font-medium mr-2">
           Filter by application type:
         </span>
-        {filterTags.map((tag) => (
+        {filterTags.map((tag: string) => (
           <Button
             key={tag}
             variant={activeFilter === tag ? "default" : "outline"}
@@ -90,11 +85,12 @@ export default function FilteredProjectList({
       {/* Render the filtered list */}
       {filteredProjects.length > 0 && (
         <div className="space-y-6">
-          {filteredProjects.map((project) => (
+          {filteredProjects.map((project: ProjectWithDetails) => (
             <div key={project.id} className="relative">
               <ProjectListItem 
                 project={project} 
-                hasApplied={userApplications.includes(project.id)} 
+                hasApplied={userApplications.includes(project.id)}
+                isCollaborator={userCollaborations.includes(project.id)} 
                 userId={userId}
               />
             </div>

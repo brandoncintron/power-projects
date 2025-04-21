@@ -25,18 +25,9 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { useLoading } from "@/components/ui/loading-context";
-import { deleteProject } from "../actions";
-import { toast } from "sonner";
+import { DeleteProjectDialog } from "./DeleteProjectDialog";
 
 export default function CompactProjectCard({
   project,
@@ -47,7 +38,6 @@ export default function CompactProjectCard({
   const { showLoading } = useLoading();
   const isOpen = project.status === "OPEN";
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   
   // Calculate member statistics for display
   const memberCount = (project._count?.collaborators ?? 0) + 1;
@@ -85,28 +75,6 @@ export default function CompactProjectCard({
   const openDeleteDialog = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent card click
     setShowDeleteDialog(true);
-  };
-
-  const handleDelete = async () => {
-    try {
-      setIsDeleting(true);
-      showLoading("Deleting project...");
-      const result = await deleteProject(project.id);
-      
-      if (result.success) {
-        toast.success("Project deleted successfully");
-        window.location.reload();
-      } else {
-        setIsDeleting(false);
-        setShowDeleteDialog(false);
-        toast.error(result.error || "Failed to delete project");
-      }
-    } catch (error) {
-      setIsDeleting(false);
-      setShowDeleteDialog(false);
-      toast.error("An error occurred while deleting the project");
-      console.error(error);
-    }
   };
 
   return (
@@ -223,53 +191,41 @@ export default function CompactProjectCard({
           </div>
         </div>
 
-        <div className="flex gap-2 mt-3">
-          <Button 
+        <div className="flex gap-2 mt-3 xl:flex-row flex-col">
+        <Button 
             variant="outline" 
             size="sm" 
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              showLoading("Loading project details...");
+              router.push(`/projects/${project.id}`);
+            }}
           >
-            <Pencil className="h-4 w-4 mr-1" />
-            Edit Project
+            <ExternalLink className="h-4 w-4 mr-1" />
+            View Project
           </Button>
+          
           <Button 
             variant="outline" 
             size="sm" 
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              showLoading("Loading edit page...");
+              router.push(`/projects/${project.id}/edit`);
+            }}
           >
-            <Users className="h-4 w-4 mr-1" />
-            Manage Applications
+            <Pencil className="h-4 w-4 mr-2" />
+            Edit Project
           </Button>
         </div>
       </div>
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Delete Project</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete &quot;{project.projectName}&quot;? This action cannot be undone and will permanently remove the project, all applications, and collaborator associations.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex flex-row justify-end gap-2 sm:gap-0">
-            <Button
-              variant="outline"
-              onClick={() => setShowDeleteDialog(false)}
-              disabled={isDeleting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDelete}
-              disabled={isDeleting}
-            >
-              {isDeleting ? "Deleting..." : "Delete Project"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Use the DeleteProjectDialog component */}
+      <DeleteProjectDialog
+        isOpen={showDeleteDialog}
+        setIsOpen={setShowDeleteDialog}
+        project={project}
+      />
     </>
   );
 } 

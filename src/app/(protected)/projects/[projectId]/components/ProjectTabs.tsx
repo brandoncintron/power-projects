@@ -5,34 +5,25 @@ import { ProjectOverview } from "./ProjectOverview";
 import { ScrumBoardCard } from "./ScrumBoardCard";
 import { ProjectChatCard } from "./ProjectChatCard";
 import { ProjectApplicationsSection } from "./ProjectApplicationsSection";
-import { Owner } from "../../ProjectTypes";
-import { Applicants } from "../../ProjectTypes";
+import { ProjectTabsProps } from "../../ProjectTypes";
 import { ProjectTasksCard } from "./ProjectTasks";
 
-interface ProjectTabsProps {
-  isOwner: boolean;
-  applicationType: string;
-  frameworks: string[] | null;
-  databases: string[] | null;
-  description: string | null;
-  completionDate: Date | null;
-  owner: Owner;
-  applicants: Applicants[];
-}
-
-/* Project Tabs - Manages tabbed interface for project content with conditional rendering based on ownership */
+/* Project Tabs - Manages tabbed interface for project content with conditional rendering based on ownership and collaboration status */
 export function ProjectTabs({
   isOwner,
+  isCollaborator = false,
   applicationType,
   frameworks,
   databases,
   description,
   completionDate,
   owner,
-  applicants
+  applicants,
+  collaborators = [],
+  projectId
 }: ProjectTabsProps) {
-  // Non-owner view shows only the overview without tabs
-  if (!isOwner) {
+  // Non-owner and non-collaborator view shows only the overview without tabs
+  if (!isOwner && !isCollaborator) {
     return (
       <>
         <div className="mt-6">
@@ -43,16 +34,19 @@ export function ProjectTabs({
             description={description}
             completionDate={completionDate}
             owner={owner}
+            collaborators={collaborators}
+            isOwner={isOwner}
+            projectId={projectId}
           />
         </div>
       </>
     );
   }
 
-  // Owner view with tabs for different project management features
+  // Owner or collaborator view with tabs for different project management features
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList className={`grid w-full ${!isOwner ? 'grid-cols-4 md:w-[450px]' : 'grid-cols-5 md:w-[600px]'}`}>
+      <TabsList className={`grid w-full ${isOwner ? 'grid-cols-5 md:w-[600px]' : 'grid-cols-4 md:w-[500px]'}`}>
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="tasks">Project Tasks</TabsTrigger>
         <TabsTrigger value="scrum">Scrum Board</TabsTrigger>
@@ -70,6 +64,9 @@ export function ProjectTabs({
           description={description}
           completionDate={completionDate}
           owner={owner}
+          collaborators={collaborators}
+          isOwner={isOwner}
+          projectId={projectId}
         />
       </TabsContent>
 
@@ -85,12 +82,16 @@ export function ProjectTabs({
         <ProjectChatCard />
       </TabsContent>
 
-      <TabsContent value="applications" className="mt-6">
-        <ProjectApplicationsSection
-          owner={owner}
-          applicants={applicants}
-        />
-      </TabsContent>
+      {isOwner && (
+        <TabsContent value="applications" className="mt-6">
+          <ProjectApplicationsSection
+            owner={owner}
+            applicants={applicants}
+            collaborators={collaborators}
+            projectId={projectId}
+          />
+        </TabsContent>
+      )}
     </Tabs>
   );
 }
