@@ -5,18 +5,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileCode2, Users, Clock, CheckCircle2, ClockIcon, XCircle } from "lucide-react";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
-import { Project } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { handleWithdrawApplication } from "../actions";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
-interface ProjectCardProps {
-  project: Project;
-  applicationStatus?: string;
-  isApplication?: boolean;
-}
+import { ProjectCardProps } from "../DashboardTypes";
 
 /* Project Card - Displays individual project summary with metadata */
 export function ProjectCard({ project, applicationStatus, isApplication = false }: ProjectCardProps) {
