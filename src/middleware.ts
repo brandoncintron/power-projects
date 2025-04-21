@@ -1,6 +1,6 @@
 import authConfig from "@/auth.config";
 import NextAuth from "next-auth";
-import { publicRoutes, apiAuthPrefix } from "@/routes";
+import { publicRoutes, apiAuthPrefix, DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 const { auth } = NextAuth(authConfig);
 
@@ -31,11 +31,16 @@ export default auth((req) => {
         return pattern === nextUrl.pathname; // Exact match for static routes
     }
     return pattern.test(nextUrl.pathname); // Regex test for dynamic routes
-});
+  });
 
   // Allow all auth API routes
   if (isApiAuthRoute) {
     return;
+  }
+
+  // Redirect logged-in users trying to access home page
+  if (isLoggedIn && nextUrl.pathname === "/") {
+    return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
   // Allow public routes for everyone
