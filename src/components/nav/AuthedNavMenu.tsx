@@ -45,13 +45,12 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
 
   return (
     <Sidebar className="md:w-[250px] p-0">
-      <SidebarHeader className="flex items-center justify-between px-4 py-3">
+      <SidebarHeader className="flex items-center justify-between px-4 pt-4 pb-0">
         <Link href="/" className="no-underline" onClick={() => handleNavWithLoading("/", "Loading home...")}>
-          <div className="border border-red-500 h-[50px] w-[175px] flex items-center justify-center">
-            Logo placeholder
+          <div className=" h-[50px] w-[175px] flex items-center justify-center overflow-hidden">
+            <span className="text-2xl font-bold">Power Projects</span>
           </div>
         </Link>
-        <SidebarTrigger className="ml-auto md:hidden" />
       </SidebarHeader>
 
       <SidebarContent className="px-3 py-2">
