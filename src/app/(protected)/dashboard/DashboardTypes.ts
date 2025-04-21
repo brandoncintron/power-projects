@@ -23,4 +23,14 @@ export interface ProjectCardProps {
   project: DashboardProject;
   applicationStatus?: string;
   isApplication?: boolean;
+}
+
+export interface CollaborationsSectionProps {
+  collaborations: DashboardProject[];
+}
+
+export interface DashboardData {
+  ownedProjects: DashboardProject[];
+  collaborations: DashboardProject[];
+  applications: ProjectWithApplicationStatus[];
 } 

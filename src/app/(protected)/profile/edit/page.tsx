@@ -7,7 +7,7 @@ export default async function FetchSession() {
   return (
     <>
       <EditProfileForm session={session} />
-      <HideLoading />
+      
     </>
   );
 }

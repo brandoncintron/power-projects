@@ -6,15 +6,19 @@ import { HideLoading } from "@/components/HideLoading";
 import { LoadingSpinner } from "@/components/ui/loading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserProfile } from "./components/UserProfile";
-import { DashboardTabs } from "./components/DashboardTabs";
-import { Project } from "@prisma/client";
+import { ProjectList } from "./components/ProjectList";
+import { AppliedToProjectList } from "./components/AppliedToProjectList";
+import { CollaborationsSection } from "./components/CollaborationsSection";
+import { NotificationsSection } from "./components/NotificationsSection";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
+import { DashboardData } from "./DashboardTypes";
 
-const fetchProjectData = async (userId: string) => {
-  return db.user.findUnique({
+const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
+  const userData = await db.user.findUnique({
     where: { id: userId },
     include: {
+      // Fetch projects user has applied to
       applications: {
         include: {
           project: {
@@ -22,17 +26,59 @@ const fetchProjectData = async (userId: string) => {
               owner: {
                 select: { id: true, username: true, image: true },
               },
+              _count: {
+                select: { collaborators: true, applicants: true },
+              },
             },
           },
         },
       },
+      // Fetch projects user owns
       ownedProjects: {
         orderBy: {
           createdAt: "desc",
         },
+        include: {
+          _count: {
+            select: { collaborators: true, applicants: true },
+          },
+        },
+      },
+      // Fetch projects user is collaborating on
+      collaborations: {
+        include: {
+          project: {
+            include: {
+              owner: {
+                select: { id: true, username: true, image: true },
+              },
+              _count: {
+                select: { collaborators: true, applicants: true },
+              },
+            },
+          },
+        },
       },
     },
   });
+
+  // Transform collaboration data
+  const collaborations = userData?.collaborations.map(collab => ({
+    ...collab.project,
+    owner: collab.project.owner,
+  })) || [];
+
+  // Transform application data
+  const applications = userData?.applications.map(app => ({
+    ...app.project,
+    applicationStatus: app.status,
+  })) || [];
+
+  return {
+    ownedProjects: userData?.ownedProjects || [],
+    collaborations,
+    applications,
+  };
 };
 
 export default async function DashboardPage() {
@@ -52,8 +98,11 @@ export default async function DashboardPage() {
     );
   }
 
-  let userProjects: Project[] = [];
-  let appliedProjects: Project[] = [];
+  let dashboardData: DashboardData = {
+    ownedProjects: [],
+    collaborations: [],
+    applications: [],
+  };
   let fetchError: string | null = null;
 
   try {
@@ -61,35 +110,20 @@ export default async function DashboardPage() {
       throw new Error("User ID not found in session.");
     }
 
-    const userData = await fetchProjectData(user.id);
-
-    // Extract owned and applied projects safely using optional chaining and nullish coalescing
-    userProjects = userData?.ownedProjects ?? [];
-    
-    // Include application status in applied projects
-    appliedProjects =
-      userData?.applications?.map((app) => ({
-        ...app.project,
-        applicationStatus: app.status
-      })) ?? [];
+    dashboardData = await fetchDashboardData(user.id);
   } catch (error) {
     console.error("Failed to fetch dashboard data:", error);
     fetchError = "Could not load dashboard data. Please try again later.";
-    userProjects = [];
-    appliedProjects = [];
   }
 
-  const applicationCount = appliedProjects.length;
-
   return (
-    <main className="container mx-auto py-10 px-4 md:px-6 min-h-screen">
+    <main className="container mx-auto py-6 px-4 md:px-6 min-h-screen">
       <DialogCloser />
       <HideLoading />
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
         <UserProfile user={user} />
-        <Separator />
-
+        
         {fetchError ? (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />
@@ -97,11 +131,22 @@ export default async function DashboardPage() {
             <AlertDescription>{fetchError}</AlertDescription>
           </Alert>
         ) : (
-          <DashboardTabs
-            projects={userProjects}
-            appliedProjects={appliedProjects}
-            applicationCount={applicationCount}
-          />
+          <>
+            {/* Projects Section */}
+            <ProjectList projects={dashboardData.ownedProjects} />
+            <Separator className="my-1" />
+
+            {/* Collaborations Section */}
+            <CollaborationsSection collaborations={dashboardData.collaborations} />
+            <Separator className="my-1" />
+
+            {/* Applications Section */}
+            <AppliedToProjectList projects={dashboardData.applications} />
+            <Separator className="my-1" />
+
+            {/* Notifications Section */}
+            <NotificationsSection />
+          </>
         )}
       </div>
     </main>

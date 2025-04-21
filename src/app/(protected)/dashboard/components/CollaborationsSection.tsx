@@ -1,29 +1,26 @@
 "use client";
 
-import Link from "next/link";
+import { Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { ProjectCard } from "./ProjectCard";
-import { useLoading } from "@/components/ui/loading-context";
-import { AppliedToProjectListProps } from "../DashboardTypes";
 import { Button } from "@/components/ui/button";
-import { Clock } from "lucide-react";
-import { LoadingSpinner } from "@/components/ui/loading";
+import { ProjectCard } from "./ProjectCard";
+import { DashboardProject } from "../DashboardTypes";
+import Link from "next/link";
+import { useLoading } from "@/components/ui/loading-context";
 
-/* Project List - Renders grid of pending applications */
-export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
+interface CollaborationsSectionProps {
+  collaborations: DashboardProject[];
+}
+
+export function CollaborationsSection({ collaborations }: CollaborationsSectionProps) {
   const { showLoading } = useLoading();
-  
-  // Filter for only pending applications
-  const pendingApplications = projects.filter(
-    project => project.applicationStatus?.toLowerCase() === 'pending'
-  );
   
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold flex items-center gap-1.5">
-          <Clock className="h-4 w-4" />
-          Pending Applications
+          <Users className="h-4 w-4" />
+          Projects You&apos;re Collaborating On
         </h2>
         <Link href="/projects/browse">
           <Button 
@@ -32,41 +29,36 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
             className="h-7 text-xs px-3"
             onClick={() => showLoading("Loading project browser...")}
           >
-            Browse Projects
+            Browse More Projects
           </Button>
         </Link>
       </div>
 
-      {pendingApplications.length === 0 ? (
+      {collaborations.length === 0 ? (
         <Card>
           <CardContent className="p-4 text-center flex flex-col items-center">
             <p className="text-muted-foreground mb-2 text-sm">
-              {projects.length === 0 
-                ? "You haven't applied to any projects yet." 
-                : "You don't have any pending applications."}
+              You&apos;re not collaborating on any projects yet.
             </p>
-            <Link 
-              href="/projects/browse" 
-              onClick={() => showLoading("Loading project browser...")} 
-            >
+            <Link href="/projects/browse">
               <Button 
                 variant="default" 
                 size="sm" 
                 className="h-7 text-xs px-3"
+                onClick={() => showLoading("Loading project browser...")}
               >
-                Browse and Apply for Projects
+                Find Projects to Collaborate On
               </Button>
             </Link>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {pendingApplications.map((project) => (
+          {collaborations.map((project) => (
             <ProjectCard 
               key={project.id} 
               project={project} 
-              applicationStatus={project.applicationStatus} 
-              isApplication={true}
+              isApplication={false}
             />
           ))}
         </div>
