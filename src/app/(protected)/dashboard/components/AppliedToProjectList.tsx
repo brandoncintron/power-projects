@@ -7,7 +7,6 @@ import { useLoading } from "@/components/ui/loading-context";
 import { AppliedToProjectListProps } from "../DashboardTypes";
 import { Button } from "@/components/ui/button";
 import { Clock } from "lucide-react";
-import { LoadingSpinner } from "@/components/ui/loading";
 
 /* Project List - Renders grid of pending applications */
 export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
