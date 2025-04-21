@@ -54,7 +54,7 @@ export function AuthDialog() {
           onValueChange={(val) => setView(val as "signin" | "signup")}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2 bg-gray-100/80">
+          <TabsList className="grid w-full grid-cols-2 bg-primary/3 dark:bg-secondary">
             <TabsTrigger value="signin" className="cursor-pointer">
               Sign In
             </TabsTrigger>
