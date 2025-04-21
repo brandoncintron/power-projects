@@ -210,6 +210,7 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
               >
                 <Link
                   href="/profile/edit"
+                  onClick={() => handleNavWithLoading("/profile/edit", "Loading profile...")}
                 >
                   <Users className="h-4 w-4 mr-2" />
                   <span>Edit Profile</span>
