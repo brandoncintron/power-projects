@@ -47,36 +47,49 @@ export function LoadingScreen({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           className={cn(
-            'fixed inset-0 flex flex-col items-center justify-center bg-background/80 backdrop-blur-xs'
+            'md:ml-[250px] fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-background to-background/95 backdrop-blur-sm'
           )}
           style={{ zIndex }}
         >
-          <div className="flex flex-col items-center gap-4">
-            <motion.div
-              animate={{
-                scale: [1, 1.1, 1],
-                rotate: [0, 360],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              className="relative w-16 h-16"
-            >
-              <div className="absolute inset-0 rounded-full border-t-2 border-primary animate-spin" />
-              <div className="absolute inset-3 rounded-full border-t-2 border-primary/70 animate-spin-slow" />
-            </motion.div>
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex items-center justify-center space-x-2">
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  animate={{
+                    y: [0, -15, 0],
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    repeat: Infinity,
+                    delay: i * 0.1,
+                    ease: "easeInOut"
+                  }}
+                  className="h-4 w-4 rounded-full bg-primary"
+                />
+              ))}
+            </div>
             
             {text && (
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-lg text-foreground/80"
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+                className="flex flex-col items-center"
               >
-                {text}
-              </motion.p>
+                <p className="text-xl font-medium text-foreground">{text}</p>
+                <motion.div 
+                  className="h-0.5 bg-primary mt-3 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity,
+                    repeatType: "reverse"
+                  }}
+                />
+              </motion.div>
             )}
           </div>
         </motion.div>
