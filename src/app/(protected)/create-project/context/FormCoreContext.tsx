@@ -12,6 +12,7 @@ import { projectFormSchema, ProjectFormData } from "../../../../schema/projectFo
 import { createProject } from "@/actions/createProject";
 import { useRouter } from "next/navigation";
 import { useLoading } from "@/components/ui/loading-context";
+import { setToast } from "@/components/ShowToast";
 
 // Context interface
 interface FormCoreContextType {
@@ -87,10 +88,9 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
         // debug - console.log(`Data being sent to createProject action:`, values);
         await createProject(values);
 
-        toast.success("Project submitted successfully", {
-          description: "Your project has been created.",
-        });
-
+        // Set toast data in sessionStorage instead of showing it directly
+        setToast("Project created successfully!", "success", "dashboardToast");
+        
         router.push("/dashboard");
       } catch (error) {
         console.error("Project submission failed:", error);
@@ -99,6 +99,7 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
           error instanceof Error
             ? error.message
             : "Could not create the project. Please try again.";
+        
         toast.error("Submission failed", {
           description: errorMessage,
         });

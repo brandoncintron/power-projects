@@ -5,6 +5,8 @@ import { auth } from "@/auth";
 import { ProjectHeader } from "./components/ProjectHeader";
 import { ProjectTabs } from "./components/ProjectTabs";
 import { HideLoading } from "@/components/HideLoading";
+import { ShowToast } from "@/components/ShowToast";
+
 /**
  * Project Detail Page - Displays comprehensive information about a specific project
  * Handles data fetching, ownership verification, and rendering of the appropriate components
@@ -88,6 +90,7 @@ async function ProjectDetailPage(props: {
 
   return (
     <div className="container mx-auto p-4 md:p-8 min-h-screen">
+      <ShowToast storageKey="projectToast" />
       <HideLoading />
       {/* Header Section */}
       <ProjectHeader

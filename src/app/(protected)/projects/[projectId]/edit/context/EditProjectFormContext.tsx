@@ -8,6 +8,7 @@ import { updateProject } from "@/actions/updateProject";
 import { useRouter } from "next/navigation";
 import { useLoading } from "@/components/ui/loading-context";
 import { editProjectSchema, EditProjectSchema } from "@/schema/editProjectSchema"; 
+import { setToast } from "@/components/ShowToast";
 
 // Context interface
 interface EditProjectFormContextType {
@@ -48,7 +49,7 @@ export function EditProjectFormProvider({
   const router = useRouter();
   const [charCount, setCharCount] = useState(initialDescription?.length || 0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { showLoading, hideLoading } = useLoading();
+  const { showLoading } = useLoading();
 
   // Initialize form with project data
   const form = useForm<EditProjectSchema>({
@@ -78,7 +79,7 @@ export function EditProjectFormProvider({
         const result = await updateProject(projectId, values);
         
         if (result.success) {
-          toast.success("Project updated successfully");
+          setToast("Project updated successfully!", "success", "projectToast");
           router.push(`/projects/${projectId}`);
         } else {
           toast.error("Update failed", {
@@ -92,10 +93,9 @@ export function EditProjectFormProvider({
         });
       } finally {
         setIsSubmitting(false);
-        hideLoading();
       }
     },
-    [projectId, router, hideLoading, showLoading]
+    [projectId, router, showLoading]
   );
 
   // Context value

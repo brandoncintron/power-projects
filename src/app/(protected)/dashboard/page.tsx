@@ -13,6 +13,7 @@ import { NotificationsSection } from "./components/NotificationsSection";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { DashboardData } from "./DashboardTypes";
+import { ShowToast } from "@/components/ShowToast";
 
 const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
   const userData = await db.user.findUnique({
@@ -120,6 +121,7 @@ export default async function DashboardPage() {
     <main className="container mx-auto py-6 px-4 md:px-6 min-h-screen">
       <DialogCloser />
       <HideLoading />
+      <ShowToast storageKey="dashboardToast" />
 
       <div className="flex flex-col gap-4">
         <UserProfile user={user} />
