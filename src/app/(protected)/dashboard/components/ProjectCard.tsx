@@ -16,12 +16,13 @@ import { useLoading } from "@/components/ui/loading-context";
 /* Project Card - Displays individual project summary with metadata */
 export function ProjectCard({ project, applicationStatus, isApplication = false }: ProjectCardProps) {
   const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [hasWithdrawn, setHasWithdrawn] = useState(false);
   const router = useRouter();
   const { showLoading } = useLoading();
 
   // Define a function to render status badge based on application status
   const renderApplicationStatus = () => {
-    if (!isApplication || !applicationStatus) return null;
+    if (!isApplication || !applicationStatus || hasWithdrawn) return null;
     
     const statusMap: Record<string, { color: string, icon: JSX.Element }> = {
       pending: { 
@@ -51,21 +52,31 @@ export function ProjectCard({ project, applicationStatus, isApplication = false 
   };
 
   const handleWithdraw = async () => {
+    // Prevent multiple submissions
+    if (isWithdrawing) return;
+    
+    // Set withdrawing state to show loading indicator right away
+    setIsWithdrawing(true);
+    
     try {
-      setIsWithdrawing(true);
       const result = await handleWithdrawApplication(project.id);
       
       if (result.success) {
-        router.refresh();
-        setIsWithdrawing(false);
-        toast.success("Application withdrawn successfully");
+        // Add a 1000ms delay before showing success state and toast
+        setTimeout(() => {
+          toast.success("Application withdrawn successfully");
+          setHasWithdrawn(true);
+          setIsWithdrawing(false);
+          router.refresh();
+        }, 1000);
       } else {
-        console.error("Error withdrawing application:", result.error);
-        toast.error("Failed to withdraw application");
+        // Show error toast immediately
+        toast.error(result.error || "Failed to withdraw application");
+        setIsWithdrawing(false);
       }
     } catch (error) {
       console.error("Failed to withdraw application:", error);
-    } finally {
+      toast.error("An unexpected error occurred");
       setIsWithdrawing(false);
     }
   };
@@ -109,7 +120,7 @@ export function ProjectCard({ project, applicationStatus, isApplication = false 
               <a>View Details</a>
             </Button>
           </Link>
-          {isApplication && (
+          {isApplication && !hasWithdrawn && (
             <Button 
               size="sm" 
               variant="destructive" 
@@ -119,6 +130,11 @@ export function ProjectCard({ project, applicationStatus, isApplication = false 
             >
               {isWithdrawing ? "Withdrawing..." : "Withdraw"}
             </Button>
+          )}
+          {isApplication && hasWithdrawn && (
+            <Badge variant="outline" className="text-slate-500 border-slate-300">
+              Withdrawn
+            </Badge>
           )}
         </div>
       </CardContent>

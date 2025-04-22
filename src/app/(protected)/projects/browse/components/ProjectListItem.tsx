@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useTransition } from "react";
+import React, { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -27,24 +27,44 @@ export default function ProjectListItem({
   const memberCount = (project._count?.collaborators ?? 0) + 1;
 
   const [isPending, startTransition] = useTransition();
+  const [localHasApplied, setLocalHasApplied] = useState(hasApplied);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { showLoading } = useLoading();
   // Check if user is the owner of the project
   const isOwner = userId && project.ownerId === userId;
 
   const onSubmit = async (projectId: string) => {
+    // Prevent multiple submissions
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
     startTransition(() => {
-      // debug - console.log(`project id sent to handleProjectApplication: ${projectId}`)
       handleProjectApplication(projectId).then((data) => {
         if (data?.error) {
+          // Show error toast immediately on error
           toast.error(data.error);
+          setIsSubmitting(false);
         } else {
-          toast.success("Application submitted successfully.");
-          router.refresh();
+          setTimeout(() => {
+            toast.success("Application submitted successfully.");
+            setLocalHasApplied(true);
+            setIsSubmitting(false);
+            router.refresh();
+          }, 1000);
         }
+      }).catch(error => {
+        // Handle unexpected errors
+        console.error("Application submission failed:", error);
+        setIsSubmitting(false);
+        toast.error("Failed to submit application. Please try again.");
       });
     });
   };
+
+  // Use the local state to determine the UI
+  const showAppliedState = localHasApplied || hasApplied;
 
   return (
     <div className={`relative border rounded-md p-4 hover:shadow-md transition-all duration-300 flex flex-col gap-2.5 shadow-sm hover:translate-y-[-1px] bg-card
@@ -151,7 +171,7 @@ export default function ProjectListItem({
         <div className="flex items-center gap-2">
           {isOpen && !isOwner && !isCollaborator && (
             <>
-              {hasApplied ? (
+              {showAppliedState ? (
                 <Button size="sm" variant="outline" disabled className="text-teal-600 dark:text-teal-400 border-slate-300 dark:border-slate-600 h-7 text-xs px-2.5">
                   Already Applied
                 </Button>
@@ -159,11 +179,11 @@ export default function ProjectListItem({
                 <Button
                   size="sm"
                   variant="outline"
-                  disabled={isPending}
+                  disabled={isPending || isSubmitting}
                   onClick={() => onSubmit(project.id)}
                   className="h-7 text-xs px-2.5"
                 >
-                  {isPending && <Loader className="mr-1.5 size-3 animate-spin" />}
+                  {(isPending || isSubmitting) && <Loader className="mr-1.5 size-3 animate-spin" />}
                   Apply Now
                 </Button>
               )}
