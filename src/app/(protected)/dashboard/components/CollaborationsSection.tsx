@@ -1,6 +1,6 @@
 "use client";
 
-import { Users } from "lucide-react";
+import { Users, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ProjectCard } from "./ProjectCard";
@@ -14,6 +14,10 @@ interface CollaborationsSectionProps {
 
 export function CollaborationsSection({ collaborations }: CollaborationsSectionProps) {
   const { showLoading } = useLoading();
+  
+  // Limit displayed collaborations to 3
+  const displayedCollaborations = collaborations.slice(0, 3);
+  const hasMoreCollaborations = collaborations.length > 3;
   
   return (
     <section className="space-y-3">
@@ -53,15 +57,33 @@ export function CollaborationsSection({ collaborations }: CollaborationsSectionP
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {collaborations.map((project) => (
-            <ProjectCard 
-              key={project.id} 
-              project={project} 
-              isApplication={false}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {displayedCollaborations.map((project) => (
+              <ProjectCard 
+                key={project.id} 
+                project={project} 
+                isApplication={false}
+              />
+            ))}
+          </div>
+          
+          {hasMoreCollaborations && (
+            <div className="flex justify-center mt-4">
+              <Link href="/projects/my-projects">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs px-3 flex items-center gap-1"
+                  onClick={() => showLoading("Loading all collaborations...")}
+                >
+                  View all collaborations
+                  <ArrowRight className="h-3 w-3 ml-1" />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </section>
   );

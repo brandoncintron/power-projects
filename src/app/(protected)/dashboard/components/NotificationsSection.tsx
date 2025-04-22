@@ -2,10 +2,9 @@
 
 import { Bell, MessageSquare, UserPlus, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 
+{/* 
 const getNotificationIcon = (type: string) => {
   switch (type) {
     case 'message':
@@ -32,7 +31,7 @@ const formatTimestamp = (date: Date) => {
     const days = Math.floor(diffInMinutes / 1440);
     return `${days} day${days !== 1 ? 's' : ''} ago`;
   }
-};
+};*/}
 
 export function NotificationsSection() {
   return (

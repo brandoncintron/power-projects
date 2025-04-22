@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileCode2 } from "lucide-react";
+import { FileCode2, ArrowRight } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
 import { DashboardProject } from "../DashboardTypes";
 import { useLoading } from "@/components/ui/loading-context";
@@ -15,6 +15,10 @@ interface ProjectListProps {
 /* Project List - Renders grid of project cards or empty state placeholder */
 export function ProjectList({ projects }: ProjectListProps) {
   const { showLoading } = useLoading();
+  
+  // Limit displayed projects to 3
+  const displayedProjects = projects.slice(0, 3);
+  const hasMoreProjects = projects.length > 3;
   
   return (
     <section className="space-y-3">
@@ -54,15 +58,33 @@ export function ProjectList({ projects }: ProjectListProps) {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard 
-              key={project.id} 
-              project={project} 
-              isApplication={false}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {displayedProjects.map((project) => (
+              <ProjectCard 
+                key={project.id} 
+                project={project} 
+                isApplication={false}
+              />
+            ))}
+          </div>
+          
+          {hasMoreProjects && (
+            <div className="flex justify-center mt-4">
+              <Link href="/projects/my-projects">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs px-3 flex items-center gap-1"
+                  onClick={() => showLoading("Loading all projects...")}
+                >
+                  View all projects
+                  <ArrowRight className="h-3 w-3 ml-1" />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </section>
   );

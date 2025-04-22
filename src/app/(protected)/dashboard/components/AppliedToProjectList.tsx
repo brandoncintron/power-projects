@@ -6,7 +6,7 @@ import { ProjectCard } from "./ProjectCard";
 import { useLoading } from "@/components/ui/loading-context";
 import { AppliedToProjectListProps } from "../DashboardTypes";
 import { Button } from "@/components/ui/button";
-import { Clock } from "lucide-react";
+import { Clock, ArrowRight } from "lucide-react";
 
 /* Project List - Renders grid of pending applications */
 export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
@@ -16,6 +16,10 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
   const pendingApplications = projects.filter(
     project => project.applicationStatus?.toLowerCase() === 'pending'
   );
+  
+  // Limit displayed applications to 3
+  const displayedApplications = pendingApplications.slice(0, 3);
+  const hasMoreApplications = pendingApplications.length > 3;
   
   return (
     <section className="space-y-3">
@@ -59,16 +63,34 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {pendingApplications.map((project) => (
-            <ProjectCard 
-              key={project.id} 
-              project={project} 
-              applicationStatus={project.applicationStatus} 
-              isApplication={true}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {displayedApplications.map((project) => (
+              <ProjectCard 
+                key={project.id} 
+                project={project} 
+                applicationStatus={project.applicationStatus} 
+                isApplication={true}
+              />
+            ))}
+          </div>
+          
+          {hasMoreApplications && (
+            <div className="flex justify-center mt-4">
+              <Link href="/projects/browse?tab=applications">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-7 text-xs px-3 flex items-center gap-1"
+                  onClick={() => showLoading("Loading all applications...")}
+                >
+                  View all applications
+                  <ArrowRight className="h-3 w-3 ml-1" />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </>
       )}
     </section>
   );
