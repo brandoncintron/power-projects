@@ -12,6 +12,9 @@ import { LoadingProvider } from "@/components/ui/loading-context";
 import { SetUsernamePopup } from "@/components/auth/SetUsernamePopup";
 import { AuthedNavMenu } from "@/components/nav/AuthedNavMenu";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { DM_Sans } from "next/font/google"
+
+const dmSansFont = DM_Sans({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
   title: "Power Projects",
@@ -28,7 +31,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body id="top" className="flex min-h-screen flex-col">
+      <body id="top" className={`flex min-h-screen flex-col ${dmSansFont.className}`} >
         <Suspense>
           <ThemeProvider
             attribute="class"
@@ -47,7 +50,7 @@ export default async function RootLayout({
                         <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground md:hidden" />
                       </div>
                       
-                      <div className="p-0">
+                      <div className="p-0 md:w-[80%] mx-auto">
                         {user?.username === null ? <SetUsernamePopup /> : children}
                       </div>
                       <Footer />
