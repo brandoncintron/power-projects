@@ -120,6 +120,7 @@ export default function CompactProjectCard({
             <p className="text-sm text-muted-foreground line-clamp-1">
               {project.description || "No description provided."}
             </p>
+            
           </div>
           
           {/* Actions dropdown */}

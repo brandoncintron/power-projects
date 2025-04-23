@@ -42,8 +42,26 @@ export default async function MyProjectsPage() {
       },
       include: {
         owner: { select: { username: true } },
-        _count: { select: { collaborators: true, applicants: true } },
+        _count: { 
+          select: { 
+            collaborators: true, 
+            applicants: {
+              where: {
+                status: "pending"
+              }
+            } 
+          } 
+        },
+        applicants: {
+          where: {
+            status: "pending"
+          },
+          select: {
+            status: true,
+          }
+        }
       },
+      
       orderBy: { createdAt: "desc" },
     })) as ProjectWithDetails[];
 
