@@ -3,6 +3,8 @@ import * as z from "zod";
 export const editProjectSchema = z.object({
     projectName: z.string().min(1, {
       message: "Project name is required",
+    }).max(50, {
+      message: "Project name cannot exceed 50 characters",
     }),
     description: z
       .string()
