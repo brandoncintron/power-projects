@@ -67,14 +67,14 @@ export default function ProjectListItem({
   const showAppliedState = localHasApplied || hasApplied;
 
   return (
-    <div className={`relative border rounded-md p-4 hover:shadow-md transition-all duration-300 flex flex-col gap-2.5 shadow-sm hover:translate-y-[-1px] bg-card
+    <div className={`relative rounded-3xl p-4 hover:shadow-md transition-all duration-300 flex flex-col gap-2.5 hover:translate-y-[-1px] bg-card w-full
       ${isCollaborator ? 'border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200 dark:ring-emerald-900' : ''}
     `}>
       {/* Collaboration Badge */}
       {isCollaborator && (
         <div className="absolute -top-2 -right-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium border border-emerald-200 dark:border-emerald-800 flex items-center gap-0.5">
           <CheckCircle size={12} />
-          Collaborating
+          You're on this project
         </div>
       )}
       

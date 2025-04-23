@@ -26,7 +26,16 @@ export default async function BrowseProjectsListPage() {
       },
       include: {
         owner: { select: { username: true } },
-        _count: { select: { collaborators: true, applicants: true } },
+        _count: {
+          select: {
+            collaborators: true,
+            applicants: {
+              where: {
+                status: "pending",
+              },
+            },
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     })) as ProjectWithDetails[];
@@ -35,16 +44,16 @@ export default async function BrowseProjectsListPage() {
     if (userId) {
       const applications = await db.projectApplication.findMany({
         where: { userId },
-        select: { projectId: true }
+        select: { projectId: true },
       });
-      userApplications = applications.map(app => app.projectId);
-      
+      userApplications = applications.map((app) => app.projectId);
+
       // Fetch projects where the user is a collaborator
       const collaborations = await db.projectCollaborator.findMany({
         where: { userId },
-        select: { projectId: true }
+        select: { projectId: true },
       });
-      userCollaborations = collaborations.map(collab => collab.projectId);
+      userCollaborations = collaborations.map((collab) => collab.projectId);
     }
 
     // Extract unique application types for filter tags
