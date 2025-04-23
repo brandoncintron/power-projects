@@ -47,7 +47,7 @@ export function LoadingScreen({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           className={cn(
-            'md:ml-[250px] fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-background to-background/95 backdrop-blur-sm'
+            'lg:ml-[250px] fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-background to-background/95 backdrop-blur-sm'
           )}
           style={{ zIndex }}
         >

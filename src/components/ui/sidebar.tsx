@@ -207,7 +207,7 @@ function Sidebar({
 
   return (
     <div
-      className="group peer text-sidebar-foreground hidden md:block bg-[#f3f2f1] dark:bg-[#1a1a1a]"
+      className="group peer text-sidebar-foreground hidden lg:block bg-[#f3f2f1] dark:bg-[#1a1a1a]"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}

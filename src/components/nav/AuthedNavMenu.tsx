@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Grid, Plus, Users, LogOut, User, Moon, Sun, Inbox, Folder } from "lucide-react";
+import { Home, Grid, Plus, LogOut, User, Moon, Sun, Inbox, Folder, UserPlus, Merge, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -46,7 +46,7 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
     <Sidebar className="md:w-[250px] p-0">
       <SidebarHeader className="flex items-center justify-between px-4 pt-4 pb-0">
         <Link href="/" className="no-underline" onClick={() => handleNavWithLoading("/", "Loading home...")}>
-          <div className=" h-[50px] w-[175px] flex items-center justify-center overflow-hidden">
+          <div className="h-[50px] w-[175px] flex items-center justify-center overflow-hidden">
             <span className="text-2xl font-bold">Power Projects</span>
           </div>
         </Link>
@@ -145,6 +145,48 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
 
         <SidebarGroup>
           <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">
+            Collaboration
+          </SidebarGroupLabel>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === "/my-projects"}
+                tooltip="Joined Projects"
+                className="px-2 py-1.5"
+              >
+                <Link
+                  href="/inbox"
+                  onClick={() => handleNavWithLoading("/inbox", "Loading inbox...")}
+                >
+                  <Merge className="h-4 w-4 mr-2" />
+                  <span>Joined Projects</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                isActive={pathname === "/my-applications"}
+                tooltip="Project Applications"
+                className="px-2 py-1.5"
+              >
+                <Link
+                  href="/my-applications"
+                  onClick={() => handleNavWithLoading("/my-applications", "Loading my applications...")}
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  <span>Project Applications</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            
+          </SidebarMenu>
+        </SidebarGroup>
+        
+        <SidebarGroup>
+          <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">
             Inbox
           </SidebarGroupLabel>
           <SidebarMenu>
@@ -212,7 +254,7 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
                   href="/profile/edit"
                   onClick={() => handleNavWithLoading("/profile/edit", "Loading profile...")}
                 >
-                  <Users className="h-4 w-4 mr-2" />
+                  <UserCircle className="h-4 w-4 mr-2" />
                   <span>Edit Profile</span>
                 </Link>
               </SidebarMenuButton>

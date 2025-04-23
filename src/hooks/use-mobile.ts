@@ -1,13 +1,13 @@
 import * as React from "react"
 
 // Mobile breakpoint in pixels - screen widths below this are considered mobile
-const MOBILE_BREAKPOINT = 768
+const MOBILE_BREAKPOINT = 1024
 
 /**
  * useIsMobile - Custom hook to detect if the current viewport is mobile
  * 
  * This hook uses the MediaQueryList API to detect if the current viewport width
- * is below the defined mobile breakpoint (768px). It also listens for window resize
+ * is below the defined mobile breakpoint (1024px). It also listens for window resize
  * events to update the state when the viewport changes between mobile and desktop.
  * 
  * The hook returns undefined initially (during SSR) and then updates with the

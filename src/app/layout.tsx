@@ -46,8 +46,8 @@ export default async function RootLayout({
                     <AuthedNavMenu session={session} />
                     
                     <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out bg-[#f3f2f1] dark:bg-[#1a1a1a]">
-                      <div className="fixed top-4 left-4 md:left-auto md:right-4 z-50">
-                        <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground md:hidden" />
+                      <div className="fixed top-4 left-4 lg:left-auto md:right-4 z-50">
+                        <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground lg:hidden" />
                       </div>
                       
                       <div className="p-0 md:w-[80%] mx-auto">
