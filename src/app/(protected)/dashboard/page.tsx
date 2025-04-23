@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { Separator } from "@/components/ui/separator";
 import { DialogCloser } from "@/components/auth/DialogCloser";
 import { HideLoading } from "@/components/HideLoading";
 import { LoadingSpinner } from "@/components/ui/loading";
@@ -14,6 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { DashboardData } from "./DashboardTypes";
 import { ShowToast } from "@/components/ShowToast";
+import { Separator } from "@/components/ui/separator";
 
 const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
   const userData = await db.user.findUnique({
@@ -118,12 +118,12 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="container mx-auto py-6 px-4 md:px-6 min-h-screen">
+    <main className="py-6 px-4 md:px-6 min-h-screen">
       <DialogCloser />
       <HideLoading />
       <ShowToast storageKey="dashboardToast" />
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         <UserProfile user={user} />
         
         {fetchError ? (
@@ -134,20 +134,44 @@ export default async function DashboardPage() {
           </Alert>
         ) : (
           <>
-            {/* Projects Section */}
-            <ProjectList projects={dashboardData.ownedProjects} />
-            <Separator className="my-1" />
+            {/* First Container - Collaborations & Applications */}
+            <Card className="rounded-4xl p-4 sm:p-6 border-0">
+              <CardHeader className="px-2 sm:px-4">
+                <CardTitle className="text-lg sm:text-xl font-semibold">Start your project collaboration journey</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+                  {/* Left section - Collaborations */}
+                  <div className="p-2 sm:p-4 rounded-xl sm:rounded-4xl">
+                    <CollaborationsSection collaborations={dashboardData.collaborations} />
+                  </div>
 
-            {/* Collaborations Section */}
-            <CollaborationsSection collaborations={dashboardData.collaborations} />
-            <Separator className="my-1" />
+                  <Separator className="my-4 2xl:hidden" orientation="horizontal" />
+                  
+                  {/* Right section - Applications */}
+                  <div className="p-2 sm:p-4 rounded-xl sm:rounded-4xl">
+                    <AppliedToProjectList projects={dashboardData.applications} />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Applications Section */}
-            <AppliedToProjectList projects={dashboardData.applications} />
-            <Separator className="my-1" />
+            {/* Second Container - Projects */}
+            <Card className="rounded-4xl p-4 sm:p-6 border-0">
+              <CardContent className="px-2 sm:px-6 pb-4">
+                <ProjectList projects={dashboardData.ownedProjects} />
+              </CardContent>
+            </Card>
 
-            {/* Notifications Section */}
-            <NotificationsSection />
+            {/* Third Container - Notifications */}
+            <Card className="rounded-4xl p-4 sm:p-6 border-0">
+              <CardHeader className="px-2 sm:px-4">
+                <CardTitle className="text-lg sm:text-xl font-medium">My notifications</CardTitle>
+              </CardHeader>
+              <CardContent className="px-2 sm:px-6 py-4">
+                <NotificationsSection />
+              </CardContent>
+            </Card>
           </>
         )}
       </div>

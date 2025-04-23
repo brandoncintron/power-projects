@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileCode2, ArrowRight } from "lucide-react";
+import { FileCode2, ArrowRight, Plus } from "lucide-react";
 import { ProjectCard } from "./ProjectCard";
 import { DashboardProject } from "../DashboardTypes";
 import { useLoading } from "@/components/ui/loading-context";
+import { useEffect, useState } from "react";
 
 interface ProjectListProps {
   projects: DashboardProject[];
@@ -15,62 +15,81 @@ interface ProjectListProps {
 /* Project List - Renders grid of project cards or empty state placeholder */
 export function ProjectList({ projects }: ProjectListProps) {
   const { showLoading } = useLoading();
+  const [displayCount, setDisplayCount] = useState(2);
   
-  // Limit displayed projects to 3
-  const displayedProjects = projects.slice(0, 3);
-  const hasMoreProjects = projects.length > 3;
+  useEffect(() => {
+    // Check if screen is larger than 1536px (2xl breakpoint)
+    const handleResize = () => {
+      setDisplayCount(window.innerWidth > 1536 ? 3 : 2);
+    };
+    
+    // Set initial value
+    handleResize();
+    
+    // Add event listener
+    window.addEventListener('resize', handleResize);
+    
+    // Clean up
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Limit displayed projects based on screen size
+  const displayedProjects = projects.slice(0, displayCount);
+  const hasMoreProjects = projects.length > displayCount;
+  const hasProjects = projects.length > 0;
   
   return (
-    <section className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold flex items-center gap-1.5">
+    <section className="space-y-3 h-full flex flex-col">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2">
+        <h2 className="text-base sm:text-lg font-semibold flex items-center gap-1.5">
           <FileCode2 className="h-4 w-4" />
-          My Projects
+          Your Projects
         </h2>
-        <Link href="/create-project">
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="h-7 text-xs px-3"
-            onClick={() => showLoading("Loading project creation form...")}
-          >
-            Create New Project
-          </Button>
-        </Link>
+        {hasProjects && (
+          <Link href="/create-project" className="inline-flex">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-7 text-xs px-3 w-full lg:w-auto"
+              onClick={() => showLoading("Loading project creation form...")}
+            >
+              <Plus className="h-4 w-4" />
+              Create New Project
+            </Button>
+          </Link>
+        )}
       </div>
 
-      {projects.length === 0 ? (
-        <Card>
-          <CardContent className="p-4 text-center flex flex-col items-center">
-            <p className="text-muted-foreground mb-2 text-sm">
-              You haven&apos;t created any projects yet.
-            </p>
-            <Link href="/create-project">
-              <Button 
-                variant="default" 
-                size="sm" 
-                className="h-7 text-xs px-3"
-                onClick={() => showLoading("Loading project creation form...")}
-              >
-                Create Your First Project
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+      {!hasProjects ? (
+        <div className="flex flex-col items-center justify-center flex-grow py-6  mx-auto md:w-[80%] w-full rounded-lg bg-green-100">
+          <p className="text-muted-foreground mb-4 text-sm text-center px-4">
+            You haven&apos;t created any projects yet.
+          </p>
+          <Link href="/create-project" className="w-fit">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="break-all"
+              onClick={() => showLoading("Loading project creation form...")}
+            >
+              <Plus className="h-4 w-4" />
+              Create a Project
+            </Button>
+          </Link>
+        </div>
       ) : (
         <>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
             {displayedProjects.map((project) => (
               <ProjectCard 
                 key={project.id} 
-                project={project} 
-                isApplication={false}
+                project={project}
               />
             ))}
           </div>
           
           {hasMoreProjects && (
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-2">
               <Link href="/projects/my-projects">
                 <Button
                   variant="outline"

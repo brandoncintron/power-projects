@@ -3,88 +3,25 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileCode2, Users, Clock, CheckCircle2, ClockIcon, XCircle } from "lucide-react";
+import { FileCode2, Users, Clock, GlobeLock } from "lucide-react";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { handleWithdrawApplication } from "../actions";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { ProjectCardProps } from "../DashboardTypes";
+import { DashboardProject } from "../DashboardTypes";
 import { useLoading } from "@/components/ui/loading-context";
 
+interface ProjectCardProps {
+  project: DashboardProject;
+}
+
 /* Project Card - Displays individual project summary with metadata */
-export function ProjectCard({ project, applicationStatus, isApplication = false }: ProjectCardProps) {
-  const [isWithdrawing, setIsWithdrawing] = useState(false);
-  const [hasWithdrawn, setHasWithdrawn] = useState(false);
-  const router = useRouter();
+export function ProjectCard({ project }: ProjectCardProps) {
   const { showLoading } = useLoading();
-
-  // Define a function to render status badge based on application status
-  const renderApplicationStatus = () => {
-    if (!isApplication || !applicationStatus || hasWithdrawn) return null;
-    
-    const statusMap: Record<string, { color: string, icon: JSX.Element }> = {
-      pending: { 
-        color: "bg-yellow-100 text-yellow-800 border-yellow-300", 
-        icon: <ClockIcon size={10} className="text-yellow-600" />
-      },
-      accepted: { 
-        color: "bg-green-100 text-green-800 border-green-300", 
-        icon: <CheckCircle2 size={10} className="text-green-600" />
-      },
-      rejected: { 
-        color: "bg-red-100 text-red-800 border-red-300", 
-        icon: <XCircle size={10} className="text-red-600" />
-      }
-    };
-    
-    const status = statusMap[applicationStatus.toLowerCase()] || statusMap.pending;
-    
-    return (
-      <Badge 
-        variant="outline" 
-        className={`whitespace-nowrap flex items-center gap-1 text-xs py-0.5 px-1.5 ${status.color}`}
-      >
-        {status.icon} {applicationStatus.charAt(0).toUpperCase() + applicationStatus.slice(1).toLowerCase()}
-      </Badge>
-    );
-  };
-
-  const handleWithdraw = async () => {
-    // Prevent multiple submissions
-    if (isWithdrawing) return;
-    
-    // Set withdrawing state to show loading indicator right away
-    setIsWithdrawing(true);
-    
-    try {
-      const result = await handleWithdrawApplication(project.id);
-      
-      if (result.success) {
-        // Add a 1000ms delay before showing success state and toast
-        setTimeout(() => {
-          toast.success("Application withdrawn successfully");
-          setHasWithdrawn(true);
-          setIsWithdrawing(false);
-          router.refresh();
-        }, 1000);
-      } else {
-        // Show error toast immediately
-        toast.error(result.error || "Failed to withdraw application");
-        setIsWithdrawing(false);
-      }
-    } catch (error) {
-      console.error("Failed to withdraw application:", error);
-      toast.error("An unexpected error occurred");
-      setIsWithdrawing(false);
-    }
-  };
+  const isPrivate = project.visibility.toLowerCase() === 'private';
 
   return (
-    <Card key={project.id} className="relative p-1 shadow-sm hover:shadow-md transition-shadow">
-      <CardContent className="p-3">
-        <div className="flex flex-wrap items-center gap-1.5 mb-2 text-xs">
+    <Card className="overflow-hidden h-full rounded-4xl">
+      <CardContent className="px-3 sm:px-4 flex flex-col h-full">
+        <div className="flex flex-wrap items-center gap-1.5 mb-2">
           <Badge
             variant="secondary"
             className="whitespace-nowrap flex items-center gap-1 text-xs py-0.5 px-1.5"
@@ -95,47 +32,31 @@ export function ProjectCard({ project, applicationStatus, isApplication = false 
             variant="outline"
             className="whitespace-nowrap flex items-center gap-1 text-xs py-0.5 px-1.5"
           >
-            <Users size={10} />{" "}
+            {isPrivate ? <GlobeLock size={10} /> : <Users size={10} />}
             {project.visibility.charAt(0).toUpperCase() +
               project.visibility.slice(1).toLowerCase()}
           </Badge>
-          {renderApplicationStatus()}
         </div>
-        <h3 className="text-base font-semibold mb-0.5 line-clamp-1">{project.projectName}</h3>
+        
+        <h3 className="font-medium md:line-clamp-3 text-sm sm:text-base mb-1.5">{project.projectName}</h3>
         <p className="text-xs line-clamp-2 mb-1.5">{project.description}</p>
-        <div className="flex items-center text-xs gap-1 text-muted-foreground mb-2">
-          <Clock size={10} />
+        
+        <div className="flex items-center text-xs gap-1 text-muted-foreground mb-3">
+          <Clock size={12} className="mr-1" />
           <span>{formatRelativeTime(project.createdAt)}</span>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <Link href={`/projects/${project.id}`} passHref legacyBehavior>
+        <div className="mt-auto flex items-center justify-start">
+          <Link href={`/projects/${project.id}`} className="w-full sm:w-auto">
             <Button 
-              asChild 
-              size="sm" 
-              variant="default" 
-              className="h-7 text-xs px-2"
+              size="sm"
+              variant="default"
+              className="text-xs sm:text-sm py-1 px-2 h-auto sm:h-8 sm:w-fit w-fit"
               onClick={() => showLoading("Loading project details...")}
             >
-              <a>View Details</a>
+              View Details
             </Button>
           </Link>
-          {isApplication && !hasWithdrawn && (
-            <Button 
-              size="sm" 
-              variant="destructive" 
-              className="h-7 text-xs px-2"
-              onClick={handleWithdraw}
-              disabled={isWithdrawing}
-            >
-              {isWithdrawing ? "Withdrawing..." : "Withdraw"}
-            </Button>
-          )}
-          {isApplication && hasWithdrawn && (
-            <Badge variant="outline" className="text-slate-500 border-slate-300">
-              Withdrawn
-            </Badge>
-          )}
         </div>
       </CardContent>
     </Card>

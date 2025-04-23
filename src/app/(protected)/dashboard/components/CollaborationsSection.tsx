@@ -1,7 +1,6 @@
 "use client";
 
-import { Users, ArrowRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Users, ArrowRight, Merge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProjectCard } from "./ProjectCard";
 import { DashboardProject } from "../DashboardTypes";
@@ -18,58 +17,60 @@ export function CollaborationsSection({ collaborations }: CollaborationsSectionP
   // Limit displayed collaborations to 3
   const displayedCollaborations = collaborations.slice(0, 3);
   const hasMoreCollaborations = collaborations.length > 3;
+  const hasCollaborations = collaborations.length > 0;
   
   return (
-    <section className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold flex items-center gap-1.5">
+    <section className="space-y-3 h-full flex flex-col">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2">
+        <h2 className="text-base sm:text-lg font-semibold flex items-center gap-1.5">
           <Users className="h-4 w-4" />
-          Projects You&apos;re Collaborating On
+          Joined Projects
         </h2>
-        <Link href="/projects/browse">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="h-7 text-xs px-3"
-            onClick={() => showLoading("Loading project browser...")}
-          >
-            Browse More Projects
-          </Button>
-        </Link>
+        {hasCollaborations && (
+          <Link href="/my-projects" className="inline-flex">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-7 text-xs px-3 w-full lg:w-auto"
+              onClick={() => showLoading("Loading project browser...")}
+            >
+              <Users className="h-4 w-4" />
+              View Joined Projects
+            </Button>
+          </Link>
+        )}
       </div>
 
-      {collaborations.length === 0 ? (
-        <Card>
-          <CardContent className="p-4 text-center flex flex-col items-center">
-            <p className="text-muted-foreground mb-2 text-sm">
-              You&apos;re not collaborating on any projects yet.
-            </p>
-            <Link href="/projects/browse">
-              <Button 
-                variant="default" 
-                size="sm" 
-                className="h-7 text-xs px-3"
-                onClick={() => showLoading("Loading project browser...")}
-              >
-                Find Projects to Collaborate On
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+      {!hasCollaborations ? (
+        <div className="flex flex-col items-center justify-center flex-grow py-6 mx-auto md:w-[80%] w-full rounded-lg bg-blue-100">
+          <p className="text-muted-foreground mb-4 text-sm text-center px-4">
+            You&apos;re not collaborating on any projects yet.
+          </p>
+          <Link href="/projects/browse" className="w-fit">
+            <Button 
+              variant="default" 
+              size="sm"
+              className="break-all"
+              onClick={() => showLoading("Loading project browser...")}
+            >
+              <Merge className="h-2 w-2" />
+              Start Collaborating
+            </Button>
+          </Link>
+        </div>
       ) : (
         <>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-1">
             {displayedCollaborations.map((project) => (
               <ProjectCard 
                 key={project.id} 
-                project={project} 
-                isApplication={false}
+                project={project}
               />
             ))}
           </div>
           
           {hasMoreCollaborations && (
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-2">
               <Link href="/projects/my-projects">
                 <Button
                   variant="outline"
