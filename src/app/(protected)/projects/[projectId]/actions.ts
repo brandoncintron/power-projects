@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { NotificationType } from "@prisma/client";
 
 export async function acceptProjectApplication(projectId: string, applicantId: string) {
   try {
@@ -20,6 +21,11 @@ export async function acceptProjectApplication(projectId: string, applicantId: s
         id: projectId,
         ownerId: session.user.id // Only the owner can accept applications
       },
+      select: {
+        id: true,
+        projectName: true,
+        ownerId: true
+      }
     });
 
     if (!project) {
@@ -67,6 +73,18 @@ export async function acceptProjectApplication(projectId: string, applicantId: s
       },
     });
 
+    // Create notification for the applicant
+    await db.notification.create({
+      data: {
+        userId: applicantId, // Send to the applicant
+        type: NotificationType.APPLICATION_ACCEPTED,
+        title: "Your application was accepted",
+        content: `You've been accepted to join "${project.projectName}"`,
+        projectId: project.id,
+        senderId: session.user.id // Project owner is the sender
+      }
+    });
+
     return { 
       success: true, 
       data: { application: updatedApplication, collaborator } 
@@ -97,6 +115,11 @@ export async function denyProjectApplication(projectId: string, applicantId: str
         id: projectId,
         ownerId: session.user.id // Only the owner can reject applications
       },
+      select: {
+        id: true,
+        projectName: true,
+        ownerId: true
+      }
     });
 
     if (!project) {
@@ -134,6 +157,18 @@ export async function denyProjectApplication(projectId: string, applicantId: str
       data: {
         status: "rejected",
       },
+    });
+
+    // Create notification for the applicant
+    await db.notification.create({
+      data: {
+        userId: applicantId, // Send to the applicant
+        type: NotificationType.APPLICATION_REJECTED,
+        title: "Your application was not accepted",
+        content: `Unfortunately, your application to join "${project.projectName}" was not accepted.`,
+        projectId: project.id,
+        senderId: session.user.id // Project owner is the sender
+      }
     });
 
     return { success: true, data: updatedApplication };

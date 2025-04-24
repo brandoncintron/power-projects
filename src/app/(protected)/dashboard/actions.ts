@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
+import { NotificationType } from "@prisma/client";
 
 export async function handleWithdrawApplication(projectId: string) {
   try {
@@ -24,6 +25,13 @@ export async function handleWithdrawApplication(projectId: string) {
           projectId: projectId,
         },
       },
+      include: {
+        project: {
+          select: {
+            ownerId: true
+          }
+        }
+      }
     });
 
     if (!alreadyApplied) {
@@ -42,6 +50,18 @@ export async function handleWithdrawApplication(projectId: string) {
         },
       },
     });
+
+    // Delete any application notification that was sent to the project owner
+    if (alreadyApplied.project?.ownerId) {
+      await db.notification.deleteMany({
+        where: {
+          projectId: projectId,
+          userId: alreadyApplied.project.ownerId, // The notification recipient (project owner)
+          senderId: applicantId, // The user who sent the application
+          type: NotificationType.APPLICATION_SENT, // The type used for application notifications
+        }
+      });
+    }
 
     return { success: true, data: deletedApplication };
   } catch (error) {
