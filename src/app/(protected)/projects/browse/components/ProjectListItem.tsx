@@ -74,7 +74,7 @@ export default function ProjectListItem({
       {isCollaborator && (
         <div className="absolute -top-2 -right-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium border border-emerald-200 dark:border-emerald-800 flex items-center gap-0.5">
           <CheckCircle size={12} />
-          You're on this project
+          You&apos;re on this project
         </div>
       )}
       

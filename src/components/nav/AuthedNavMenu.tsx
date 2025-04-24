@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Grid, Plus, LogOut, User, Moon, Sun, Inbox, Folder, UserPlus, Merge, UserCircle } from "lucide-react";
+import { Home, Grid, Plus, LogOut, User, Moon, Sun, Inbox, Folder, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";

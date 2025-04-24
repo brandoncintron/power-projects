@@ -45,6 +45,7 @@ export function ShowToast({ storageKey = 'toastStatus' }: ShowToastProps) {
             break;
         }
       } catch (e) {
+        console.error("Error parsing toast data:", e);
         // Fallback for when the stored value is just a string (for backward compatibility)
         if (storedToast === 'success') {
           toast.success('Operation completed successfully!');

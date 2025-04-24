@@ -1,7 +1,5 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 interface UserProfileProps {
   user: {
     username?: string | null;

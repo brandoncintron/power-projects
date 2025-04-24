@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useLoading } from "@/components/ui/loading-context";
 import { AppliedToProjectListProps } from "../DashboardTypes";
 import { Button } from "@/components/ui/button";
-import { Clock, ArrowRight, Compass } from "lucide-react";
+import { Clock, Compass } from "lucide-react";
 import { ApplicationCard } from "./ApplicationCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
