@@ -73,13 +73,23 @@ export async function acceptProjectApplication(projectId: string, applicantId: s
       },
     });
 
+    // Delete the original application notification from project owner's notifications
+    await db.notification.deleteMany({
+      where: {
+        projectId: projectId,
+        userId: project.ownerId, // The project owner received the original notification
+        senderId: applicantId, // From the applicant
+        type: NotificationType.APPLICATION_SENT,
+      }
+    });
+
     // Create notification for the applicant
     await db.notification.create({
       data: {
         userId: applicantId, // Send to the applicant
         type: NotificationType.APPLICATION_ACCEPTED,
         title: "Your application was accepted",
-        content: `You've been accepted to join "${project.projectName}"`,
+        content: `Congratulations! ${session.user.username} has accepted your application to join "${project.projectName}."`,
         projectId: project.id,
         senderId: session.user.id // Project owner is the sender
       }
@@ -157,6 +167,16 @@ export async function denyProjectApplication(projectId: string, applicantId: str
       data: {
         status: "rejected",
       },
+    });
+
+    // Delete the original application notification from project owner's notifications
+    await db.notification.deleteMany({
+      where: {
+        projectId: projectId,
+        userId: project.ownerId, // The project owner received the original notification
+        senderId: applicantId, // From the applicant
+        type: NotificationType.APPLICATION_SENT,
+      }
     });
 
     // Create notification for the applicant
