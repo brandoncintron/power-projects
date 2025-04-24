@@ -140,16 +140,14 @@ export default async function DashboardPage() {
                 <CardTitle className="text-lg sm:text-xl font-semibold">Start your project collaboration journey</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 px-2 sm:px-6">
                   {/* Left section - Collaborations */}
-                  <div className="p-2 sm:p-4 rounded-xl sm:rounded-4xl">
+                  <div className="rounded-xl">
                     <CollaborationsSection collaborations={dashboardData.collaborations} />
                   </div>
-
-                  <Separator className="my-4 2xl:hidden" orientation="horizontal" />
                   
                   {/* Right section - Applications */}
-                  <div className="p-2 sm:p-4 rounded-xl sm:rounded-4xl">
+                  <div className="rounded-xl">
                     <AppliedToProjectList projects={dashboardData.applications} />
                   </div>
                 </div>

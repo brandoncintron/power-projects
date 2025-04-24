@@ -27,7 +27,7 @@ export function CollaborationsSection({ collaborations }: CollaborationsSectionP
           Joined Projects
         </h2>
         {hasCollaborations && (
-          <Link href="/my-projects" className="inline-flex">
+          <Link href="/projects/my-projects" className="inline-flex">
             <Button 
               variant="outline" 
               size="sm" 
@@ -42,7 +42,7 @@ export function CollaborationsSection({ collaborations }: CollaborationsSectionP
       </div>
 
       {!hasCollaborations ? (
-        <div className="flex flex-col items-center justify-center flex-grow py-6 mx-auto md:w-[80%] w-full rounded-lg bg-blue-100">
+        <div className="flex flex-col items-center justify-center flex-grow py-6 mx-auto md:w-[80%] w-full rounded-4xl bg-blue-200 dark:border dark:border-dashed dark:border-blue-500 dark:bg-blue-900">
           <p className="text-muted-foreground mb-4 text-sm text-center px-4">
             You&apos;re not collaborating on any projects yet.
           </p>
@@ -50,7 +50,6 @@ export function CollaborationsSection({ collaborations }: CollaborationsSectionP
             <Button 
               variant="default" 
               size="sm"
-              className="break-all"
               onClick={() => showLoading("Loading project browser...")}
             >
               <Merge className="h-2 w-2" />

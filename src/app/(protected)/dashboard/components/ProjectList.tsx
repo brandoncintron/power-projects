@@ -61,15 +61,14 @@ export function ProjectList({ projects }: ProjectListProps) {
       </div>
 
       {!hasProjects ? (
-        <div className="flex flex-col items-center justify-center flex-grow py-6  mx-auto md:w-[80%] w-full rounded-lg bg-green-100">
+        <div className="flex flex-col items-center justify-center flex-grow py-6 mx-auto md:w-[80%] w-full rounded-4xl bg-green-200 dark:border dark:border-dashed dark:border-green-500 dark:bg-green-900">
           <p className="text-muted-foreground mb-4 text-sm text-center px-4">
             You haven&apos;t created any projects yet.
           </p>
           <Link href="/create-project" className="w-fit">
             <Button 
-              variant="outline" 
+              variant="default" 
               size="sm"
-              className="break-all"
               onClick={() => showLoading("Loading project creation form...")}
             >
               <Plus className="h-4 w-4" />

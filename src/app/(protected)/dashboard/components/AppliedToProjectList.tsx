@@ -6,8 +6,9 @@ import { AppliedToProjectListProps } from "../DashboardTypes";
 import { Button } from "@/components/ui/button";
 import { Clock, ArrowRight, Compass } from "lucide-react";
 import { ApplicationCard } from "./ApplicationCard";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-/* Project List - Renders grid of pending applications */
+/* Project List - Renders list of pending applications in a scrollable area */
 export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
   const { showLoading } = useLoading();
   
@@ -16,9 +17,6 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
     project => project.applicationStatus?.toLowerCase() === 'pending'
   );
   
-  // Limit displayed applications to 2
-  const displayedApplications = pendingApplications.slice(0, 2);
-  const hasMoreApplications = pendingApplications.length > 2;
   const hasPendingApplications = pendingApplications.length > 0;
   
   return (
@@ -36,7 +34,7 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
               className="h-7 text-xs px-3 w-full lg:w-auto"
               onClick={() => showLoading("Loading project browser...")}
             >
-              <Compass className="h-4 w-4" />
+              <Compass className="h-4 w-4 mr-1" />
               Browse More Projects
             </Button>
           </Link>
@@ -44,7 +42,7 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
       </div>
 
       {!hasPendingApplications ? (
-        <div className="flex flex-col items-center justify-center flex-grow py-6 mx-auto md:w-[80%] w-full rounded-lg bg-orange-100">
+        <div className="flex flex-col items-center justify-center flex-grow py-6 mx-auto md:w-[80%] w-full rounded-4xl bg-yellow-100 dark:border dark:border-dashed dark:border-yellow-500 dark:bg-yellow-900">
           <p className="text-muted-foreground mb-4 text-sm text-center px-4">
             {projects.length === 0 
               ? "You haven't applied to any projects yet." 
@@ -58,36 +56,23 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
             <Button 
               variant="default" 
               size="sm"
-              className="break-all"
             >
-              <Compass className="h-4 w-4" />
+              <Compass className="h-4 w-4 mr-2" />
               Browse Projects
             </Button>
           </Link>
         </div>
       ) : (
         <>
-          <div className="grid gap-4 md:grid-cols-2">
-            {displayedApplications.map((project) => (
-              <ApplicationCard key={project.id} project={project} />
-            ))}
+          <div className="border rounded-lg overflow-hidden bg-card shadow-sm">
+            <ScrollArea className="h-[180px] md:h-[210px] xl:h-[190px]">
+              <div className="divide-y">
+                {pendingApplications.map((project) => (
+                  <ApplicationCard key={project.id} project={project} />
+                ))}
+              </div>
+            </ScrollArea>
           </div>
-          
-          {hasMoreApplications && (
-            <div className="flex justify-center mt-2">
-              <Link href="/my-applications">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-7 text-xs px-3 flex items-center gap-1"
-                  onClick={() => showLoading("Loading all applications...")}
-                >
-                  View all applications
-                  <ArrowRight className="h-3 w-3 ml-1" />
-                </Button>
-              </Link>
-            </div>
-          )}
         </>
       )}
     </section>

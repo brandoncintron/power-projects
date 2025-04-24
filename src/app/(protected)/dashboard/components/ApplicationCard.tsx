@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock } from "lucide-react";
+import { Clock, Loader } from "lucide-react";
 import { useState } from "react";
 import { handleWithdrawApplication } from "../actions";
 import { useRouter } from "next/navigation";
@@ -56,72 +55,59 @@ export function ApplicationCard({ project }: ApplicationCardProps) {
   };
 
   return (
-    <Card className="overflow-hidden h-full rounded-4xl">
-      <CardContent className="px-3 sm:px-4 flex flex-col h-full">
+    <div className="flex items-center justify-between h-[42px] py-1 px-3 hover:bg-muted/10 transition-colors">
+      {/* Left section: Project name and application type */}
+      <div className="flex items-center min-w-0 gap-3 flex-1 overflow-hidden">
         {/* Status Badge */}
-        <div className="flex mb-2">
-          {!hasWithdrawn ? (
-            <Badge 
-              variant="outline" 
-              className={applicationStatus.toLowerCase() === "pending" 
-                ? "bg-yellow-100 text-yellow-800 border-yellow-300" 
-                : applicationStatus.toLowerCase() === "accepted"
-                  ? "bg-green-100 text-green-800 border-green-300"
-                  : "bg-red-100 text-red-800 border-red-300"
-              }
-            >
-              {applicationStatus.charAt(0).toUpperCase() + applicationStatus.slice(1).toLowerCase()}
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="text-slate-500 border-slate-300">
-              Withdrawn
-            </Badge>
-          )}
-        </div>
+        <Badge 
+          variant="outline" 
+          className={`shrink-0 h-5 ${!hasWithdrawn ? 
+            applicationStatus.toLowerCase() === "pending" 
+              ? "bg-yellow-100 text-yellow-800 border-yellow-300" 
+              : applicationStatus.toLowerCase() === "accepted"
+                ? "bg-green-100 text-green-800 border-green-300"
+                : "bg-red-100 text-red-800 border-red-300"
+            : "text-slate-500 border-slate-300"
+          }`}
+        >
+
+          {!hasWithdrawn 
+            ? <Clock />
+            : "Withdrawn"
+          }
+        </Badge>
         
-        {/* Project Name */}
-        <h3 className="font-medium text-sm line-clamp-2 sm:text-base mb-1.5">{project.projectName}</h3>
-        
-        <div className="mb-1.5">
-          <Badge variant="secondary" className="text-xs sm:text-sm px-2 whitespace-pre-wrap">
-            {project.applicationType}
-          </Badge>
-        </div>
-        
-        {/* Timestamp - Full Width Row */}
-        <div className="flex items-center text-xs text-muted-foreground mb-3">
-          <Clock size={12} className="mr-1" />
-          <span>{formatRelativeTime(project.createdAt)}</span>
-        </div>
-        
-        {/* Buttons - Fixed width */}
-        <div className="mt-auto">
-          <div className="flex flex-col xl:flex-row xs:flex-col gap-2 lg:gap-3 justify-start w-fit">
-            <Link href={`/projects/${project.id}`}>
-              <Button 
-                size="sm"
-                variant="default"
-                className="text-xs sm:text-sm py-1 h-auto sm:h-8 sm:w-fit w-[140px]"
-                onClick={() => showLoading("Loading project details...")}
-              >
-                View Details
-              </Button>
-            </Link>
-            
-            {!hasWithdrawn && (
-              <Button 
-                size="sm"
-                variant="destructive"
-                className="text-xs sm:text-sm py-1 px-2 h-auto sm:h-8 sm:w-fit w-[140px]"
-                onClick={handleWithdraw}
-                disabled={isWithdrawing}
-              >
-                {isWithdrawing ? "Withdrawing..." : "Withdraw"}
-              </Button>
-            )}
+        {/* Project Name (as link) */}
+        <div className="min-w-0 flex-1 overflow-hidden">
+          <Link 
+            href={`/projects/${project.id}`}
+            onClick={() => showLoading("Loading project details...")}
+            className="text-sm font-medium hover:underline line-clamp-1"
+          >
+            {project.projectName}
+          </Link>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span className="truncate w-fit">{project.applicationType}</span>
+            <span className="hidden xs:flex items-center whitespace-nowrap">
+              <Clock size={10} className="mr-1 shrink-0" />
+              {formatRelativeTime(project.createdAt)}
+            </span>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+      
+      {/* Right section: Withdraw button */}
+      {!hasWithdrawn && (
+        <Button 
+          size="sm"
+          variant="ghost"
+          className="text-xs h-6 px-2 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/20 ml-1.5 shrink-0"
+          onClick={handleWithdraw}
+          disabled={isWithdrawing}
+        >
+          {isWithdrawing ? <Loader className="h-3 w-3 animate-spin" /> : "Withdraw"}
+        </Button>
+      )}
+    </div>
   );
 } 
