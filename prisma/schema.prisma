@@ -19,6 +19,39 @@ enum ProjectStatus {
   CLOSED
 }
 
+enum NotificationType {
+  APPLICATION_ACCEPTED
+  APPLICATION_REJECTED
+  APPLICATION_SENT
+  COLLABORATION_INVITE
+  PROJECT_UPDATE
+  MENTION
+  MESSAGE
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  userId      String
+  type        NotificationType
+  title       String
+  content     String?
+  isRead      Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  
+  // Optional references
+  projectId   String?
+  senderId    String?
+  
+  // Relations
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project     Project?         @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  sender      User?            @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([projectId])
+  @@index([createdAt])
+}
+
 model User {
   id            String          @id @default(cuid())
   name          String?
@@ -48,6 +81,8 @@ model User {
   collaborations    ProjectCollaborator[]
   // Applications submitted by the user
   applications      ProjectApplication[]
+  notifications       Notification[]
+  sentNotifications   Notification[]  @relation("NotificationSender")
 }
 
 model Account {
@@ -98,6 +133,7 @@ model Project {
   applicants      ProjectApplication[]
 
   @@index([ownerId]) // Index for faster lookups by owner
+  notifications       Notification[]
 }
 
 // --- Join Table for Project Collaborators (Many-to-Many User <-> Project) ---
