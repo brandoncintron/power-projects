@@ -142,48 +142,6 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-
-        <SidebarGroup>
-          <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">
-            Collaboration
-          </SidebarGroupLabel>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/my-projects"}
-                tooltip="Joined Projects"
-                className="px-2 py-1.5"
-              >
-                <Link
-                  href="/inbox"
-                  onClick={() => handleNavWithLoading("/inbox", "Loading inbox...")}
-                >
-                  <Merge className="h-4 w-4 mr-2" />
-                  <span>Joined Projects</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname === "/my-applications"}
-                tooltip="Project Applications"
-                className="px-2 py-1.5"
-              >
-                <Link
-                  href="/my-applications"
-                  onClick={() => handleNavWithLoading("/my-applications", "Loading my applications...")}
-                >
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  <span>Project Applications</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-
-            
-          </SidebarMenu>
-        </SidebarGroup>
         
         <SidebarGroup>
           <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">
@@ -193,13 +151,13 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                isActive={pathname === "/inbox"}
+                isActive={pathname === "/notifications"}
                 tooltip="Inbox"
                 className="px-2 py-1.5"
               >
                 <Link
-                  href="/inbox"
-                  onClick={() => handleNavWithLoading("/inbox", "Loading inbox...")}
+                  href="/notifications"
+                  onClick={() => handleNavWithLoading("/notifications", "Loading notifications...")}
                 >
                   <Inbox className="h-4 w-4 mr-2" />
                   <span>Inbox</span>
