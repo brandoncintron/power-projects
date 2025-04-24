@@ -150,17 +150,6 @@ export default function CompactProjectCard({
                   <ExternalLink className="h-4 w-4 mr-2" />
                   View Details
                 </DropdownMenuItem>
-                {applicantCount > 0 && (
-                  <DropdownMenuItem
-                    onClick={() => {
-                      showLoading("Loading applications...");
-                      router.push(`/projects/${project.id}/applications`);
-                    }}
-                  >
-                    <Users className="h-4 w-4 mr-2" />
-                    Manage {applicantCount} Applicant{applicantCount !== 1 ? 's' : ''}
-                  </DropdownMenuItem>
-                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={openDeleteDialog}
