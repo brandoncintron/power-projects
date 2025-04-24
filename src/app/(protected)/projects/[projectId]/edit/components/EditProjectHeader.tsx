@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { GitBranch, Users, Clock, X } from "lucide-react";
 import Link from "next/link";
 import { EditProjectNameField } from "./EditProjectNameField";
+import { useLoading } from "@/components/ui/loading-context";
 
 interface EditProjectHeaderProps {
   projectName: string;
@@ -19,6 +20,8 @@ export function EditProjectHeader({
   createdAt,
   isOwner,
 }: Omit<EditProjectHeaderProps, 'projectName'>) {
+  const { showLoading } = useLoading();
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
       <div>
@@ -42,7 +45,7 @@ export function EditProjectHeader({
             <GitBranch className="mr-2 h-4 w-4" />
             Connect GitHub
           </Button>
-          <Link href={`/projects/${projectId}`}>
+          <Link href={`/projects/${projectId}`} onClick={() => showLoading("Discarding changes...")}>
             <Button variant="outline" size="sm" className="gap-1">
               <X className="mr-2 h-4 w-4" />
               Discard Changes

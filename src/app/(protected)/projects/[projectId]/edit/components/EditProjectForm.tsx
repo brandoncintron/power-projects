@@ -15,6 +15,7 @@ import { Form } from "@/components/ui/form";
 import { useEditProjectForm } from "../context/EditProjectFormContext";
 import { Button } from "@/components/ui/button";
 import { EditProjectHeader } from "./EditProjectHeader";
+import { useLoading } from "@/components/ui/loading-context";
 
 interface EditProjectFormFullProps extends ProjectOverviewProps {
   projectName: string;
@@ -38,6 +39,7 @@ export function EditProjectForm({
   createdAt,
   isOwner,
 }: EditProjectFormFullProps) {
+
   return (
     <EditProjectFormProvider 
       projectId={projectId}
@@ -71,6 +73,7 @@ function EditProjectFormContent({
   isOwner,
 }: Omit<EditProjectFormFullProps, 'projectName' | 'description' | 'completionDate'>) {
   const { form, onSubmit, isSubmitting } = useEditProjectForm();
+  const { showLoading } = useLoading();
 
   return (
     <div className="space-y-8">
@@ -99,6 +102,9 @@ function EditProjectFormContent({
                     type="submit" 
                     disabled={isSubmitting}
                     className="mt-4"
+                    onClick={() => {
+                      showLoading("Saving changes...");
+                    }}
                   >
                     Save Changes
                   </Button>

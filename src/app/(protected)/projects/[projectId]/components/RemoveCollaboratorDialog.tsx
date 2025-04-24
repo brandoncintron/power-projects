@@ -21,6 +21,7 @@ interface RemoveCollaboratorDialogProps {
   selectedCollaborator: Collaborator | null;
   projectId: string;
   onSuccess?: () => void;
+  onPendingChange?: (isPending: boolean) => void;
 }
 
 /* Remove Collaborator Dialog - Confirmation dialog for removing project collaborators */
@@ -29,7 +30,8 @@ export function RemoveCollaboratorDialog({
   setIsOpen,
   selectedCollaborator,
   projectId,
-  onSuccess
+  onSuccess,
+  onPendingChange
 }: RemoveCollaboratorDialogProps) {
   const [isRemoving, setIsRemoving] = useState(false);
   const router = useRouter();
@@ -39,6 +41,8 @@ export function RemoveCollaboratorDialog({
 
     try {
       setIsRemoving(true);
+      if (onPendingChange) onPendingChange(true);
+      
       const result = await removeCollaborator(projectId, selectedCollaborator.userId);
       
       if (result.success) {
@@ -46,7 +50,11 @@ export function RemoveCollaboratorDialog({
         if (onSuccess) {
           onSuccess();
         }
-        router.refresh();
+        
+        // Allow UI to update before refreshing
+        setTimeout(() => {
+          router.refresh();
+        }, 100);
       } else {
         toast.error(result.error || "Failed to remove collaborator");
       }
@@ -55,6 +63,7 @@ export function RemoveCollaboratorDialog({
       toast.error("An unexpected error occurred");
     } finally {
       setIsRemoving(false);
+      if (onPendingChange) onPendingChange(false);
       setIsOpen(false);
     }
   };

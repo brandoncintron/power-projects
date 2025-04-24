@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Owner, Collaborator } from "../../ProjectTypes";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
-import { MinusCircle } from "lucide-react";
+import { MinusCircle, Loader } from "lucide-react";
 import { RemoveCollaboratorDialog } from "./RemoveCollaboratorDialog";
 
 interface TeamMembersCardProps {
@@ -25,6 +25,8 @@ export function TeamMembersCard({
 }: TeamMembersCardProps) {
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
   const [selectedCollaborator, setSelectedCollaborator] = useState<Collaborator | null>(null);
+  const [removedCollaboratorIds, setRemovedCollaboratorIds] = useState<string[]>([]);
+  const [pendingRemovalIds, setPendingRemovalIds] = useState<string[]>([]);
 
   const handleRemoveClick = (collaborator: Collaborator, e: React.MouseEvent) => {
     e.preventDefault();
@@ -32,6 +34,23 @@ export function TeamMembersCard({
     setSelectedCollaborator(collaborator);
     setShowRemoveDialog(true);
   };
+
+  const handleRemoveSuccess = (userId: string) => {
+    setRemovedCollaboratorIds(prev => [...prev, userId]);
+  };
+
+  const handleRemovePending = (userId: string, isPending: boolean) => {
+    setPendingRemovalIds(prev => 
+      isPending 
+        ? [...prev, userId] 
+        : prev.filter(id => id !== userId)
+    );
+  };
+
+  // Filter out collaborators that have been removed
+  const filteredCollaborators = collaborators.filter(
+    collaborator => !removedCollaboratorIds.includes(collaborator.userId)
+  );
 
   return (
     <>
@@ -65,10 +84,10 @@ export function TeamMembersCard({
             
             {/* Collaborators Section */}
             <div>
-              <p className="text-sm font-medium mb-3">Collaborators ({collaborators.length})</p>
-              {collaborators.length > 0 ? (
+              <p className="text-sm font-medium mb-3">Collaborators ({filteredCollaborators.length})</p>
+              {filteredCollaborators.length > 0 ? (
                 <div className="space-y-3">
-                  {collaborators.map((collaborator) => (
+                  {filteredCollaborators.map((collaborator) => (
                     <div key={collaborator.userId} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
@@ -95,9 +114,14 @@ export function TeamMembersCard({
                           size="icon" 
                           className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/20"
                           onClick={(e) => handleRemoveClick(collaborator, e)}
+                          disabled={pendingRemovalIds.includes(collaborator.userId)}
                           title="Remove collaborator"
                         >
-                          <MinusCircle className="h-5 w-5" />
+                          {pendingRemovalIds.includes(collaborator.userId) ? (
+                            <Loader className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <MinusCircle className="h-5 w-5" />
+                          )}
                         </Button>
                       )}
                     </div>
@@ -117,6 +141,8 @@ export function TeamMembersCard({
         setIsOpen={setShowRemoveDialog}
         selectedCollaborator={selectedCollaborator}
         projectId={projectId}
+        onSuccess={() => selectedCollaborator && handleRemoveSuccess(selectedCollaborator.userId)}
+        onPendingChange={(isPending: boolean) => selectedCollaborator && handleRemovePending(selectedCollaborator.userId, isPending)}
       />
     </>
   );

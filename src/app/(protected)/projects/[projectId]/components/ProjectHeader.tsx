@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { GitBranch, Users, Clock, Pencil } from "lucide-react";
 import Link from "next/link";
+import { useLoading } from "@/components/ui/loading-context";
+
 interface ProjectHeaderProps {
   projectName: string;
   memberCount: number;
@@ -10,6 +12,7 @@ interface ProjectHeaderProps {
   createdAt: Date;
   isOwner: boolean;
 }
+
 
 /* Project Header - Displays project title, metadata and owner actions */
 export function ProjectHeader({
@@ -19,6 +22,8 @@ export function ProjectHeader({
   createdAt,
   isOwner,
 }: ProjectHeaderProps) {
+  const { showLoading } = useLoading();
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
       <div>
@@ -40,7 +45,7 @@ export function ProjectHeader({
             <GitBranch className="mr-2 h-4 w-4" />
             Connect GitHub
           </Button>
-          <Link href={`/projects/${projectId}/edit`}>
+          <Link href={`/projects/${projectId}/edit`} onClick={() => showLoading("Loading project editor...")}>
             <Button variant="outline" size="sm" className="gap-1">
               <Pencil className="mr-2 h-4 w-4" />
               Edit Project

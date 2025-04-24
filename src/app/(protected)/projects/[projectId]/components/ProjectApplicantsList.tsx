@@ -10,14 +10,14 @@ interface ProjectApplicantsListProps {
   applicants: Applicants[];
   onAccept: (userId: string) => void;
   onDeny: (userId: string) => void;
-  isPending?: boolean;
+  pendingActions?: {[key: string]: {accept?: boolean, deny?: boolean}};
 }
 
 export function ProjectApplicantsList({
   applicants,
   onAccept,
   onDeny,
-  isPending = false,
+  pendingActions = {},
 }: ProjectApplicantsListProps) {
   // Filter to only show pending applications
   const pendingApplicants = applicants.filter(
@@ -70,20 +70,20 @@ export function ProjectApplicantsList({
                 variant="outline"
                 size="sm"
                 onClick={() => onAccept(applicant.userId)}
-                disabled={isPending}
+                disabled={!!pendingActions[applicant.userId]?.accept || !!pendingActions[applicant.userId]?.deny}
                 aria-label={`Accept application from ${applicant.user.username || applicant.userId}`}
               >
-                {isPending && <Loader className="mr-2 h-3 w-3 animate-spin" />}
+                {pendingActions[applicant.userId]?.accept && <Loader className="mr-2 h-3 w-3 animate-spin" />}
                 Accept
               </Button>
               <Button
                 variant="destructive"
                 size="sm"
                 onClick={() => onDeny(applicant.userId)}
-                disabled={isPending}
+                disabled={!!pendingActions[applicant.userId]?.accept || !!pendingActions[applicant.userId]?.deny}
                 aria-label={`Deny application from ${applicant.user.username || applicant.userId}`}
               >
-                {isPending && <Loader className="mr-2 h-3 w-3 animate-spin" />}
+                {pendingActions[applicant.userId]?.deny && <Loader className="mr-2 h-3 w-3 animate-spin" />}
                 Deny
               </Button>
             </div>
