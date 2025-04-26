@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Grid, Plus, LogOut, User, Moon, Sun, Inbox, Folder, UserCircle } from "lucide-react";
+import { Home, Grid, Plus, LogOut, User, Moon, Sun, Bell, Folder, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
@@ -145,7 +145,7 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
         
         <SidebarGroup>
           <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">
-            Inbox
+            Notifications
           </SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -159,8 +159,8 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
                   href="/notifications"
                   onClick={() => handleNavWithLoading("/notifications", "Loading notifications...")}
                 >
-                  <Inbox className="h-4 w-4 mr-2" />
-                  <span>Inbox</span>
+                  <Bell className="h-4 w-4 mr-2" />
+                  <span>Notifications</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
