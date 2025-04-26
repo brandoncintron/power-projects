@@ -2,7 +2,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProjectOverview } from "./ProjectOverview";
-import { ScrumBoardCard } from "./ScrumBoardCard";
+import { ScrumBoard } from "./ScrumBoard";
 import { ProjectChatCard } from "./ProjectChatCard";
 import { ProjectApplicationsSection } from "./ProjectApplicationsSection";
 import { ProjectTabsProps } from "../../ProjectTypes";
@@ -75,7 +75,7 @@ export function ProjectTabs({
       </TabsContent>
       
       <TabsContent value="scrum" className="mt-6">
-        <ScrumBoardCard />
+        <ScrumBoard />
       </TabsContent>
 
       <TabsContent value="chat" className="mt-6">

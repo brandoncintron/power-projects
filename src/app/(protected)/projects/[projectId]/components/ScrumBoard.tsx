@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 /* Scrum Board Card - Placeholder for the future scrum board functionality */
-export function ScrumBoardCard() {
+export function ScrumBoard() {
   return (
     <Card>
       <CardHeader>
