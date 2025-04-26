@@ -13,6 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { DashboardData } from "./DashboardTypes";
 import { ShowToast } from "@/components/ShowToast";
+import { NotificationWithDetails } from "@/app/notifications/NotificationTypes";
 
 const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
   const userData = await db.user.findUnique({
@@ -81,6 +82,44 @@ const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
   };
 };
 
+// Fetch user notifications
+const fetchUserNotifications = async (userId: string): Promise<{
+  notifications: NotificationWithDetails[];
+  totalCount: number;
+}> => {
+  // Count total notifications
+  const totalCount = await db.notification.count({
+    where: { userId }
+  });
+  
+  // Fetch recent notifications
+  const notifications = await db.notification.findMany({
+    where: { userId },
+    include: {
+      sender: {
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          image: true,
+        }
+      },
+      project: {
+        select: {
+          id: true,
+          projectName: true,
+        }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 5, // Get 5 most recent
+  });
+  
+  return { notifications, totalCount };
+};
+
 export default async function DashboardPage() {
   const session = await auth();
   const user = session?.user;
@@ -103,6 +142,12 @@ export default async function DashboardPage() {
     collaborations: [],
     applications: [],
   };
+  
+  let notificationsData = {
+    notifications: [] as NotificationWithDetails[],
+    totalCount: 0
+  };
+  
   let fetchError: string | null = null;
 
   try {
@@ -111,6 +156,8 @@ export default async function DashboardPage() {
     }
 
     dashboardData = await fetchDashboardData(user.id);
+    notificationsData = await fetchUserNotifications(user.id);
+    
   } catch (error) {
     console.error("Failed to fetch dashboard data:", error);
     fetchError = "Could not load dashboard data. Please try again later.";
@@ -139,7 +186,7 @@ export default async function DashboardPage() {
                 <CardTitle className="text-lg sm:text-xl font-semibold">Start your project collaboration journey</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 px-2 sm:px-6">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 px-2 pb-4 sm:px-6">
                   {/* Left section - Collaborations */}
                   <div className="rounded-xl">
                     <CollaborationsSection collaborations={dashboardData.collaborations} />
@@ -166,7 +213,10 @@ export default async function DashboardPage() {
                 <CardTitle className="text-lg sm:text-xl font-medium">My notifications</CardTitle>
               </CardHeader>
               <CardContent className="px-2 sm:px-6 py-4">
-                <NotificationsSection />
+                <NotificationsSection 
+                  notifications={notificationsData.notifications} 
+                  totalCount={notificationsData.totalCount} 
+                />
               </CardContent>
             </Card>
           </>
