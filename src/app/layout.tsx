@@ -11,8 +11,8 @@ import { auth } from "@/auth";
 import { LoadingProvider } from "@/components/ui/loading-context";
 import { SetUsernamePopup } from "@/components/auth/SetUsernamePopup";
 import { AuthedNavMenu } from "@/components/nav/AuthedNavMenu";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { DM_Sans } from "next/font/google"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { DM_Sans } from "next/font/google";
 
 const dmSansFont = DM_Sans({ subsets: ["latin"], weight: "400" });
 
@@ -31,7 +31,10 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body id="top" className={`flex min-h-screen flex-col ${dmSansFont.className}`} >
+      <body
+        id="top"
+        className={`flex min-h-screen flex-col ${dmSansFont.className}`}
+      >
         <Suspense>
           <ThemeProvider
             attribute="class"
@@ -44,14 +47,17 @@ export default async function RootLayout({
                 {session ? (
                   <SidebarProvider defaultOpen={true}>
                     <AuthedNavMenu session={session} />
-                    
                     <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out bg-[#f3f2f1] dark:bg-[#1a1a1a]">
-                      <div className="fixed top-4 left-4 lg:left-auto md:right-4 z-50">
+                      <div className="fixed top-14 left-4 lg:left-auto md:right-4 z-50">
                         <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground lg:hidden" />
                       </div>
-                      
+
                       <div className="p-0 md:w-[80%] mx-auto">
-                        {user?.username === null ? <SetUsernamePopup /> : children}
+                        {user?.username === null ? (
+                          <SetUsernamePopup />
+                        ) : (
+                          children
+                        )}
                       </div>
                       <Footer />
                     </div>

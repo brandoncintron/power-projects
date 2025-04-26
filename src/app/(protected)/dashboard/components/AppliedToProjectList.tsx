@@ -31,11 +31,11 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-7 text-xs px-3 w-full lg:w-auto"
+              className="text-xs sm:text-xs w-fit"
               onClick={() => showLoading("Loading project browser...")}
             >
               <Compass className="h-4 w-4 mr-1" />
-              Browse More Projects
+              Browse Projects
             </Button>
           </Link>
         )}
@@ -56,6 +56,7 @@ export function AppliedToProjectList({ projects }: AppliedToProjectListProps) {
             <Button 
               variant="default" 
               size="sm"
+              className="text-xs sm:text-xs w-fit"
             >
               <Compass className="h-4 w-4 mr-2" />
               Browse Projects

@@ -51,7 +51,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <Button 
               size="sm"
               variant="default"
-              className="text-xs sm:text-sm py-1 px-2 h-auto sm:h-8 sm:w-fit w-fit"
+              className="text-xs sm:text-xs w-fit"
               onClick={() => showLoading("Loading project details...")}
             >
               View Details

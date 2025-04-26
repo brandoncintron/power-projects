@@ -50,7 +50,7 @@ export function ProjectList({ projects }: ProjectListProps) {
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-7 text-xs px-3 w-full lg:w-auto"
+              className="text-xs sm:text-xs w-fit"
               onClick={() => showLoading("Loading project creation form...")}
             >
               <Plus className="h-4 w-4" />
@@ -69,6 +69,7 @@ export function ProjectList({ projects }: ProjectListProps) {
             <Button 
               variant="default" 
               size="sm"
+              className="text-xs sm:text-xs w-fit"
               onClick={() => showLoading("Loading project creation form...")}
             >
               <Plus className="h-4 w-4" />

@@ -21,7 +21,7 @@ export function CollaborationsSection({ collaborations }: CollaborationsSectionP
   
   return (
     <section className="space-y-3 h-full flex flex-col">
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2">
+      <div className="flex flex-row items-center justify-between gap-2">
         <h2 className="text-base sm:text-lg font-semibold flex items-center gap-1.5">
           <Users className="h-4 w-4" />
           Joined Projects
@@ -31,11 +31,11 @@ export function CollaborationsSection({ collaborations }: CollaborationsSectionP
             <Button 
               variant="outline" 
               size="sm" 
-              className="h-7 text-xs px-3 w-full lg:w-auto"
+              className="h-7 text-xs px-3 w-fit"
               onClick={() => showLoading("Loading project browser...")}
             >
               <Users className="h-4 w-4" />
-              View Joined Projects
+              View All
             </Button>
           </Link>
         )}
