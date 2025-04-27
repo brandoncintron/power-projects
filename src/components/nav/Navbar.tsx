@@ -9,14 +9,12 @@ import AccessButtons from "@/components/auth/AccessButtons";
 import MobileNavbar from "@/components/nav/MobileNavbar";
 import NavLinks from "@/components/nav/NavLinks";
 import ThemeSelector from "@/components/nav/ThemeSelector";
-import AlertBanner from "@/components/AlertBanner";
 
 const Navbar = () => {
   const { scrolled } = useScrollDetection(); // Check if user scrolled
 
   return (
     <div className="flex flex-col w-full sticky top-0 z-50">
-      <AlertBanner />
       <nav
         className={`w-full bg-background transition-all duration-200 py-4 ${
           scrolled ? "border-b shadow-sm" : ""
