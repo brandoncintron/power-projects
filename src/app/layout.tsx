@@ -13,7 +13,7 @@ import { SetUsernamePopup } from "@/components/auth/SetUsernamePopup";
 import { AuthedNavMenu } from "@/components/nav/AuthedNavMenu";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DM_Sans } from "next/font/google";
-
+import AlertBanner from "@/components/AlertBanner";
 const dmSansFont = DM_Sans({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
@@ -35,6 +35,7 @@ export default async function RootLayout({
         id="top"
         className={`flex min-h-screen flex-col ${dmSansFont.className}`}
       >
+        <AlertBanner />
         <Suspense>
           <ThemeProvider
             attribute="class"
