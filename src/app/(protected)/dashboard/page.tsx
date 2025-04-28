@@ -13,7 +13,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import { DashboardData } from "./DashboardTypes";
 import { ShowToast } from "@/components/ShowToast";
-import { NotificationWithDetails } from "@/app/notifications/NotificationTypes";
+import { NotificationWithDetails } from "@/app/(protected)/notifications/NotificationTypes";
 
 const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
   const userData = await db.user.findUnique({
