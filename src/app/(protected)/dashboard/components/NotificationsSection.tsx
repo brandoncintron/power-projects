@@ -5,8 +5,8 @@ import { Bell } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { NotificationWithDetails } from "@/app/notifications/NotificationTypes";
-import { getNotificationIcon } from "@/app/notifications/utils/getNotificationIcon";
+import { NotificationWithDetails } from "@/app/(protected)/notifications/NotificationTypes";
+import { getNotificationIcon } from "@/app/(protected)/notifications/utils/getNotificationIcon";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
 import { useLoading } from "@/components/ui/loading-context";
 
