@@ -48,7 +48,7 @@ export default function Hero({ session }: HeroProps) {
           <Button
             variant="outline"
             size="lg"
-            className="border-gray-600 hover:text-white hover:bg-gray-800 sm:mx-0 mx-auto"
+            className="border-gray-600 hover:text-white hover:bg-[#161722] sm:mx-0 mx-auto dark:bg-[#161722]"
             onClick={() => handleNavigation("about")}
           >
             Learn More <ChevronRight />

@@ -48,7 +48,7 @@ export default async function RootLayout({
                 {session ? (
                   <SidebarProvider defaultOpen={true}>
                     <AuthedNavMenu session={session} />
-                    <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out bg-[#f3f2f1] dark:bg-[#1a1a1a]">
+                    <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out bg-[#f3f2f1] dark:bg-[#161722]">
                       <div className="fixed top-14 left-4 lg:left-auto md:right-4 z-50">
                         <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground lg:hidden" />
                       </div>

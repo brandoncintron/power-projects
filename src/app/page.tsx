@@ -8,7 +8,7 @@ const session = await auth();
 
   return (
     <main>
-      <div>
+      <div className=" dark:bg-[#161722]">
         <Hero session={session} />
         <div id="features">
           <Features />

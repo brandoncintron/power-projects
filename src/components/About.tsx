@@ -32,8 +32,8 @@ const AboutSection = ({
 
 export default function About({ session }: { session: Session | null }) {
   return (
-    <section className="py-24 px-4 bg-slate-50 dark:bg-slate-900">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-24 px-4">
+      <div className="max-w-6xl mx-auto">
         <AboutSection index={0}>
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold mb-6">About Power Projects</h2>
@@ -45,7 +45,7 @@ export default function About({ session }: { session: Session | null }) {
           </div>
         </AboutSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-20">
+        <div className="max-w-3xl mx-auto flex items-center mb-20">
           <AboutSection index={1}>
             <div>
               <h3 className="text-3xl font-bold mb-6 text-blue-400">
@@ -62,12 +62,6 @@ export default function About({ session }: { session: Session | null }) {
                 an experienced developer looking to mentor others, Power
                 Projects provides the tools and community to help you succeed.
               </p>
-            </div>
-          </AboutSection>
-
-          <AboutSection index={2}>
-            <div className="rounded-lg shadow-xl overflow-hidden border border-gray-700 h-[400px]">
-              Image placeholder4
             </div>
           </AboutSection>
         </div>

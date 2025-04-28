@@ -16,7 +16,7 @@ const Navbar = () => {
   return (
     <div className="flex flex-col w-full sticky top-0 z-50">
       <nav
-        className={`w-full bg-background transition-all duration-200 py-4 ${
+        className={`w-full bg-background transition-all duration-200 py-4 dark:bg-[#161722] ${
           scrolled ? "border-b shadow-sm" : ""
         }`}
       >

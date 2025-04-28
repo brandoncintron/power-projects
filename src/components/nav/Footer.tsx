@@ -9,7 +9,7 @@ export default function Footer() {
   const { handleNavigation } = useNavigation();
   
   return (
-    <footer className="py-8 px-4 bg-[#f3f2f1] dark:bg-[#1a1a1a]">
+    <footer className="py-8 px-4  dark:bg-[#161722]">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div>

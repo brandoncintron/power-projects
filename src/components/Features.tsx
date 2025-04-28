@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { GitBranch, LayoutGrid, MessageSquare } from "lucide-react";
+import Image from 'next/image';
 
 const FeatureSection = ({ children, index }: { children: React.ReactNode, index: number }) => {
   const ref = useRef(null);
@@ -24,12 +25,12 @@ const FeatureSection = ({ children, index }: { children: React.ReactNode, index:
 export default function Features() {
   return (
     <section className="py-20 px-4">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-5xl font-bold mb-16 text-center">Features</h2>
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-5xl font-bold text-center">Features</h2>
 
         {/* First Feature */}
         <FeatureSection index={2}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center mb-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 items-center mb-32">
             <div className="order-2 md:order-1">
               <div className="flex items-center mb-6">
                 <LayoutGrid className="h-6 w-6 text-blue-400 mr-3" />
@@ -43,8 +44,14 @@ export default function Features() {
             </div>
 
             <div className="order-1 md:order-2">
-              <div className="rounded-lg shadow-xl overflow-hidden border border-gray-700 h-[400px]">
-                Image placeholder3
+              <div className="overflow-hidden flex items-center justify-center">
+                <Image 
+                  src="/agileimage.png" 
+                  alt="Agile Development" 
+                  width={350} 
+                  height={350}
+                  className="p-8"
+                />
               </div>
             </div>
           </div>
@@ -53,10 +60,16 @@ export default function Features() {
 
         {/* Second Feature */}
         <FeatureSection index={1}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 mb-32 items-center">
             <div>
-              <div className="rounded-lg shadow-xl overflow-hidden border border-gray-700 h-[400px]">
-                Image placeholder2
+              <div className="overflow-hidden flex items-center justify-center">
+                <Image 
+                  src="/github.svg" 
+                  alt="GitHub Integration" 
+                  width={350} 
+                  height={350}
+                  className="p-8"
+                />
               </div>
             </div>
 
@@ -76,7 +89,7 @@ export default function Features() {
 
         {/* Third Feature */}
         <FeatureSection index={0}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 mb-32 items-center">
             <div className="order-2 md:order-1">
               <div className="flex items-center mb-6">
                 <MessageSquare className="h-6 w-6 text-blue-400 mr-3" />
@@ -90,8 +103,14 @@ export default function Features() {
             </div>
 
             <div className="order-1 md:order-2">
-              <div className="rounded-lg shadow-xl overflow-hidden border border-gray-700 h-[400px]">
-                Image placeholder1
+              <div className="overflow-hidden flex items-center justify-center">
+                <Image 
+                  src="/chatimage.png" 
+                  alt="Team Communication" 
+                  width={350} 
+                  height={350}
+                  className="p-8"
+                />
               </div>
             </div>
           </div>
