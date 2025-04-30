@@ -5,7 +5,7 @@ import type { Session } from "next-auth";
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
 
 const AboutSection = ({
   children,
@@ -31,6 +31,8 @@ const AboutSection = ({
 };
 
 export default function About({ session }: { session: Session | null }) {
+  const { open } = useAuthDialog();
+
   return (
     <section className="py-24 px-4">
       <div className="max-w-6xl mx-auto">
@@ -81,13 +83,7 @@ export default function About({ session }: { session: Session | null }) {
                   size="lg"
                   className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                   onClick={() =>
-                    toast.warning(
-                      "This feature is not yet implemented. Check back soon!",
-                      {
-                        duration: 3000,
-                        position: "bottom-right",
-                      }
-                    )
+                    open("signup")
                   }
                 >
                   Sign Up Now
