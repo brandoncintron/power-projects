@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+
 export type AuthView = "signin" | "signup";
 
 export interface AuthDialogContextType {
@@ -14,7 +16,7 @@ export interface AuthDialogContextType {
 export interface AuthErrorHandlerParams {
   errorParam: string | null;
   open: (view: AuthView, error?: string) => void;
-  router: any; // Using any here, but in practice this is ReturnType<typeof useRouterType>
+  router: ReturnType<typeof useRouter>;
   errorCheckedRef: React.MutableRefObject<boolean>;
 }
 
