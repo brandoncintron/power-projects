@@ -1,12 +1,13 @@
 import { NotificationType } from "@prisma/client";
 import {
-  CheckCircle,
-  X,
-  Clock,
-  UserPlus,
-  MessageSquare,
   Bell,
+  CheckCircle,
+  Clock,
+  MessageSquare,
+  UserPlus,
+  X,
 } from "lucide-react";
+
 export const getNotificationIcon = (type: NotificationType) => {
   switch (type) {
     case "APPLICATION_ACCEPTED":

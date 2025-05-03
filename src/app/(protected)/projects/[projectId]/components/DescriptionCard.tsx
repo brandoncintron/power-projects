@@ -2,9 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface DescriptionCardProps {
-  description: string;
-}
+import { DescriptionCardProps } from "@@/projects/types/types";
 
 /* Description Card - Displays the project description */
 export function DescriptionCard({ description }: DescriptionCardProps) {
@@ -18,4 +16,4 @@ export function DescriptionCard({ description }: DescriptionCardProps) {
       </CardContent>
     </Card>
   );
-} 
+}

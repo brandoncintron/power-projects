@@ -1,14 +1,15 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileCode2 } from "lucide-react";
 
-interface ApplicationTypeCardProps {
-  applicationType: string;
-}
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { ApplicationTypeCardProps } from "@@/projects/types/types";
 
 /* Application Type Card - Displays the project's application type */
-export function ApplicationTypeCard({ applicationType }: ApplicationTypeCardProps) {
+export function ApplicationTypeCard({
+  applicationType,
+}: ApplicationTypeCardProps) {
   return (
     <Card>
       <CardHeader>
@@ -24,4 +25,4 @@ export function ApplicationTypeCard({ applicationType }: ApplicationTypeCardProp
       </CardContent>
     </Card>
   );
-} 
+}

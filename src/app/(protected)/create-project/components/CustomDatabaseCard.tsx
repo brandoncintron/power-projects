@@ -1,6 +1,7 @@
 import React from "react";
-import { useProjectForm } from "../context/ProjectFormContext";
-import { CustomItemCard } from "./CustomItemCard";
+
+import { CustomItemCard } from "@@/create-project/components/CustomItemCard";
+import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
 
 /**
  * Component for adding custom databases that aren't in the predefined list
@@ -31,4 +32,4 @@ export function CustomDatabaseCard() {
       itemType="database"
     />
   );
-} 
+}

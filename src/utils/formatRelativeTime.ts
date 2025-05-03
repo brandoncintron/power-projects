@@ -3,7 +3,7 @@
  * Returns condensed format like "2d ago", "5h ago" for efficient display in UIs
  */
 export function formatRelativeTime(date: Date | null | undefined): string {
-  if (!date) return '';
+  if (!date) return "";
   const now = new Date();
   const past = new Date(date);
   const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);

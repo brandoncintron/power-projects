@@ -1,11 +1,12 @@
 "use client";
 
+import React, { useRef } from "react";
+
+import { motion, useInView } from "framer-motion";
 import type { Session } from "next-auth";
 
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
+import { Button } from "@/components/ui/button";
 
 const AboutSection = ({
   children,
@@ -82,9 +83,7 @@ export default function About({ session }: { session: Session | null }) {
                 <Button
                   size="lg"
                   className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                  onClick={() =>
-                    open("signup")
-                  }
+                  onClick={() => open("signup")}
                 >
                   Sign Up Now
                 </Button>

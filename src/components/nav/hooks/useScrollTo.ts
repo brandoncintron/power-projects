@@ -1,7 +1,10 @@
-"use client"
+"use client";
 
-import { useCallback, useEffect } from 'react';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { useCallback, useEffect } from "react";
+
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+import { NavigationProps } from "@/components/nav/types/types";
 
 /**
  * Manages the mechanics of scrolling, including calculating offsets and handling
@@ -18,26 +21,30 @@ export function useScrollTo() {
    * Scrolls the window smoothly to a specific section identified by its ID.
    * Accounts for a base offset (e.g., navbar height) and an optional additional offset.
    */
-  const scrollToSection = useCallback((sectionId: string, additionalOffset = 0) => {
-    // Find the target element in the DOM
-    const section = document.getElementById(sectionId);
-    if (section) {
-      // Define the base offset (height of the navbar)
-      const baseOffset = 64;
-      // Add up the total offset
-      const scrollOffset = baseOffset + additionalOffset;
+  const scrollToSection = useCallback(
+    ({ sectionId, additionalOffset = 0 }: NavigationProps) => {
+      // Find the target element in the DOM
+      const section = document.getElementById(sectionId);
+      if (section) {
+        // Define the base offset (height of the navbar)
+        const baseOffset = 64;
+        // Add up the total offset
+        const scrollOffset = baseOffset + additionalOffset;
 
-      // Calculate the target scroll position
-      const elementPosition = section.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - scrollOffset;
+        // Calculate the target scroll position
+        const elementPosition =
+          section.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - scrollOffset;
 
-      // Perform the smooth scroll animation to the calculated position
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  }, []);
+        // Perform the smooth scroll animation to the calculated position
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    },
+    [],
+  );
 
   /**
    * Effect hook to handle scroll behavior when the page loads and user comes from a different page.
@@ -45,11 +52,11 @@ export function useScrollTo() {
   useEffect(() => {
     // Only apply this automatic scroll behavior on home page for now
     // If I need to add scrolling from another page functionality, add the pathname below
-    if (pathname === '/') {
-      const fromNavigation = searchParams.get('fromNavigation'); // Flag indicating cross-page nav
-      const targetSection = searchParams.get('section'); // The ID of the target section
+    if (pathname === "/") {
+      const fromNavigation = searchParams.get("fromNavigation"); // Flag indicating cross-page nav
+      const targetSection = searchParams.get("section"); // The ID of the target section
 
-      if (fromNavigation === 'true' && targetSection) {
+      if (fromNavigation === "true" && targetSection) {
         // If a user comes in from another page and needs to scroll to something, do this:
 
         // Instantly scroll to the top on page load for better UX
@@ -63,23 +70,24 @@ export function useScrollTo() {
           if (section) {
             // Calculate the scroll offset (only base navbar height needed here)
             const scrollOffset = 64;
-            const elementPosition = section.getBoundingClientRect().top + window.scrollY;
+            const elementPosition =
+              section.getBoundingClientRect().top + window.scrollY;
             const offsetPosition = elementPosition - scrollOffset;
 
             // Perform the smooth scroll to the target section
             window.scrollTo({
               top: offsetPosition,
-              behavior: 'smooth'
+              behavior: "smooth",
             });
           }
         }, scrollDelay);
 
-        router.replace("/")
+        router.replace("/");
       } else {
         // If the user is on the current page, just scroll to that section instead
-        const hash = window.location.hash.replace('#', ''); // Get the hash(section id) value without the '#'
+        const hash = window.location.hash.replace("#", ""); // Get the hash(section id) value without the '#'
         if (hash) {
-          scrollToSection(hash);
+          scrollToSection({ sectionId: hash });
         }
       }
     }

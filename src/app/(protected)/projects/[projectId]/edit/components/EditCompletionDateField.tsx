@@ -1,23 +1,31 @@
 "use client";
 
 import React from "react";
+
 import { format } from "date-fns";
-import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
+import { FaCalendarAlt } from "react-icons/fa";
+
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { FaCalendarAlt } from "react-icons/fa";
-import { useEditProjectForm } from "../context/EditProjectFormContext";
+
+import { useEditProjectForm } from "@@/projects/[projectId]/edit/hooks/useEditProjectForm";
 
 export function EditCompletionDateField() {
   const { form } = useEditProjectForm();
-  
+
   return (
     <FormField
       control={form.control}
@@ -25,7 +33,8 @@ export function EditCompletionDateField() {
       render={({ field }) => (
         <FormItem>
           <p className="text-sm uppercase text-muted-foreground mb-2">
-            <FaCalendarAlt className="inline mr-1 mb-1" /> Target Completion Date
+            <FaCalendarAlt className="inline mr-1 mb-1" /> Target Completion
+            Date
           </p>
           <Popover>
             <PopoverTrigger asChild>
@@ -34,7 +43,7 @@ export function EditCompletionDateField() {
                   variant="outline"
                   className={cn(
                     "pl-3 text-left font-normal w-full",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
                   )}
                 >
                   {field.value ? (
@@ -61,4 +70,4 @@ export function EditCompletionDateField() {
       )}
     />
   );
-} 
+}

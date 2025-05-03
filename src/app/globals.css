@@ -78,6 +78,10 @@
   --foreground: oklch(0.147 0.004 49.25);
 }
 
+.light {
+  --background: oklch(0.96 0.0017 67.8);
+}
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);

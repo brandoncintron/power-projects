@@ -1,19 +1,25 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/components/ui/theme-provider";
+
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+
 import "./globals.css";
+
 import { Suspense } from "react";
-import { AuthDialogProvider } from "@/components/auth/hooks/useAuthDialog";
-import Navbar from "@/components/nav/Navbar";
-import Footer from "@/components/nav/Footer";
-import { AuthDialog } from "@/components/auth/AuthDialog";
+
 import { auth } from "@/auth";
-import { LoadingProvider } from "@/components/ui/loading-context";
+import { DM_Sans } from "next/font/google";
+
+import AlertBanner from "@/components/AlertBanner";
+import { AuthDialog } from "@/components/auth/AuthDialog";
+import { AuthDialogProvider } from "@/components/auth/hooks/useAuthDialog";
 import { SetUsernamePopup } from "@/components/auth/SetUsernamePopup";
 import { AuthedNavMenu } from "@/components/nav/AuthedNavMenu";
+import Footer from "@/components/nav/Footer";
+import Navbar from "@/components/nav/Navbar";
+import { LoadingProvider } from "@/components/ui/loading-context";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { DM_Sans } from "next/font/google";
-import AlertBanner from "@/components/AlertBanner";
+
 const dmSansFont = DM_Sans({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
@@ -35,7 +41,6 @@ export default async function RootLayout({
         id="top"
         className={`flex min-h-screen flex-col ${dmSansFont.className}`}
       >
-        <AlertBanner />
         <Suspense>
           <ThemeProvider
             attribute="class"
@@ -48,8 +53,12 @@ export default async function RootLayout({
                 {session ? (
                   <SidebarProvider defaultOpen={true}>
                     <AuthedNavMenu session={session} />
-                    <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out bg-[#f3f2f1] dark:bg-[#161722]">
-                      <div className="fixed top-14 left-4 lg:left-auto md:right-4 z-50">
+                    <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out">
+                      <div className="w-[calc(100%+5px)] relative left-[-5px]">
+                        <AlertBanner />
+                      </div>
+
+                      <div className="fixed top-18 right-5 lg:left-auto md:right-4 z-50">
                         <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground lg:hidden" />
                       </div>
 
@@ -57,7 +66,7 @@ export default async function RootLayout({
                         {user?.username === null ? (
                           <SetUsernamePopup />
                         ) : (
-                          children
+                          <>{children}</>
                         )}
                       </div>
                       <Footer />
@@ -66,13 +75,13 @@ export default async function RootLayout({
                     <Toaster richColors />
                   </SidebarProvider>
                 ) : (
-                  <>
+                  <div className="bg-white dark:bg-[#161722]">
                     <Navbar />
                     {children}
                     <Footer />
                     <AuthDialog />
                     <Toaster richColors />
-                  </>
+                  </div>
                 )}
               </LoadingProvider>
             </AuthDialogProvider>

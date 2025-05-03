@@ -1,7 +1,9 @@
 import { auth } from "@/auth";
+
 import { db } from "@/lib/db";
-import { NotificationWithDetails } from "./NotificationTypes";
-import { NotificationsClient } from "./components/NotificationsClient";
+
+import { NotificationsClient } from "@@/notifications/components/NotificationsClient";
+import { NotificationWithDetails } from "@@/notifications/types/types";
 
 export default async function NotificationsPage() {
   const session = await auth();
@@ -45,9 +47,9 @@ export default async function NotificationsPage() {
   }
 
   return (
-    <NotificationsClient 
-      initialNotifications={notifications} 
-      initialError={error} 
+    <NotificationsClient
+      initialNotifications={notifications}
+      initialError={error}
     />
   );
 }

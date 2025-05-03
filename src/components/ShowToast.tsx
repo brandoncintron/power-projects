@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { toast } from "sonner";
 
 export type ToastType = "success" | "error" | "info" | "warning";
@@ -18,28 +19,28 @@ interface ShowToastProps {
   storageKey?: string;
 }
 
-export function ShowToast({ storageKey = 'toastStatus' }: ShowToastProps) {
+export function ShowToast({ storageKey = "toastStatus" }: ShowToastProps) {
   useEffect(() => {
     // Check sessionStorage when the component mounts
     const storedToast = sessionStorage.getItem(storageKey);
-    
+
     if (storedToast) {
       try {
         // Try to parse the stored data as JSON
         const toastData = JSON.parse(storedToast) as ToastStorage;
-        
+
         // Show the appropriate toast based on type
         switch (toastData.type) {
-          case 'success':
+          case "success":
             toast.success(toastData.message);
             break;
-          case 'error':
+          case "error":
             toast.error(toastData.message);
             break;
-          case 'warning':
+          case "warning":
             toast.warning(toastData.message);
             break;
-          case 'info':
+          case "info":
           default:
             toast.info(toastData.message);
             break;
@@ -47,11 +48,11 @@ export function ShowToast({ storageKey = 'toastStatus' }: ShowToastProps) {
       } catch (e) {
         console.error("Error parsing toast data:", e);
         // Fallback for when the stored value is just a string (for backward compatibility)
-        if (storedToast === 'success') {
-          toast.success('Operation completed successfully!');
+        if (storedToast === "success") {
+          toast.success("Operation completed successfully!");
         }
       }
-      
+
       // Remove the toast data from storage
       sessionStorage.removeItem(storageKey);
     }
@@ -63,7 +64,11 @@ export function ShowToast({ storageKey = 'toastStatus' }: ShowToastProps) {
 /**
  * Helper function to set toast data in sessionStorage
  */
-export function setToast(message: string, type: ToastType = 'success', key: string = 'toastStatus') {
+export function setToast(
+  message: string,
+  type: ToastType = "success",
+  key: string = "toastStatus",
+) {
   const toastData: ToastStorage = { type, message };
   sessionStorage.setItem(key, JSON.stringify(toastData));
 }

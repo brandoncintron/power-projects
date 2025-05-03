@@ -1,10 +1,12 @@
 import React from "react";
-import { db } from "@/lib/db";
-import { notFound } from "next/navigation";
-import { auth } from "@/auth";
-import { HideLoading } from "@/components/HideLoading";
-import { EditProjectForm } from "./components/EditProjectForm";
 
+import { auth } from "@/auth";
+import { notFound } from "next/navigation";
+
+import { HideLoading } from "@/components/HideLoading";
+import { db } from "@/lib/db";
+
+import { EditProjectForm } from "@@/projects/[projectId]/edit/components/EditProjectForm";
 
 async function ProjectEditPage(props: {
   params: Promise<{ projectId: string }>;

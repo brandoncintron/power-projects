@@ -1,14 +1,17 @@
 import React from "react";
-import Link from "next/link";
-import { db } from "@/lib/db";
-import { Button } from "@/components/ui/button";
-import { HideLoading } from "@/components/HideLoading";
-import { ProjectWithDetails } from "../ProjectTypes";
+
 import { auth } from "@/auth";
 import { Plus } from "lucide-react";
-import ProjectStats from "./components/ProjectStats";
-import ProjectGrid from "./components/ProjectGrid";
+import Link from "next/link";
+
+import { HideLoading } from "@/components/HideLoading";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { db } from "@/lib/db";
+
+import ProjectGrid from "@@/projects/my-projects/components/ProjectGrid";
+import ProjectStats from "@@/projects/my-projects/components/ProjectStats";
+import { ProjectWithDetails } from "@@/projects/types/types";
 
 export default async function MyProjectsPage() {
   const session = await auth();
@@ -42,31 +45,31 @@ export default async function MyProjectsPage() {
       },
       include: {
         owner: { select: { username: true } },
-        _count: { 
-          select: { 
-            collaborators: true, 
+        _count: {
+          select: {
+            collaborators: true,
             applicants: {
               where: {
-                status: "pending"
-              }
-            } 
-          } 
+                status: "pending",
+              },
+            },
+          },
         },
         applicants: {
           where: {
-            status: "pending"
+            status: "pending",
           },
           select: {
             status: true,
-          }
-        }
+          },
+        },
       },
-      
+
       orderBy: { createdAt: "desc" },
     })) as ProjectWithDetails[];
 
     // Post-process the projects to add missing fields
-    projects = projects.map(project => ({
+    projects = projects.map((project) => ({
       ...project,
       frameworks: project.frameworks || [],
       databases: project.databases || [],
@@ -75,7 +78,7 @@ export default async function MyProjectsPage() {
     // Extract unique application types for filter tags
     if (projects.length > 0) {
       const uniqueApplicationTypes = Array.from(
-        new Set(projects.map((p) => p.applicationType))
+        new Set(projects.map((p) => p.applicationType)),
       ).sort();
       dynamicFilterTags = ["All", ...uniqueApplicationTypes];
     }
@@ -120,7 +123,8 @@ export default async function MyProjectsPage() {
             </div>
             <h2 className="text-xl font-semibold mb-2">No projects yet</h2>
             <p className="text-muted-foreground max-w-md mb-6">
-              You haven&apos;t created any projects yet. Create your first project to start collaborating with others.
+              You haven&apos;t created any projects yet. Create your first
+              project to start collaborating with others.
             </p>
             <Button asChild>
               <Link href="/create-project">Create Your First Project</Link>
@@ -135,10 +139,7 @@ export default async function MyProjectsPage() {
             <ProjectStats projects={projects} />
 
             {/* Project Grid */}
-            <ProjectGrid 
-              projects={projects}
-              filterTags={dynamicFilterTags}
-            />
+            <ProjectGrid projects={projects} filterTags={dynamicFilterTags} />
           </>
         )}
       </main>

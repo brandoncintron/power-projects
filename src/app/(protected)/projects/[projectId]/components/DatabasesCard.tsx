@@ -3,9 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDatabaseIcon } from "@/lib/language-icons";
 
-interface DatabasesCardProps {
-  databases: string[];
-}
+import { DatabasesCardProps } from "@@/projects/types/types";
 
 /* Databases Card - Displays the project's database technologies */
 export function DatabasesCard({ databases }: DatabasesCardProps) {
@@ -35,4 +33,4 @@ export function DatabasesCard({ databases }: DatabasesCardProps) {
       </CardContent>
     </Card>
   );
-} 
+}

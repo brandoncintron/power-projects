@@ -1,19 +1,16 @@
 "use client";
 
-import Link from "next/link";
-import { Bell } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { NotificationWithDetails } from "@/app/(protected)/notifications/NotificationTypes";
 import { getNotificationIcon } from "@/app/(protected)/notifications/utils/getNotificationIcon";
-import { formatRelativeTime } from "@/utils/formatRelativeTime";
-import { useLoading } from "@/components/ui/loading-context";
+import { Bell } from "lucide-react";
+import Link from "next/link";
 
-interface NotificationsSectionProps {
-  notifications: NotificationWithDetails[];
-  totalCount: number;
-}
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLoading } from "@/components/ui/loading-context";
+import { formatRelativeTime } from "@/utils/formatRelativeTime";
+
+import { NotificationsSectionProps } from "@@/dashboard/types/types";
 
 export function NotificationsSection({
   notifications,
@@ -24,8 +21,8 @@ export function NotificationsSection({
   const hasMoreNotifications = totalCount > 5;
 
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="px-4 pb-2">
+    <Card className="shadow-sm rounded-4xl p-4 sm:p-6 border-0 dark:border">
+      <CardHeader className="px-2 sm:px-4">
         <div className="flex justify-between items-center">
           <CardTitle className="text-base flex items-center gap-1.5">
             <Bell className="h-4 w-4" />
@@ -33,7 +30,7 @@ export function NotificationsSection({
           </CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="rounded-md p-6 pt-0">
+      <CardContent className="rounded-md px-6  pt-0 dark:border">
         {recentNotifications.length === 0 ? (
           <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
             No notifications yet.

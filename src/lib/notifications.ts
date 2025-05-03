@@ -1,5 +1,6 @@
-import { db } from "@/lib/db";
 import { NotificationType } from "@prisma/client";
+
+import { db } from "@/lib/db";
 
 type CreateNotificationParams = {
   userId: string;

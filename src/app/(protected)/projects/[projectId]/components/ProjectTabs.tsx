@@ -1,12 +1,13 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ProjectOverview } from "./ProjectOverview";
-import { ScrumBoard } from "./ScrumBoard";
-import { ProjectChatCard } from "./ProjectChatCard";
-import { ProjectApplicationsSection } from "./ProjectApplicationsSection";
-import { ProjectTabsProps } from "../../ProjectTypes";
-import { ProjectTasksCard } from "./ProjectTasks";
+
+import { ProjectApplicationsSection } from "@@/projects/[projectId]/components/ProjectApplicationsSection";
+import { ProjectChatCard } from "@@/projects/[projectId]/components/ProjectChatCard";
+import { ProjectOverview } from "@@/projects/[projectId]/components/ProjectOverview";
+import { ProjectTasksCard } from "@@/projects/[projectId]/components/ProjectTasks";
+import { ScrumBoard } from "@@/projects/[projectId]/components/ScrumBoard";
+import { ProjectTabsProps } from "@@/projects/types/types";
 
 /* Project Tabs - Manages tabbed interface for project content with conditional rendering based on ownership and collaboration status */
 export function ProjectTabs({
@@ -20,7 +21,7 @@ export function ProjectTabs({
   owner,
   applicants,
   collaborators = [],
-  projectId
+  projectId,
 }: ProjectTabsProps) {
   // Non-owner and non-collaborator view shows only the overview without tabs
   if (!isOwner && !isCollaborator) {
@@ -46,7 +47,9 @@ export function ProjectTabs({
   // Owner or collaborator view with tabs for different project management features
   return (
     <Tabs defaultValue="overview" className="w-full">
-      <TabsList className={`grid w-full ${isOwner ? 'grid-cols-5 md:w-[600px]' : 'grid-cols-4 md:w-[500px]'}`}>
+      <TabsList
+        className={`grid w-full ${isOwner ? "grid-cols-5 md:w-[600px]" : "grid-cols-4 md:w-[500px]"}`}
+      >
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="tasks">Project Tasks</TabsTrigger>
         <TabsTrigger value="scrum">Scrum Board</TabsTrigger>
@@ -73,7 +76,7 @@ export function ProjectTabs({
       <TabsContent value="tasks" className="mt-6">
         <ProjectTasksCard />
       </TabsContent>
-      
+
       <TabsContent value="scrum" className="mt-6">
         <ScrumBoard />
       </TabsContent>

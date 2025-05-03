@@ -1,12 +1,15 @@
 import React from "react";
-import Link from "next/link";
-import { db } from "@/lib/db";
-import { ProjectVisibility } from "@prisma/client";
-import { Button } from "@/components/ui/button";
-import { HideLoading } from "@/components/HideLoading";
-import FilteredProjectList from "./components/FilteredProjectList";
-import { ProjectWithDetails } from "../ProjectTypes";
+
 import { auth } from "@/auth";
+import { ProjectVisibility } from "@prisma/client";
+import Link from "next/link";
+
+import { HideLoading } from "@/components/HideLoading";
+import { Button } from "@/components/ui/button";
+import { db } from "@/lib/db";
+
+import { ProjectWithDetails } from "../types/types";
+import FilteredProjectList from "./components/FilteredProjectList";
 
 export default async function BrowseProjectsListPage() {
   const session = await auth();
@@ -59,7 +62,7 @@ export default async function BrowseProjectsListPage() {
     // Extract unique application types for filter tags
     if (projects.length > 0) {
       const uniqueApplicationTypes = Array.from(
-        new Set(projects.map((p) => p.applicationType))
+        new Set(projects.map((p) => p.applicationType)),
       ).sort();
       dynamicFilterTags = ["All", ...uniqueApplicationTypes];
     }

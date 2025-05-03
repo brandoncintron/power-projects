@@ -1,23 +1,32 @@
 import React from "react";
+
 import { format } from "date-fns";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { useProjectForm } from "../context/ProjectFormContext";
+
+import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
 
 /**
  * Component for the completion date calendar field
  */
 export function CompletionDateField() {
   const { form } = useProjectForm();
-  
+
   return (
     <FormField
       control={form.control}
@@ -32,7 +41,7 @@ export function CompletionDateField() {
                   variant="outline"
                   className={cn(
                     "pl-3 text-left font-normal",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
                   )}
                 >
                   {field.value ? (
@@ -59,4 +68,4 @@ export function CompletionDateField() {
       )}
     />
   );
-} 
+}

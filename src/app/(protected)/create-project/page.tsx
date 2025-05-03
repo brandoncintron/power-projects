@@ -1,19 +1,19 @@
 "use client";
 
 import React from "react";
-import { Form } from "@/components/ui/form";
-import { ProjectNameField } from "./components/ProjectNameField";
-import { ProjectDescriptionField } from "./components/ProjectDescriptionField";
-import { TeamNameField } from "./components/TeamNameField";
+
 import { HideLoading } from "@/components/HideLoading";
-import { VisibilitySelection } from "./components/VisibilitySelection";
-import { CompletionDateField } from "./components/CompletionDateField";
+import { Form } from "@/components/ui/form";
+
 import { ApplicationTypeDropdown } from "./components/ApplicationTypeDropdown";
+import { CompletionDateField } from "./components/CompletionDateField";
+import { ProjectDescriptionField } from "./components/ProjectDescriptionField";
+import { ProjectNameField } from "./components/ProjectNameField";
+import { TeamNameField } from "./components/TeamNameField";
 import { TechnologySelectionSection } from "./components/TechnologySelectionSection";
-import {
-  ProjectFormProvider,
-  useProjectForm,
-} from "./context/ProjectFormContext";
+import { VisibilitySelection } from "./components/VisibilitySelection";
+import { ProjectFormProvider } from "./context/ProjectFormContext";
+import { useProjectForm } from "./hooks/useProjectForm";
 
 /**
  * Project Submission Page:

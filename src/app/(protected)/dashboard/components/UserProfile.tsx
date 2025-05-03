@@ -1,18 +1,11 @@
 "use client";
 
-interface UserProfileProps {
-  user: {
-    username?: string | null;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  } | null;
-}
+import { UserProfileProps } from "@@/dashboard/types/types";
 
 /* User Profile - Displays user's avatar and personal information */
 export function UserProfile({ user }: UserProfileProps) {
   if (!user) return null;
-  
+
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
       <div>
@@ -22,4 +15,4 @@ export function UserProfile({ user }: UserProfileProps) {
       </div>
     </div>
   );
-} 
+}

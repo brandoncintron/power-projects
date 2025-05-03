@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import Link from "next/link";
+
+import { HideLoading } from "@/components/HideLoading";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useLoading } from "@/components/ui/loading-context";
 import {
   Pagination,
   PaginationContent,
@@ -15,68 +17,38 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Search } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
-import { getNotificationIcon } from "../utils/getNotificationIcon";
-import { NotificationWithDetails } from "../NotificationTypes";
-import { HideLoading } from "@/components/HideLoading";
-import { useLoading } from "@/components/ui/loading-context";
 
-interface NotificationsClientProps {
-  initialNotifications: NotificationWithDetails[];
-  initialError: string | null;
-}
+import { useNotificationPagination } from "@@/notifications/hooks/useNotificationPagination";
+import { useNotificationSearch } from "@@/notifications/hooks/useNotificationSearch";
+import { NotificationsClientProps } from "@@/notifications/types/types";
+import { getNotificationIcon } from "@@/notifications/utils/getNotificationIcon";
 
-export function NotificationsClient({ 
-  initialNotifications, 
-  initialError 
+export function NotificationsClient({
+  initialNotifications,
+  initialError,
 }: NotificationsClientProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
   const { showLoading } = useLoading();
-  
-  const pageSize = 5;
 
-  // Get notifications for current page
-  const getCurrentPageNotifications = () => {
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    
-    // Filter by search query if provided
-    const filteredNotifications = searchQuery 
-      ? initialNotifications.filter(notification => 
-          notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          notification.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          notification.project?.projectName.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      : initialNotifications;
-    
-    return filteredNotifications.slice(startIndex, endIndex);
+  // First, get the filtered notifications from search
+  const { searchQuery, filteredNotifications, handleSearchChange } =
+    useNotificationSearch(initialNotifications);
+
+  // Then, use those filtered notifications for pagination
+  const {
+    currentPage,
+    paginatedNotifications,
+    totalPages,
+    handlePageChange,
+    resetPage,
+  } = useNotificationPagination(filteredNotifications);
+
+  // Update search hook to use resetPage function
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleSearchChange(e);
+    resetPage();
   };
-
-  // Handle page change
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    // Scroll to top of notification list
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Handle search input change
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page when searching
-  };
-
-  const currentNotifications = getCurrentPageNotifications();
-  const filteredNotifications = searchQuery 
-    ? initialNotifications.filter(notification => 
-        notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        notification.content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        notification.project?.projectName.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : initialNotifications;
-  
-  const filteredTotalPages = Math.ceil(filteredNotifications.length / pageSize);
 
   return (
     <main className="py-6 px-4 md:px-6 min-h-screen">
@@ -96,7 +68,7 @@ export function NotificationsClient({
                     placeholder="Search notifications"
                     className="pl-9 h-10 w-full sm:w-[250px]"
                     value={searchQuery}
-                    onChange={handleSearchChange}
+                    onChange={handleSearch}
                   />
                 </div>
               </div>
@@ -112,17 +84,19 @@ export function NotificationsClient({
               </div>
             )}
 
-            {!initialError && currentNotifications.length === 0 && (
+            {!initialError && paginatedNotifications.length === 0 && (
               <div className="py-8 text-center">
                 <p className="text-muted-foreground">
-                  {searchQuery ? "No notifications match your search" : "No notifications to display"}
+                  {searchQuery
+                    ? "No notifications match your search"
+                    : "No notifications to display"}
                 </p>
               </div>
             )}
 
-            {!initialError && currentNotifications.length > 0 && (
+            {!initialError && paginatedNotifications.length > 0 && (
               <div className="divide-y">
-                {currentNotifications.map((notification) => (
+                {paginatedNotifications.map((notification) => (
                   <div key={notification.id} className="first:pt-0 py-4">
                     <div className="flex gap-4">
                       <Avatar className="h-10 w-10">
@@ -173,7 +147,9 @@ export function NotificationsClient({
                             >
                               <Link
                                 href={`/projects/${notification.projectId}`}
-                                onClick={() => showLoading("Loading project details...")}
+                                onClick={() =>
+                                  showLoading("Loading project details...")
+                                }
                               >
                                 View project
                               </Link>
@@ -187,20 +163,20 @@ export function NotificationsClient({
               </div>
             )}
 
-            {filteredTotalPages > 1 && (
+            {totalPages > 1 && (
               <div className="py-6">
                 <Pagination>
                   <PaginationContent>
                     {currentPage > 1 && (
                       <PaginationItem>
-                        <PaginationPrevious 
-                          onClick={() => handlePageChange(currentPage - 1)} 
+                        <PaginationPrevious
+                          onClick={() => handlePageChange(currentPage - 1)}
                           className="cursor-pointer"
                         />
                       </PaginationItem>
                     )}
 
-                    {Array.from({ length: filteredTotalPages }, (_, i) => i + 1).map(
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                       (pageNum) => (
                         <PaginationItem key={pageNum}>
                           <PaginationLink
@@ -211,12 +187,12 @@ export function NotificationsClient({
                             {pageNum}
                           </PaginationLink>
                         </PaginationItem>
-                      )
+                      ),
                     )}
 
-                    {currentPage < filteredTotalPages && (
+                    {currentPage < totalPages && (
                       <PaginationItem>
-                        <PaginationNext 
+                        <PaginationNext
                           onClick={() => handlePageChange(currentPage + 1)}
                           className="cursor-pointer"
                         />
@@ -231,4 +207,4 @@ export function NotificationsClient({
       </div>
     </main>
   );
-} 
+}

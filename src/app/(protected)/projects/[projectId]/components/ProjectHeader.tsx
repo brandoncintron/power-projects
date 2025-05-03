@@ -1,18 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { GitBranch, Users, Clock, Pencil } from "lucide-react";
+import { Clock, GitBranch, Pencil, Users } from "lucide-react";
 import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/ui/loading-context";
 
-interface ProjectHeaderProps {
-  projectName: string;
-  memberCount: number;
-  projectId: string;
-  createdAt: Date;
-  isOwner: boolean;
-}
-
+import { ProjectHeaderProps } from "@@/projects/types/types";
 
 /* Project Header - Displays project title, metadata and owner actions */
 export function ProjectHeader({
@@ -45,7 +39,10 @@ export function ProjectHeader({
             <GitBranch className="mr-2 h-4 w-4" />
             Connect GitHub
           </Button>
-          <Link href={`/projects/${projectId}/edit`} onClick={() => showLoading("Loading project editor...")}>
+          <Link
+            href={`/projects/${projectId}/edit`}
+            onClick={() => showLoading("Loading project editor...")}
+          >
             <Button variant="outline" size="sm" className="gap-1">
               <Pencil className="mr-2 h-4 w-4" />
               Edit Project
@@ -55,4 +52,4 @@ export function ProjectHeader({
       )}
     </div>
   );
-} 
+}

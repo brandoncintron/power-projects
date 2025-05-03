@@ -1,10 +1,17 @@
 "use server";
 
-import { db } from "@/lib/db";
 import { auth } from "@/auth";
-import { editProjectSchema, EditProjectSchema } from "@/schema/editProjectSchema";
 
-export async function updateProject(projectId: string, values: EditProjectSchema) {
+import { db } from "@/lib/db";
+import {
+  editProjectSchema,
+  EditProjectSchema,
+} from "@/schema/editProjectSchema";
+
+export async function updateProject(
+  projectId: string,
+  values: EditProjectSchema,
+) {
   const validatedFields = editProjectSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -30,9 +37,9 @@ export async function updateProject(projectId: string, values: EditProjectSchema
     });
 
     if (!project) {
-      return { 
-        success: false, 
-        error: "Project not found or you don't have permission to update it." 
+      return {
+        success: false,
+        error: "Project not found or you don't have permission to update it.",
       };
     }
 
@@ -51,9 +58,10 @@ export async function updateProject(projectId: string, values: EditProjectSchema
     return { success: true, project: updatedProject };
   } catch (error) {
     console.error("Failed to update project:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "Failed to update project" 
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to update project",
     };
   }
-} 
+}

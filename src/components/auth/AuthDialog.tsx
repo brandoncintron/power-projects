@@ -1,5 +1,17 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { DialogError } from "@/components/auth/DialogError";
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
+import OAuthButtons from "@/components/auth/OAuthButtons";
+import SignInForm from "@/components/auth/SignInForm";
+import SignUpForm from "@/components/auth/SignUpForm";
+import { handleAuthErrors } from "@/components/auth/utils/handleAuthErrors";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -7,18 +19,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import SignInForm from "@/components/auth/SignInForm";
-import SignUpForm from "@/components/auth/SignUpForm";
-import { DialogError } from "@/components/auth/DialogError";
-import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
-import OAuthButtons from "@/components/auth/OAuthButtons";
-import { useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { handleAuthErrors } from "./utils/handleAuthErrors";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function AuthDialog() {
   const { isOpen, close, view, setView, error, open } = useAuthDialog();
@@ -71,7 +73,9 @@ export function AuthDialog() {
 
                 <div className="flex items-center gap-4">
                   <Separator className="flex-1" />
-                  <span className="text-xs text-muted-foreground">or login with:</span>
+                  <span className="text-xs text-muted-foreground">
+                    or login with:
+                  </span>
                   <Separator className="flex-1" />
                 </div>
 
@@ -88,7 +92,9 @@ export function AuthDialog() {
 
                 <div className="flex items-center gap-4">
                   <Separator className="flex-1" />
-                  <span className="text-xs text-muted-foreground">or login with:</span>
+                  <span className="text-xs text-muted-foreground">
+                    or login with:
+                  </span>
                   <Separator className="flex-1" />
                 </div>
 

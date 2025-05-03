@@ -16,4 +16,4 @@ export function ScrumBoard() {
       </CardContent>
     </Card>
   );
-} 
+}

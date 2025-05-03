@@ -1,11 +1,18 @@
-"use client"
+"use client";
 
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import React, { useRef } from "react";
+
+import { motion, useInView } from "framer-motion";
 import { GitBranch, LayoutGrid, MessageSquare } from "lucide-react";
-import Image from 'next/image';
+import Image from "next/image";
 
-const FeatureSection = ({ children, index }: { children: React.ReactNode, index: number }) => {
+const FeatureSection = ({
+  children,
+  index,
+}: {
+  children: React.ReactNode;
+  index: number;
+}) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
@@ -39,16 +46,19 @@ export default function Features() {
                 </h3>
               </div>
               <p className="text-lg leading-relaxed">
-                Organize your projects with intuitive kanban boards, sprint planning tools, and task tracking capabilities. Experience the workflow used by professional developers and prepare yourself for future tech roles.
+                Organize your projects with intuitive kanban boards, sprint
+                planning tools, and task tracking capabilities. Experience the
+                workflow used by professional developers and prepare yourself
+                for future tech roles.
               </p>
             </div>
 
             <div className="order-1 md:order-2">
               <div className="overflow-hidden flex items-center justify-center">
-                <Image 
-                  src="/agileimage.png" 
-                  alt="Agile Development" 
-                  width={350} 
+                <Image
+                  src="/agileimage.png"
+                  alt="Agile Development"
+                  width={350}
                   height={350}
                   className="p-8"
                 />
@@ -56,17 +66,16 @@ export default function Features() {
             </div>
           </div>
         </FeatureSection>
-        
 
         {/* Second Feature */}
         <FeatureSection index={1}>
           <div className="grid grid-cols-1 md:grid-cols-2 mb-32 items-center">
             <div>
               <div className="overflow-hidden flex items-center justify-center">
-                <Image 
-                  src="/github.svg" 
-                  alt="GitHub Integration" 
-                  width={350} 
+                <Image
+                  src="/github.svg"
+                  alt="GitHub Integration"
+                  width={350}
                   height={350}
                   className="p-8"
                 />
@@ -81,7 +90,10 @@ export default function Features() {
                 </h3>
               </div>
               <p className="text-lg leading-relaxed">
-                Seamlessly connect with your GitHub repositories to track contributions, manage pull requests, and sync issues. Keep your codebase organized without switching between platforms, making collaboration smoother for everyone.
+                Seamlessly connect with your GitHub repositories to track
+                contributions, manage pull requests, and sync issues. Keep your
+                codebase organized without switching between platforms, making
+                collaboration smoother for everyone.
               </p>
             </div>
           </div>
@@ -94,20 +106,22 @@ export default function Features() {
               <div className="flex items-center mb-6">
                 <MessageSquare className="h-6 w-6 text-blue-400 mr-3" />
                 <h3 className="text-3xl font-bold text-blue-400">
-                Built-in communication
+                  Built-in communication
                 </h3>
               </div>
               <p className="text-lg leading-relaxed">
-              Stay connected with your team through real-time chat and direct messaging. No need to switch between apps while collaborating on code.
+                Stay connected with your team through real-time chat and direct
+                messaging. No need to switch between apps while collaborating on
+                code.
               </p>
             </div>
 
             <div className="order-1 md:order-2">
               <div className="overflow-hidden flex items-center justify-center">
-                <Image 
-                  src="/chatimage.png" 
-                  alt="Team Communication" 
-                  width={350} 
+                <Image
+                  src="/chatimage.png"
+                  alt="Team Communication"
+                  width={350}
                   height={350}
                   className="p-8"
                 />
@@ -118,4 +132,4 @@ export default function Features() {
       </div>
     </section>
   );
-} 
+}

@@ -1,6 +1,6 @@
 import authConfig from "@/auth.config";
+import { apiAuthPrefix, DEFAULT_LOGIN_REDIRECT, publicRoutes } from "@/routes";
 import NextAuth from "next-auth";
-import { publicRoutes, apiAuthPrefix, DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 const { auth } = NextAuth(authConfig);
 
@@ -26,9 +26,9 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutePatterns.some(pattern => {
-    if (typeof pattern === 'string') {
-        return pattern === nextUrl.pathname; // Exact match for static routes
+  const isPublicRoute = publicRoutePatterns.some((pattern) => {
+    if (typeof pattern === "string") {
+      return pattern === nextUrl.pathname; // Exact match for static routes
     }
     return pattern.test(nextUrl.pathname); // Regex test for dynamic routes
   });

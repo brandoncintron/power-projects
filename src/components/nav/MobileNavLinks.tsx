@@ -1,10 +1,8 @@
-import { useNavigation } from "@/hooks/useNavigation";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-interface MobileNavLinksProps {
-  setIsOpen: (isOpen: boolean) => void;
-}
+import { useNavigation } from "@/components/nav/hooks/useNavigation";
+import { MobileNavLinksProps } from "@/components/nav/types/types";
 
 export default function MobileNavLinks({ setIsOpen }: MobileNavLinksProps) {
   const { handleNavigation } = useNavigation();

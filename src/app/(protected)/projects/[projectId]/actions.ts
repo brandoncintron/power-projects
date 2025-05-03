@@ -1,17 +1,21 @@
 "use server";
 
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { NotificationType } from "@prisma/client";
 
-export async function acceptProjectApplication(projectId: string, applicantId: string) {
+import { db } from "@/lib/db";
+
+export async function acceptProjectApplication(
+  projectId: string,
+  applicantId: string,
+) {
   try {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return { 
-        success: false, 
-        error: "User not authenticated." 
+      return {
+        success: false,
+        error: "User not authenticated.",
       };
     }
 
@@ -19,19 +23,20 @@ export async function acceptProjectApplication(projectId: string, applicantId: s
     const project = await db.project.findUnique({
       where: {
         id: projectId,
-        ownerId: session.user.id // Only the owner can accept applications
+        ownerId: session.user.id, // Only the owner can accept applications
       },
       select: {
         id: true,
         projectName: true,
-        ownerId: true
-      }
+        ownerId: true,
+      },
     });
 
     if (!project) {
-      return { 
-        success: false, 
-        error: "Project not found or you don't have permission to manage this project." 
+      return {
+        success: false,
+        error:
+          "Project not found or you don't have permission to manage this project.",
       };
     }
 
@@ -46,9 +51,9 @@ export async function acceptProjectApplication(projectId: string, applicantId: s
     });
 
     if (!application) {
-      return { 
-        success: false, 
-        error: "Application not found." 
+      return {
+        success: false,
+        error: "Application not found.",
       };
     }
 
@@ -80,7 +85,7 @@ export async function acceptProjectApplication(projectId: string, applicantId: s
         userId: project.ownerId, // The project owner received the original notification
         senderId: applicantId, // From the applicant
         type: NotificationType.APPLICATION_SENT,
-      }
+      },
     });
 
     // Create notification for the applicant
@@ -91,31 +96,35 @@ export async function acceptProjectApplication(projectId: string, applicantId: s
         title: "Your application was accepted",
         content: `Congratulations! ${session.user.username} has accepted your application to join "${project.projectName}."`,
         projectId: project.id,
-        senderId: session.user.id // Project owner is the sender
-      }
+        senderId: session.user.id, // Project owner is the sender
+      },
     });
 
-    return { 
-      success: true, 
-      data: { application: updatedApplication, collaborator } 
+    return {
+      success: true,
+      data: { application: updatedApplication, collaborator },
     };
   } catch (error) {
     console.error("Failed to accept application:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "Failed to accept application" 
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to accept application",
     };
   }
 }
 
-export async function denyProjectApplication(projectId: string, applicantId: string) {
+export async function denyProjectApplication(
+  projectId: string,
+  applicantId: string,
+) {
   try {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return { 
-        success: false, 
-        error: "User not authenticated." 
+      return {
+        success: false,
+        error: "User not authenticated.",
       };
     }
 
@@ -123,19 +132,20 @@ export async function denyProjectApplication(projectId: string, applicantId: str
     const project = await db.project.findUnique({
       where: {
         id: projectId,
-        ownerId: session.user.id // Only the owner can reject applications
+        ownerId: session.user.id, // Only the owner can reject applications
       },
       select: {
         id: true,
         projectName: true,
-        ownerId: true
-      }
+        ownerId: true,
+      },
     });
 
     if (!project) {
-      return { 
-        success: false, 
-        error: "Project not found or you don't have permission to manage this project." 
+      return {
+        success: false,
+        error:
+          "Project not found or you don't have permission to manage this project.",
       };
     }
 
@@ -150,9 +160,9 @@ export async function denyProjectApplication(projectId: string, applicantId: str
     });
 
     if (!application) {
-      return { 
-        success: false, 
-        error: "Application not found." 
+      return {
+        success: false,
+        error: "Application not found.",
       };
     }
 
@@ -176,7 +186,7 @@ export async function denyProjectApplication(projectId: string, applicantId: str
         userId: project.ownerId, // The project owner received the original notification
         senderId: applicantId, // From the applicant
         type: NotificationType.APPLICATION_SENT,
-      }
+      },
     });
 
     // Create notification for the applicant
@@ -187,28 +197,32 @@ export async function denyProjectApplication(projectId: string, applicantId: str
         title: "Your application was not accepted",
         content: `Unfortunately, your application to join "${project.projectName}" was not accepted.`,
         projectId: project.id,
-        senderId: session.user.id // Project owner is the sender
-      }
+        senderId: session.user.id, // Project owner is the sender
+      },
     });
 
     return { success: true, data: updatedApplication };
   } catch (error) {
     console.error("Failed to deny application:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "Failed to deny application" 
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "Failed to deny application",
     };
   }
 }
 
-export async function removeCollaborator(projectId: string, collaboratorId: string) {
+export async function removeCollaborator(
+  projectId: string,
+  collaboratorId: string,
+) {
   try {
     const session = await auth();
 
     if (!session?.user?.id) {
-      return { 
-        success: false, 
-        error: "User not authenticated." 
+      return {
+        success: false,
+        error: "User not authenticated.",
       };
     }
 
@@ -216,14 +230,15 @@ export async function removeCollaborator(projectId: string, collaboratorId: stri
     const project = await db.project.findUnique({
       where: {
         id: projectId,
-        ownerId: session.user.id // Only the owner can remove collaborators
+        ownerId: session.user.id, // Only the owner can remove collaborators
       },
     });
 
     if (!project) {
-      return { 
-        success: false, 
-        error: "Project not found or you don't have permission to manage this project." 
+      return {
+        success: false,
+        error:
+          "Project not found or you don't have permission to manage this project.",
       };
     }
 
@@ -238,9 +253,9 @@ export async function removeCollaborator(projectId: string, collaboratorId: stri
     });
 
     if (!collaborator) {
-      return { 
-        success: false, 
-        error: "Collaborator not found for this project." 
+      return {
+        success: false,
+        error: "Collaborator not found for this project.",
       };
     }
 
@@ -257,9 +272,12 @@ export async function removeCollaborator(projectId: string, collaboratorId: stri
     return { success: true, data: removedCollaborator };
   } catch (error) {
     console.error("Failed to remove collaborator:", error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "Failed to remove collaborator" 
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : "Failed to remove collaborator",
     };
   }
-} 
+}

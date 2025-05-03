@@ -1,25 +1,20 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { GitBranch, Users, Clock, X } from "lucide-react";
+import { Clock, GitBranch, Users, X } from "lucide-react";
 import Link from "next/link";
-import { EditProjectNameField } from "./EditProjectNameField";
+
+import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/ui/loading-context";
 
-interface EditProjectHeaderProps {
-  projectName: string;
-  memberCount: number;
-  projectId: string;
-  createdAt: Date;
-  isOwner: boolean;
-}
+import { EditProjectNameField } from "@@/projects/[projectId]/edit/components/EditProjectNameField";
+import { ProjectHeaderProps } from "@@/projects/types/types";
 
 export function EditProjectHeader({
   memberCount,
   projectId,
   createdAt,
   isOwner,
-}: Omit<EditProjectHeaderProps, 'projectName'>) {
+}: Omit<ProjectHeaderProps, "projectName">) {
   const { showLoading } = useLoading();
 
   return (
@@ -45,7 +40,10 @@ export function EditProjectHeader({
             <GitBranch className="mr-2 h-4 w-4" />
             Connect GitHub
           </Button>
-          <Link href={`/projects/${projectId}`} onClick={() => showLoading("Discarding changes...")}>
+          <Link
+            href={`/projects/${projectId}`}
+            onClick={() => showLoading("Discarding changes...")}
+          >
             <Button variant="outline" size="sm" className="gap-1">
               <X className="mr-2 h-4 w-4" />
               Discard Changes
@@ -55,4 +53,4 @@ export function EditProjectHeader({
       )}
     </div>
   );
-} 
+}

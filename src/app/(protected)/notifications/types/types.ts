@@ -12,3 +12,8 @@ export type NotificationWithDetails = PrismaNotification & {
     projectName: string;
   } | null;
 };
+
+export interface NotificationsClientProps {
+  initialNotifications: NotificationWithDetails[];
+  initialError: string | null;
+}

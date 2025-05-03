@@ -1,25 +1,23 @@
 "use client";
 
+import { Clock, FileCode2, GlobeLock, Users } from "lucide-react";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { FileCode2, Users, Clock, GlobeLock } from "lucide-react";
-import { formatRelativeTime } from "@/utils/formatRelativeTime";
-import { Button } from "@/components/ui/button";
-import { DashboardProject } from "../DashboardTypes";
-import { useLoading } from "@/components/ui/loading-context";
 
-interface ProjectCardProps {
-  project: DashboardProject;
-}
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { useLoading } from "@/components/ui/loading-context";
+import { formatRelativeTime } from "@/utils/formatRelativeTime";
+
+import { ProjectCardProps } from "@@/dashboard/types/types";
 
 /* Project Card - Displays individual project summary with metadata */
 export function ProjectCard({ project }: ProjectCardProps) {
   const { showLoading } = useLoading();
-  const isPrivate = project.visibility.toLowerCase() === 'private';
+  const isPrivate = project.visibility.toLowerCase() === "private";
 
   return (
-    <Card className="overflow-hidden h-full rounded-4xl">
+    <Card className="overflow-hidden h-full rounded-4xl ">
       <CardContent className="px-3 sm:px-4 flex flex-col h-full">
         <div className="flex flex-wrap items-center gap-1.5 mb-2">
           <Badge
@@ -37,10 +35,12 @@ export function ProjectCard({ project }: ProjectCardProps) {
               project.visibility.slice(1).toLowerCase()}
           </Badge>
         </div>
-        
-        <h3 className="font-medium md:line-clamp-3 text-sm sm:text-base mb-1.5">{project.projectName}</h3>
+
+        <h3 className="font-medium md:line-clamp-3 text-sm sm:text-base mb-1.5">
+          {project.projectName}
+        </h3>
         <p className="text-xs line-clamp-2 mb-1.5">{project.description}</p>
-        
+
         <div className="flex items-center text-xs gap-1 text-muted-foreground mb-3">
           <Clock size={12} className="mr-1" />
           <span>{formatRelativeTime(project.createdAt)}</span>
@@ -48,7 +48,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
         <div className="mt-auto flex items-center justify-start">
           <Link href={`/projects/${project.id}`} className="w-full sm:w-auto">
-            <Button 
+            <Button
               size="sm"
               variant="default"
               className="text-xs sm:text-xs w-fit"

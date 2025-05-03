@@ -1,41 +1,45 @@
 "use client";
 
-import React, { useState, useMemo, useRef } from "react";
+import React from "react";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { Search } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+
+import {
+  FilteredProjectListProps,
+  ProjectWithDetails,
+} from "../../types/types";
+import { useAnimatedItemsInView } from "../hooks/useAnimatedItemsInView";
+import { useProjectFiltering } from "../hooks/useProjectFiltering";
 import ProjectListItem from "./ProjectListItem";
-import { FilteredProjectListProps, ProjectWithDetails } from "../../ProjectTypes";
-import { motion, useInView, AnimatePresence } from "framer-motion";
 
 // Animated project item that fades in when in view
-const AnimatedProjectItem = ({ 
-  project, 
-  hasApplied, 
-  isCollaborator, 
-  userId, 
+const AnimatedProjectItem = ({
+  project,
+  hasApplied,
+  isCollaborator,
+  userId,
   index,
-  animationKey
-}: { 
-  project: ProjectWithDetails, 
-  hasApplied: boolean, 
-  isCollaborator: boolean, 
-  userId?: string, 
-  index: number,
-  animationKey: number
+  animationKey,
+}: {
+  project: ProjectWithDetails;
+  hasApplied: boolean;
+  isCollaborator: boolean;
+  userId?: string;
+  index: number;
+  animationKey: number;
 }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { 
-    once: true,
-    amount: 0.2 
-  });
+  const { elementRef, isElementInView } = useAnimatedItemsInView();
 
   return (
-    <div ref={ref} className="relative mb-6 w-full">
+    <div ref={elementRef} className="relative mb-6 w-full">
       <motion.div
         key={`${project.id}-${animationKey}`}
         initial={{ opacity: 0, y: 30 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+        animate={isElementInView ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 * Math.min(index, 5) }}
       >
         <ProjectListItem
@@ -56,41 +60,14 @@ export default function FilteredProjectList({
   userCollaborations = [],
   userId,
 }: FilteredProjectListProps) {
-  const [activeFilter, setActiveFilter] = useState<string>("All");
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [animationKey, setAnimationKey] = useState(0);
-  
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-    // Increment animation key to trigger new animations
-    setAnimationKey(prev => prev + 1);
-  };
-
-  // Memoized filtered projects based on search query and active filter
-  const filteredProjects = useMemo(() => {
-    const query = searchQuery.toLowerCase().trim();
-
-    const searchedProjects = projects.filter((p: ProjectWithDetails) => {
-      if (!query) return true;
-      return (
-        p.projectName.toLowerCase().includes(query) ||
-        (p.description && p.description.toLowerCase().includes(query))
-      );
-    });
-
-    if (activeFilter === "All") {
-      return searchedProjects;
-    }
-    return searchedProjects.filter((p: ProjectWithDetails) => p.applicationType === activeFilter);
-  }, [projects, activeFilter, searchQuery]);
-
-  const handleFilterClick = (tag: string) => {
-    if (tag !== activeFilter) {
-      setActiveFilter(tag);
-      // Increment animation key to trigger new animations
-      setAnimationKey(prev => prev + 1);
-    }
-  };
+  const {
+    searchQuery,
+    activeFilterType,
+    animationKey,
+    filteredProjects,
+    handleSearchChange,
+    handleFilterTypeChange,
+  } = useProjectFiltering(projects);
 
   return (
     <>
@@ -114,9 +91,9 @@ export default function FilteredProjectList({
         {filterTags.map((tag: string) => (
           <Button
             key={tag}
-            variant={activeFilter === tag ? "default" : "outline"}
+            variant={activeFilterType === tag ? "default" : "outline"}
             size="sm"
-            onClick={() => handleFilterClick(tag)}
+            onClick={() => handleFilterTypeChange(tag)}
           >
             {tag}
           </Button>
@@ -135,17 +112,19 @@ export default function FilteredProjectList({
       {filteredProjects.length > 0 && (
         <div className="w-full">
           <AnimatePresence>
-            {filteredProjects.map((project: ProjectWithDetails, index: number) => (
-              <AnimatedProjectItem
-                key={project.id}
-                project={project}
-                hasApplied={userApplications.includes(project.id)}
-                isCollaborator={userCollaborations.includes(project.id)}
-                userId={userId}
-                index={index}
-                animationKey={animationKey}
-              />
-            ))}
+            {filteredProjects.map(
+              (project: ProjectWithDetails, index: number) => (
+                <AnimatedProjectItem
+                  key={project.id}
+                  project={project}
+                  hasApplied={userApplications.includes(project.id)}
+                  isCollaborator={userCollaborations.includes(project.id)}
+                  userId={userId}
+                  index={index}
+                  animationKey={animationKey}
+                />
+              ),
+            )}
           </AnimatePresence>
         </div>
       )}

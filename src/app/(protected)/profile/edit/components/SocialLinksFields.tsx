@@ -1,7 +1,6 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
-import { EditProfileSchemaType } from "@/schema/profileSchema";
+import { LuGithub, LuGlobe, LuLink, LuLinkedin } from "react-icons/lu";
 
 import {
   FormControl,
@@ -12,26 +11,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import {
-  LuGithub,
-  LuLinkedin,
-  LuGlobe,
-  LuLink,
-} from "react-icons/lu";
+import { SocialLinksFieldsProps } from "@@/profile/edit/types/types";
 
-interface SocialLinksFieldsProps {
-  form: UseFormReturn<EditProfileSchemaType>;
-  isPending: boolean;
-}
-
-export function SocialLinksFields({
-  form,
-  isPending
-}: SocialLinksFieldsProps) {
+export function SocialLinksFields({ form, isPending }: SocialLinksFieldsProps) {
   return (
     <div className="space-y-4 pt-4 border-t">
       <h3 className="text-lg font-medium">Social Links</h3>
-      
+
       {/* Github */}
       <FormField
         control={form.control}
@@ -53,7 +39,7 @@ export function SocialLinksFields({
           </FormItem>
         )}
       />
-      
+
       {/* LinkedIn */}
       <FormField
         control={form.control}
@@ -75,7 +61,7 @@ export function SocialLinksFields({
           </FormItem>
         )}
       />
-      
+
       {/* Website */}
       <FormField
         control={form.control}
@@ -97,7 +83,7 @@ export function SocialLinksFields({
           </FormItem>
         )}
       />
-      
+
       {/* Other Social */}
       <FormField
         control={form.control}
@@ -121,4 +107,4 @@ export function SocialLinksFields({
       />
     </div>
   );
-} 
+}

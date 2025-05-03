@@ -1,28 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { 
+import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { Collaborator } from "../../ProjectTypes";
-import { removeCollaborator } from "../actions";
 
-interface RemoveCollaboratorDialogProps {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  selectedCollaborator: Collaborator | null;
-  projectId: string;
-  onSuccess?: () => void;
-  onPendingChange?: (isPending: boolean) => void;
-}
+import { useRemoveCollaborator } from "@@/projects/[projectId]/hooks/useRemoveCollaborator";
+import { RemoveCollaboratorDialogProps } from "@@/projects/types/types";
 
 /* Remove Collaborator Dialog - Confirmation dialog for removing project collaborators */
 export function RemoveCollaboratorDialog({
@@ -31,41 +20,22 @@ export function RemoveCollaboratorDialog({
   selectedCollaborator,
   projectId,
   onSuccess,
-  onPendingChange
+  onPendingChange,
 }: RemoveCollaboratorDialogProps) {
-  const [isRemoving, setIsRemoving] = useState(false);
-  const router = useRouter();
-
-  const handleRemoveCollaborator = async () => {
-    if (!selectedCollaborator || !projectId) return;
-
-    try {
-      setIsRemoving(true);
-      if (onPendingChange) onPendingChange(true);
-      
-      const result = await removeCollaborator(projectId, selectedCollaborator.userId);
-      
-      if (result.success) {
-        toast.success("Collaborator removed successfully");
-        if (onSuccess) {
-          onSuccess();
-        }
-        
-        // Allow UI to update before refreshing
-        setTimeout(() => {
-          router.refresh();
-        }, 100);
-      } else {
-        toast.error(result.error || "Failed to remove collaborator");
+  const { isRemoving, handleRemoveCollaborator } = useRemoveCollaborator(
+    projectId,
+    () => {
+      if (onSuccess) {
+        onSuccess();
       }
-    } catch (error) {
-      console.error("Failed to remove collaborator:", error);
-      toast.error("An unexpected error occurred");
-    } finally {
-      setIsRemoving(false);
-      if (onPendingChange) onPendingChange(false);
       setIsOpen(false);
-    }
+    },
+    onPendingChange,
+  );
+
+  const handleRemove = () => {
+    if (!selectedCollaborator) return;
+    handleRemoveCollaborator(selectedCollaborator.userId);
   };
 
   return (
@@ -74,7 +44,9 @@ export function RemoveCollaboratorDialog({
         <DialogHeader>
           <DialogTitle>Remove Collaborator</DialogTitle>
           <DialogDescription>
-            Are you sure you want to remove {selectedCollaborator?.user?.username} from your project? They will no longer have access to the project&apos;s features.
+            Are you sure you want to remove{" "}
+            {selectedCollaborator?.user?.username} from your project? They will
+            no longer have access to the project&apos;s features.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex flex-row gap-3">
@@ -87,7 +59,7 @@ export function RemoveCollaboratorDialog({
           </Button>
           <Button
             variant="destructive"
-            onClick={handleRemoveCollaborator}
+            onClick={handleRemove}
             disabled={isRemoving}
           >
             {isRemoving ? "Removing..." : "Remove Collaborator"}
@@ -96,4 +68,4 @@ export function RemoveCollaboratorDialog({
       </DialogContent>
     </Dialog>
   );
-} 
+}

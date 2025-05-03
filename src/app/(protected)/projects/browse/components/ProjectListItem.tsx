@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useTransition, useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
+
+import { CheckCircle, Clock, FileCode2, Loader, Users } from "lucide-react";
 import Link from "next/link";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/ui/loading-context";
-import { FileCode2, Users, Clock, Loader, CheckCircle } from "lucide-react";
-import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
+import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
-import { handleProjectApplication } from "../actions";
-import { toast } from "sonner";
-import { ProjectListItemProps } from "../../ProjectTypes";
+
+import { useProjectApplication } from "@@/projects/browse/hooks/useProjectApplication";
+import { ProjectListItemProps } from "@@/projects/types/types";
 
 export default function ProjectListItem({
   project,
@@ -20,56 +21,31 @@ export default function ProjectListItem({
   userId,
 }: ProjectListItemProps) {
   // Project status management
-  const isOpen = project.status === "OPEN";
-  const statusLabel = isOpen ? "Open" : "Closed";
+  const isProjectOpen = project.status === "OPEN";
+  const statusLabel = isProjectOpen ? "Open" : "Closed";
 
   // Calculate member statistics for display
   const memberCount = (project._count?.collaborators ?? 0) + 1;
 
-  const [isPending, startTransition] = useTransition();
-  const [localHasApplied, setLocalHasApplied] = useState(hasApplied);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
+  const {
+    hasApplied: applicationSubmitted,
+    isLoading: isSubmittingApplication,
+    submitApplication,
+  } = useProjectApplication(hasApplied);
   const { showLoading } = useLoading();
+
   // Check if user is the owner of the project
   const isOwner = userId && project.ownerId === userId;
 
-  const onSubmit = async (projectId: string) => {
-    // Prevent multiple submissions
-    if (isSubmitting) return;
-    
-    setIsSubmitting(true);
-    
-    startTransition(() => {
-      handleProjectApplication(projectId).then((data) => {
-        if (data?.error) {
-          // Show error toast immediately on error
-          toast.error(data.error);
-          setIsSubmitting(false);
-        } else {
-          setTimeout(() => {
-            toast.success("Application submitted successfully.");
-            setLocalHasApplied(true);
-            setIsSubmitting(false);
-            router.refresh();
-          }, 1000);
-        }
-      }).catch(error => {
-        // Handle unexpected errors
-        console.error("Application submission failed:", error);
-        setIsSubmitting(false);
-        toast.error("Failed to submit application. Please try again.");
-      });
-    });
-  };
-
-  // Use the local state to determine the UI
-  const showAppliedState = localHasApplied || hasApplied;
+  // Use either the local state or prop to determine the UI
+  const showAppliedState = applicationSubmitted || hasApplied;
 
   return (
-    <div className={`relative rounded-3xl p-4 hover:shadow-md transition-all duration-300 flex flex-col gap-2.5 hover:translate-y-[-1px] bg-card w-full
-      ${isCollaborator ? 'border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200 dark:ring-emerald-900' : ''}
-    `}>
+    <div
+      className={`relative rounded-3xl p-4 hover:shadow-md transition-all duration-300 flex flex-col gap-2.5 hover:translate-y-[-1px] bg-card w-full
+      ${isCollaborator ? "border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200 dark:ring-emerald-900" : ""}
+    `}
+    >
       {/* Collaboration Badge */}
       {isCollaborator && (
         <div className="absolute -top-2 -right-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium border border-emerald-200 dark:border-emerald-800 flex items-center gap-0.5">
@@ -77,53 +53,53 @@ export default function ProjectListItem({
           You&apos;re on this project
         </div>
       )}
-      
+
       {/* Badges Section */}
       <div className="flex flex-wrap items-center gap-1.5 text-xs cursor-default">
+        <Badge
+          variant={isProjectOpen ? "default" : "destructive"}
+          className={`whitespace-nowrap text-xs px-2 py-0.5 ${
+            isProjectOpen
+              ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/60"
+              : "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border-red-200 dark:border-red-800/40 hover:bg-red-100/80 dark:hover:bg-red-900/60"
+          }`}
+        >
+          {statusLabel} Applications
+        </Badge>
+        <Badge
+          variant="outline"
+          className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
+        >
+          <FileCode2 className="size-3" />
+          <span>{project.applicationType}</span>
+        </Badge>
+        {project.frameworks?.map((fw) => (
           <Badge
-            variant={isOpen ? "default" : "destructive"}
-            className={`whitespace-nowrap text-xs px-2 py-0.5 ${
-              isOpen
-                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/60"
-                : "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border-red-200 dark:border-red-800/40 hover:bg-red-100/80 dark:hover:bg-red-900/60"
-            }`}
-          >
-            {statusLabel} Applications
-          </Badge>
-          <Badge
-            variant="outline"
+            key={fw}
+            variant="secondary"
             className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
           >
-            <FileCode2 className="size-3" />
-            <span>{project.applicationType}</span>
+            <div className="flex size-4 shrink-0 items-center justify-center">
+              {getTechnologyIcon(fw.toLowerCase())}
+            </div>
+            <span>
+              {fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()}
+            </span>
           </Badge>
-          {project.frameworks?.map((fw) => (
-            <Badge
-              key={fw}
-              variant="secondary"
-              className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
-            >
-              <div className="flex size-4 shrink-0 items-center justify-center">
-                {getTechnologyIcon(fw.toLowerCase())}
-              </div>
-              <span>
-                {fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()}
-              </span>
-            </Badge>
-          ))}
-          {project.databases?.map((db) => (
-            <Badge
-              key={db}
-              variant="secondary"
-              className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
-            >
-              <div className="flex size-4 shrink-0 items-center justify-center">
-                {getDatabaseIcon(db)}
-              </div>
-              <span>{db}</span>
-            </Badge>
-          ))}
-        </div>
+        ))}
+        {project.databases?.map((db) => (
+          <Badge
+            key={db}
+            variant="secondary"
+            className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
+          >
+            <div className="flex size-4 shrink-0 items-center justify-center">
+              {getDatabaseIcon(db)}
+            </div>
+            <span>{db}</span>
+          </Badge>
+        ))}
+      </div>
 
       {/* Project details section */}
       <div className="mt-1">
@@ -169,34 +145,51 @@ export default function ProjectListItem({
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2 pt-2 border-t">
         <div className="flex items-center gap-2">
-          {isOpen && !isOwner && !isCollaborator && (
+          {isProjectOpen && !isOwner && !isCollaborator && (
             <>
               {showAppliedState ? (
-                <Button size="sm" variant="outline" disabled className="text-teal-600 dark:text-teal-400 border-slate-300 dark:border-slate-600 h-7 text-xs px-2.5">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled
+                  className="text-teal-600 dark:text-teal-400 border-slate-300 dark:border-slate-600 h-7 text-xs px-2.5"
+                >
                   Already Applied
                 </Button>
               ) : (
                 <Button
                   size="sm"
                   variant="outline"
-                  disabled={isPending || isSubmitting}
-                  onClick={() => onSubmit(project.id)}
+                  disabled={isSubmittingApplication}
+                  onClick={() => submitApplication(project.id)}
                   className="h-7 text-xs px-2.5"
                 >
-                  {(isPending || isSubmitting) && <Loader className="mr-1.5 size-3 animate-spin" />}
+                  {isSubmittingApplication && (
+                    <Loader className="mr-1.5 size-3 animate-spin" />
+                  )}
                   Apply Now
                 </Button>
               )}
             </>
           )}
-          {!isOpen && !isCollaborator && (
-            <Button size="sm" variant="outline" disabled className="text-red-600 dark:text-red-400 border-red-300 dark:border-red-700/50 opacity-80 h-7 text-xs px-2.5">
+          {!isProjectOpen && !isCollaborator && (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled
+              className="text-red-600 dark:text-red-400 border-red-300 dark:border-red-700/50 opacity-80 h-7 text-xs px-2.5"
+            >
               Applications Closed
             </Button>
           )}
 
           <Link href={`/projects/${project.id}`} passHref legacyBehavior>
-            <Button asChild size="sm" variant="default" className="h-7 text-xs px-2.5">
+            <Button
+              asChild
+              size="sm"
+              variant="default"
+              className="h-7 text-xs px-2.5"
+            >
               <a
                 onClick={() => {
                   showLoading("Loading project details...");

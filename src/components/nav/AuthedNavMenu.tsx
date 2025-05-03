@@ -1,14 +1,25 @@
 "use client";
 
-import { Home, Grid, Plus, LogOut, User, Moon, Sun, Bell, Folder, UserCircle } from "lucide-react";
+import {
+  Bell,
+  Folder,
+  Grid,
+  Home,
+  LogOut,
+  Moon,
+  Plus,
+  Sun,
+  User,
+  UserCircle,
+} from "lucide-react";
+import type { Session } from "next-auth";
+import { signOut } from "next-auth/react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
-import { useLoading } from "@/components/ui/loading-context";
-import type { Session } from "next-auth";
-import Image from "next/image";
-import { useTheme } from "next-themes";
 
+import { useLoading } from "@/components/ui/loading-context";
 import {
   Sidebar,
   SidebarContent,
@@ -17,8 +28,8 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -27,7 +38,7 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
   const { showLoading } = useLoading();
   const { setOpenMobile } = useSidebar();
   const { theme, setTheme } = useTheme();
-  
+
   if (!session) return null;
 
   const toggleTheme = () => {
@@ -45,7 +56,11 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
   return (
     <Sidebar className="md:w-[250px] p-0">
       <SidebarHeader className="flex items-center justify-between px-4 pt-4 pb-0">
-        <Link href="/" className="no-underline" onClick={() => handleNavWithLoading("/", "Loading home...")}>
+        <Link
+          href="/"
+          className="no-underline"
+          onClick={() => handleNavWithLoading("/", "Loading home...")}
+        >
           <div className="h-[50px] w-[175px] flex items-center justify-center overflow-hidden">
             <span className="text-2xl font-bold">Power Projects</span>
           </div>
@@ -67,38 +82,44 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
               >
                 <Link
                   href="/dashboard"
-                  onClick={() => handleNavWithLoading("/dashboard", "Loading dashboard...")}
+                  onClick={() =>
+                    handleNavWithLoading("/dashboard", "Loading dashboard...")
+                  }
                 >
                   <Home className="h-4 w-4 mr-2" />
                   <span>Dashboard</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-
-            
           </SidebarMenu>
         </SidebarGroup>
 
         <SidebarGroup>
-        <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">
+          <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">
             Projects
           </SidebarGroupLabel>
           <SidebarMenu>
-          <SidebarMenuItem>
+            <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
                 isActive={
                   pathname.startsWith("/projects") &&
                   !pathname.includes("create-project") &&
                   !pathname.includes("my-projects") &&
-                  !pathname.includes("inbox")
+                  !pathname.includes("inbox") &&
+                  !pathname.includes("notifications")
                 }
                 tooltip="Projects"
                 className="px-2 py-1.5"
               >
                 <Link
                   href="/projects/browse"
-                  onClick={() => handleNavWithLoading("/projects/browse", "Loading project browser...")}
+                  onClick={() =>
+                    handleNavWithLoading(
+                      "/projects/browse",
+                      "Loading project browser...",
+                    )
+                  }
                 >
                   <Grid className="h-4 w-4 mr-2" />
                   <span>Browse Projects</span>
@@ -115,14 +136,18 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
               >
                 <Link
                   href="/projects/my-projects"
-                  onClick={() => handleNavWithLoading("/projects/my-projects", "Loading your projects...")}
+                  onClick={() =>
+                    handleNavWithLoading(
+                      "/projects/my-projects",
+                      "Loading your projects...",
+                    )
+                  }
                 >
                   <Folder className="h-4 w-4 mr-2" />
                   <span>My Projects</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-
 
             <SidebarMenuItem>
               <SidebarMenuButton
@@ -133,7 +158,12 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
               >
                 <Link
                   href="/create-project"
-                  onClick={() => handleNavWithLoading("/create-project", "Loading project creation...")}
+                  onClick={() =>
+                    handleNavWithLoading(
+                      "/create-project",
+                      "Loading project creation...",
+                    )
+                  }
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   <span>Create Project</span>
@@ -142,7 +172,7 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        
+
         <SidebarGroup>
           <SidebarGroupLabel className="px-2 text-xs font-medium text-muted-foreground">
             Notifications
@@ -157,19 +187,21 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
               >
                 <Link
                   href="/notifications"
-                  onClick={() => handleNavWithLoading("/notifications", "Loading notifications...")}
+                  onClick={() =>
+                    handleNavWithLoading(
+                      "/notifications",
+                      "Loading notifications...",
+                    )
+                  }
                 >
                   <Bell className="h-4 w-4 mr-2" />
                   <span>Notifications</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
-
-            
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-
 
       <SidebarFooter className="border-t p-3 mt-auto">
         {/* User Profile Display */}
@@ -202,21 +234,23 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
         <SidebarMenu>
           {/* Theme Toggle Button */}
           <SidebarMenuItem>
-              <SidebarMenuButton
-                asChild
-                isActive={pathname.startsWith("/profile")}
-                tooltip="Profile"
-                className="px-2 py-1.5"
+            <SidebarMenuButton
+              asChild
+              isActive={pathname.startsWith("/profile")}
+              tooltip="Profile"
+              className="px-2 py-1.5"
+            >
+              <Link
+                href="/profile/edit"
+                onClick={() =>
+                  handleNavWithLoading("/profile/edit", "Loading profile...")
+                }
               >
-                <Link
-                  href="/profile/edit"
-                  onClick={() => handleNavWithLoading("/profile/edit", "Loading profile...")}
-                >
-                  <UserCircle className="h-4 w-4 mr-2" />
-                  <span>Edit Profile</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+                <UserCircle className="h-4 w-4 mr-2" />
+                <span>Edit Profile</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton
               onClick={toggleTheme}
@@ -241,10 +275,10 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
             <SidebarMenuButton
               onClick={() => {
                 handleNavWithLoading("/", "Signing out...");
-                signOut({ redirectTo: "/" })
+                signOut({ redirectTo: "/" });
               }}
               tooltip="Sign Out"
-              className="px-2 py-1.5 w-full justify-start text-red-600 dark:text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 hover:text-red-700 dark:hover:text-red-400" 
+              className="px-2 py-1.5 w-full justify-start text-red-600 dark:text-red-500 hover:bg-red-100 dark:hover:bg-red-900/50 hover:text-red-700 dark:hover:text-red-400"
             >
               <LogOut className="h-4 w-4 mr-2" />
               <span>Sign Out</span>

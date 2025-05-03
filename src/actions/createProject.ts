@@ -1,9 +1,10 @@
 "use server";
 
-import { projectFormSchema, ProjectFormData } from "@/schema/projectFormSchema";
-import { db } from "@/lib/db";
-import { ProjectVisibility } from "@prisma/client";
 import { auth } from "@/auth";
+import { ProjectVisibility } from "@prisma/client";
+
+import { db } from "@/lib/db";
+import { ProjectFormData, projectFormSchema } from "@/schema/projectFormSchema";
 
 export async function createProject(values: ProjectFormData) {
   const validatedFields = projectFormSchema.safeParse(values);
@@ -35,7 +36,7 @@ export async function createProject(values: ProjectFormData) {
     default:
       // This case should ideally not be reachable if Zod validation passed
       console.error(
-        `Unexpected visibility value on server: ${data.visibility}`
+        `Unexpected visibility value on server: ${data.visibility}`,
       );
       throw new Error("Invalid visibility value.");
   }

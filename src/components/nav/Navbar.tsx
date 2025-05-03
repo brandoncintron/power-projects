@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { Github } from "lucide-react";
+import Link from "next/link";
 
-import { useScrollDetection } from "@/hooks/useScrollDetection";
-
+import AlertBanner from "@/components/AlertBanner";
 import AccessButtons from "@/components/auth/AccessButtons";
+import { useScrollDetection } from "@/components/nav/hooks/useScrollDetection";
 import MobileNavbar from "@/components/nav/MobileNavbar";
 import NavLinks from "@/components/nav/NavLinks";
 import ThemeSelector from "@/components/nav/ThemeSelector";
@@ -15,8 +15,9 @@ const Navbar = () => {
 
   return (
     <div className="flex flex-col w-full sticky top-0 z-50">
+      <AlertBanner />
       <nav
-        className={`w-full bg-background transition-all duration-200 py-4 dark:bg-[#161722] ${
+        className={`w-full bg-white transition-all duration-200 py-4 dark:bg-[#161722] ${
           scrolled ? "border-b shadow-sm" : ""
         }`}
       >

@@ -5,7 +5,8 @@ import * as z from "zod";
  * Centralized source of truth for form validation across the app
  */
 export const projectFormSchema = z.object({
-  projectName: z.string()
+  projectName: z
+    .string()
     .min(1, {
       message: "Project name is required",
     })

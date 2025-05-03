@@ -1,19 +1,21 @@
+import { NotificationWithDetails } from "@/app/(protected)/notifications/types/types";
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
+import { AlertTriangle } from "lucide-react";
+
 import { DialogCloser } from "@/components/auth/DialogCloser";
 import { HideLoading } from "@/components/HideLoading";
-import { LoadingSpinner } from "@/components/ui/loading";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserProfile } from "./components/UserProfile";
-import { ProjectList } from "./components/ProjectList";
-import { AppliedToProjectList } from "./components/AppliedToProjectList";
-import { CollaborationsSection } from "./components/CollaborationsSection";
-import { NotificationsSection } from "./components/NotificationsSection";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
-import { DashboardData } from "./DashboardTypes";
 import { ShowToast } from "@/components/ShowToast";
-import { NotificationWithDetails } from "@/app/(protected)/notifications/NotificationTypes";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { db } from "@/lib/db";
+
+import { AppliedToProjectList } from "@@/dashboard/components/AppliedToProjectList";
+import { CollaborationsSection } from "@@/dashboard/components/CollaborationsSection";
+import { NotificationsSection } from "@@/dashboard/components/NotificationsSection";
+import { ProjectList } from "@@/dashboard/components/ProjectList";
+import { UserProfile } from "@@/dashboard/components/UserProfile";
+import { DashboardData } from "@@/dashboard/types/types";
 
 const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
   const userData = await db.user.findUnique({
@@ -64,16 +66,18 @@ const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
   });
 
   // Transform collaboration data
-  const collaborations = userData?.collaborations.map(collab => ({
-    ...collab.project,
-    owner: collab.project.owner,
-  })) || [];
+  const collaborations =
+    userData?.collaborations.map((collab) => ({
+      ...collab.project,
+      owner: collab.project.owner,
+    })) || [];
 
   // Transform application data
-  const applications = userData?.applications.map(app => ({
-    ...app.project,
-    applicationStatus: app.status,
-  })) || [];
+  const applications =
+    userData?.applications.map((app) => ({
+      ...app.project,
+      applicationStatus: app.status,
+    })) || [];
 
   return {
     ownedProjects: userData?.ownedProjects || [],
@@ -83,15 +87,17 @@ const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
 };
 
 // Fetch user notifications
-const fetchUserNotifications = async (userId: string): Promise<{
+const fetchUserNotifications = async (
+  userId: string,
+): Promise<{
   notifications: NotificationWithDetails[];
   totalCount: number;
 }> => {
   // Count total notifications
   const totalCount = await db.notification.count({
-    where: { userId }
+    where: { userId },
   });
-  
+
   // Fetch recent notifications
   const notifications = await db.notification.findMany({
     where: { userId },
@@ -102,21 +108,21 @@ const fetchUserNotifications = async (userId: string): Promise<{
           username: true,
           name: true,
           image: true,
-        }
+        },
       },
       project: {
         select: {
           id: true,
           projectName: true,
-        }
-      }
+        },
+      },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
     take: 5, // Get 5 most recent
   });
-  
+
   return { notifications, totalCount };
 };
 
@@ -142,12 +148,12 @@ export default async function DashboardPage() {
     collaborations: [],
     applications: [],
   };
-  
+
   let notificationsData = {
     notifications: [] as NotificationWithDetails[],
-    totalCount: 0
+    totalCount: 0,
   };
-  
+
   let fetchError: string | null = null;
 
   try {
@@ -157,7 +163,6 @@ export default async function DashboardPage() {
 
     dashboardData = await fetchDashboardData(user.id);
     notificationsData = await fetchUserNotifications(user.id);
-    
   } catch (error) {
     console.error("Failed to fetch dashboard data:", error);
     fetchError = "Could not load dashboard data. Please try again later.";
@@ -171,7 +176,7 @@ export default async function DashboardPage() {
 
       <div className="flex flex-col gap-6">
         <UserProfile user={user} />
-        
+
         {fetchError ? (
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />
@@ -181,44 +186,44 @@ export default async function DashboardPage() {
         ) : (
           <>
             {/* First Container - Collaborations & Applications */}
-            <Card className="rounded-4xl p-4 sm:p-6 border-0">
+            <Card className="rounded-4xl p-4 sm:p-6 border-0 dark:border">
               <CardHeader className="px-2 sm:px-4">
-                <CardTitle className="text-lg sm:text-xl font-semibold">Start your project collaboration journey</CardTitle>
+                <CardTitle className="text-lg sm:text-xl font-semibold">
+                  Start your project collaboration journey
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 px-2 pb-4 sm:px-6">
                   {/* Left section - Collaborations */}
                   <div className="rounded-xl">
-                    <CollaborationsSection collaborations={dashboardData.collaborations} />
+                    <CollaborationsSection
+                      collaborations={dashboardData.collaborations}
+                    />
                   </div>
-                  
+
                   {/* Right section - Applications */}
                   <div className="rounded-xl">
-                    <AppliedToProjectList projects={dashboardData.applications} />
+                    <AppliedToProjectList
+                      projects={dashboardData.applications}
+                    />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Second Container - Projects */}
-            <Card className="rounded-4xl p-4 sm:p-6 border-0">
-              <CardContent className="px-2 sm:px-6 pb-4">
+            <Card className="rounded-4xl p-4 sm:p-6 border-0 dark:border">
+              <CardContent className="px-2 sm:px-6">
                 <ProjectList projects={dashboardData.ownedProjects} />
               </CardContent>
             </Card>
 
             {/* Third Container - Notifications */}
-            <Card className="rounded-4xl p-4 sm:p-6 border-0">
-              <CardHeader className="px-2 sm:px-4">
-                <CardTitle className="text-lg sm:text-xl font-medium">My notifications</CardTitle>
-              </CardHeader>
-              <CardContent className="px-2 sm:px-6 py-4">
-                <NotificationsSection 
-                  notifications={notificationsData.notifications} 
-                  totalCount={notificationsData.totalCount} 
-                />
-              </CardContent>
-            </Card>
+
+            <NotificationsSection
+              notifications={notificationsData.notifications}
+              totalCount={notificationsData.totalCount}
+            />
           </>
         )}
       </div>

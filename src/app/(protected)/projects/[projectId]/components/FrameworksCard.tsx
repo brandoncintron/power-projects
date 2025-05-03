@@ -3,9 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getTechnologyIcon } from "@/lib/language-icons";
 
-interface FrameworksCardProps {
-  frameworks: string[];
-}
+import { FrameworksCardProps } from "@@/projects/types/types";
 
 /* Frameworks Card - Displays the project's frameworks and technologies */
 export function FrameworksCard({ frameworks }: FrameworksCardProps) {
@@ -35,4 +33,4 @@ export function FrameworksCard({ frameworks }: FrameworksCardProps) {
       </CardContent>
     </Card>
   );
-} 
+}

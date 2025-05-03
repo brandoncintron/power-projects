@@ -1,34 +1,26 @@
 import React, {
   createContext,
+  ReactNode,
+  useCallback,
   useContext,
   useState,
-  useCallback,
-  ReactNode,
 } from "react";
-import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { projectFormSchema, ProjectFormData } from "../../../../schema/projectFormSchema";
-import { createProject } from "@/actions/createProject";
 import { useRouter } from "next/navigation";
-import { useLoading } from "@/components/ui/loading-context";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import { createProject } from "@/actions/createProject";
 import { setToast } from "@/components/ShowToast";
+import { useLoading } from "@/components/ui/loading-context";
+import { ProjectFormData, projectFormSchema } from "@/schema/projectFormSchema";
 
-// Context interface
-interface FormCoreContextType {
-  // Form
-  form: ReturnType<typeof useForm<ProjectFormData>>;
-
-  // Form helpers
-  charCount: number;
-  handleDescriptionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  onSubmit: (values: ProjectFormData) => void;
-  resetForm: () => void;
-}
+import { FormCoreContextType } from "@@/create-project/types/types";
 
 // Create context with default values
 const FormCoreContext = createContext<FormCoreContextType | undefined>(
-  undefined
+  undefined,
 );
 
 // Provider props
@@ -61,7 +53,7 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setCharCount(e.target.value.length);
     },
-    []
+    [],
   );
 
   // Reset form
@@ -90,7 +82,7 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
 
         // Set toast data in sessionStorage instead of showing it directly
         setToast("Project created successfully!", "success", "dashboardToast");
-        
+
         router.push("/dashboard");
       } catch (error) {
         console.error("Project submission failed:", error);
@@ -99,15 +91,14 @@ export function FormCoreProvider({ children }: FormCoreProviderProps) {
           error instanceof Error
             ? error.message
             : "Could not create the project. Please try again.";
-        
+
         toast.error("Submission failed", {
           description: errorMessage,
         });
       }
     },
-    [router, hideLoading, showLoading]
+    [router, hideLoading, showLoading],
   );
-
 
   // Context value
   const value = {

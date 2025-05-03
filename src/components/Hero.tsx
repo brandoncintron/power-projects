@@ -1,12 +1,12 @@
 "use client";
 
+import { ChevronRight, Compass, Sparkles, Users } from "lucide-react";
 import type { Session } from "next-auth";
-
-import { Button } from "@/components/ui/button";
-import { useNavigation } from "@/hooks/useNavigation";
-import { ChevronRight, Users, Sparkles, Compass } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
+import { useNavigation } from "@/components/nav/hooks/useNavigation";
+import { Button } from "@/components/ui/button";
 
 interface HeroProps {
   session: Session | null;

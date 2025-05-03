@@ -1,18 +1,21 @@
 import { useState } from "react";
-import Link from "next/link";
+
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Github, Menu, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
+import MobileNavLinks from "@/components/nav/MobileNavLinks";
+
+import { Button } from "../ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetTrigger,
-  SheetTitle,
   SheetDescription,
+  SheetTitle,
+  SheetTrigger,
 } from "../ui/sheet";
-import { Button } from "../ui/button";
-import MobileNavLinks from "@/components/nav/MobileNavLinks";
-import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useTheme } from "next-themes";
 
 const MobileNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -87,29 +90,28 @@ const MobileNavbar = () => {
             </div>
 
             <div className="p-4 space-y-4 border-t">
-              
-                <div className="flex flex-col gap-3">
-                  <Button
-                    variant="outline"
-                    className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
-                    onClick={() => {
-                      setIsOpen(false);
-                      open("signin");
-                    }}
-                  >
-                    Sign In
-                  </Button>
+              <div className="flex flex-col gap-3">
+                <Button
+                  variant="outline"
+                  className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
+                  onClick={() => {
+                    setIsOpen(false);
+                    open("signin");
+                  }}
+                >
+                  Sign In
+                </Button>
 
-                  <Button
-                    className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
-                    onClick={() => {
-                      setIsOpen(false);
-                      open("signup");
-                    }}
-                  >
-                    Get Started
-                  </Button>
-                </div>
+                <Button
+                  className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                  onClick={() => {
+                    setIsOpen(false);
+                    open("signup");
+                  }}
+                >
+                  Get Started
+                </Button>
+              </div>
             </div>
           </div>
         </SheetContent>

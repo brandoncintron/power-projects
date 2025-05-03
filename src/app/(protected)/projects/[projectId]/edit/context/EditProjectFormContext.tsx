@@ -1,14 +1,19 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, ReactNode } from "react";
-import { useForm } from "react-hook-form";
+import React, { createContext, ReactNode, useCallback, useState } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { updateProject } from "@/actions/updateProject";
 import { useRouter } from "next/navigation";
-import { useLoading } from "@/components/ui/loading-context";
-import { editProjectSchema, EditProjectSchema } from "@/schema/editProjectSchema"; 
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+
+import { updateProject } from "@/actions/updateProject";
 import { setToast } from "@/components/ShowToast";
+import { useLoading } from "@/components/ui/loading-context";
+import {
+  editProjectSchema,
+  EditProjectSchema,
+} from "@/schema/editProjectSchema";
 
 // Context interface
 interface EditProjectFormContextType {
@@ -19,16 +24,9 @@ interface EditProjectFormContextType {
   isSubmitting: boolean;
 }
 
-const EditProjectFormContext = createContext<EditProjectFormContextType | undefined>(undefined);
-
-// Hook to use the context
-export function useEditProjectForm() {
-  const context = useContext(EditProjectFormContext);
-  if (!context) {
-    throw new Error("useEditProjectForm must be used within EditProjectFormProvider");
-  }
-  return context;
-}
+export const EditProjectFormContext = createContext<
+  EditProjectFormContextType | undefined
+>(undefined);
 
 interface EditProjectFormProviderProps {
   children: ReactNode;
@@ -39,12 +37,12 @@ interface EditProjectFormProviderProps {
 }
 
 // Provider component
-export function EditProjectFormProvider({ 
-  children, 
+export function EditProjectFormProvider({
+  children,
   projectId,
   initialProjectName,
   initialDescription,
-  initialCompletionDate
+  initialCompletionDate,
 }: EditProjectFormProviderProps) {
   const router = useRouter();
   const [charCount, setCharCount] = useState(initialDescription?.length || 0);
@@ -66,7 +64,7 @@ export function EditProjectFormProvider({
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setCharCount(e.target.value.length);
     },
-    []
+    [],
   );
 
   // Form submission handler
@@ -77,7 +75,7 @@ export function EditProjectFormProvider({
 
       try {
         const result = await updateProject(projectId, values);
-        
+
         if (result.success) {
           setToast("Project updated successfully!", "success", "projectToast");
           router.push(`/projects/${projectId}`);
@@ -89,13 +87,14 @@ export function EditProjectFormProvider({
       } catch (error) {
         console.error("Project update failed:", error);
         toast.error("Update failed", {
-          description: error instanceof Error ? error.message : "Unknown error occurred",
+          description:
+            error instanceof Error ? error.message : "Unknown error occurred",
         });
       } finally {
         setIsSubmitting(false);
       }
     },
-    [projectId, router, showLoading]
+    [projectId, router, showLoading],
   );
 
   // Context value
@@ -104,7 +103,7 @@ export function EditProjectFormProvider({
     charCount,
     handleDescriptionChange,
     onSubmit,
-    isSubmitting
+    isSubmitting,
   };
 
   return (
@@ -112,4 +111,4 @@ export function EditProjectFormProvider({
       {children}
     </EditProjectFormContext.Provider>
   );
-} 
+}

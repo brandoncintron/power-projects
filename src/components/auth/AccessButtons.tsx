@@ -1,23 +1,26 @@
-import { Button } from "@/components/ui/button"
 import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
+import { Button } from "@/components/ui/button";
 
 const AccessButtons = () => {
-    const { open } = useAuthDialog();
+  const { open } = useAuthDialog();
 
-    return (
-        <div>
-            <button onClick={() => open("signin")} className="no-underline cursor-pointer">
-                <span className="text-base mr-4">Sign In</span>
-            </button>
+  return (
+    <div>
+      <button
+        onClick={() => open("signin")}
+        className="no-underline cursor-pointer"
+      >
+        <span className="text-base mr-4">Sign In</span>
+      </button>
 
-            <Button
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 cursor-pointer"
-                onClick={() => open("signup")}
-            >
-                Get Started
-            </Button>
-        </div>
-    )
-}
+      <Button
+        className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 cursor-pointer"
+        onClick={() => open("signup")}
+      >
+        Get Started
+      </Button>
+    </div>
+  );
+};
 
 export default AccessButtons;

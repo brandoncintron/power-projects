@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { useNavigation } from "../../hooks/useNavigation";
+
+import { useNavigation } from "@/components/nav/hooks/useNavigation";
 
 export default function NavLinks() {
-  const { handleNavigation } = useNavigation(); // Use the new navigation hook
+  const { handleNavigation } = useNavigation(); // Use the navigation hook
 
   return (
     <div className="hidden md:flex gap-8">

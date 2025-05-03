@@ -1,29 +1,19 @@
 "use client";
 
-import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
-import { TeamMembersCard } from "../../components/TeamMembersCard";
-import { ProjectOverviewProps } from "../../../ProjectTypes";
-import {
-  FaCode,
-  FaDatabase,
-  FaCube,
-} from "react-icons/fa";
-import { EditProjectFormProvider } from "../context/EditProjectFormContext";
-import { EditDescriptionField } from "./EditDescriptionField";
-import { EditCompletionDateField } from "./EditCompletionDateField";
-import { Form } from "@/components/ui/form";
-import { useEditProjectForm } from "../context/EditProjectFormContext";
-import { Button } from "@/components/ui/button";
-import { EditProjectHeader } from "./EditProjectHeader";
-import { useLoading } from "@/components/ui/loading-context";
+import { FaCode, FaCube, FaDatabase } from "react-icons/fa";
 
-interface EditProjectFormFullProps extends ProjectOverviewProps {
-  projectName: string;
-  projectId: string;
-  memberCount: number;
-  createdAt: Date;
-  isOwner: boolean;
-}
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { useLoading } from "@/components/ui/loading-context";
+import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
+
+import { TeamMembersCard } from "@@/projects/[projectId]/components/TeamMembersCard";
+import { EditCompletionDateField } from "@@/projects/[projectId]/edit/components/EditCompletionDateField";
+import { EditDescriptionField } from "@@/projects/[projectId]/edit/components/EditDescriptionField";
+import { EditProjectHeader } from "@@/projects/[projectId]/edit/components/EditProjectHeader";
+import { EditProjectFormProvider } from "@@/projects/[projectId]/edit/context/EditProjectFormContext";
+import { useEditProjectForm } from "@@/projects/[projectId]/edit/hooks/useEditProjectForm";
+import { EditProjectFormFullProps } from "@@/projects/types/types";
 
 // Wrapper component that includes the provider
 export function EditProjectForm({
@@ -39,9 +29,8 @@ export function EditProjectForm({
   createdAt,
   isOwner,
 }: EditProjectFormFullProps) {
-
   return (
-    <EditProjectFormProvider 
+    <EditProjectFormProvider
       projectId={projectId}
       initialProjectName={projectName}
       initialDescription={description}
@@ -71,7 +60,10 @@ function EditProjectFormContent({
   projectId,
   createdAt,
   isOwner,
-}: Omit<EditProjectFormFullProps, 'projectName' | 'description' | 'completionDate'>) {
+}: Omit<
+  EditProjectFormFullProps,
+  "projectName" | "description" | "completionDate"
+>) {
   const { form, onSubmit, isSubmitting } = useEditProjectForm();
   const { showLoading } = useLoading();
 
@@ -98,8 +90,8 @@ function EditProjectFormContent({
                   <EditDescriptionField />
                 </div>
                 <div className="flex justify-end">
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     disabled={isSubmitting}
                     className="mt-4"
                     onClick={() => {
@@ -114,7 +106,9 @@ function EditProjectFormContent({
               {/* Right Column: Project Details + Team */}
               <div className="space-y-6">
                 <div className="p-6 bg-card shadow-sm border rounded-md">
-                  <h2 className="text-xl font-semibold mb-4">Project Details</h2>
+                  <h2 className="text-xl font-semibold mb-4">
+                    Project Details
+                  </h2>
                   <div className="space-y-4">
                     {/* Application Type - Read-only */}
                     <div>
@@ -130,7 +124,8 @@ function EditProjectFormContent({
                     {frameworks && frameworks.length > 0 && (
                       <div>
                         <p className="text-sm uppercase text-muted-foreground">
-                          <FaCode className="inline mr-2 mb-1" /> Frameworks &amp; Technologies
+                          <FaCode className="inline mr-2 mb-1" /> Frameworks
+                          &amp; Technologies
                         </p>
                         <div className="flex flex-wrap gap-2 mt-2">
                           {frameworks.map((fw) => (
@@ -141,7 +136,10 @@ function EditProjectFormContent({
                               <div className="flex h-4 w-4 shrink-0 items-center justify-center">
                                 {getTechnologyIcon(fw.toLowerCase())}
                               </div>
-                              <span className="font-medium">{fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()}</span>
+                              <span className="font-medium">
+                                {fw.charAt(0).toUpperCase() +
+                                  fw.slice(1).toLowerCase()}
+                              </span>
                             </div>
                           ))}
                         </div>

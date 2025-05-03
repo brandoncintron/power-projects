@@ -1,13 +1,20 @@
 "use client";
 
 import React from "react";
-import { FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
+
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useEditProjectForm } from "../context/EditProjectFormContext";
+
+import { useEditProjectForm } from "@@/projects/[projectId]/edit/hooks/useEditProjectForm";
 
 export function EditDescriptionField() {
   const { form, charCount, handleDescriptionChange } = useEditProjectForm();
-  
+
   return (
     <FormField
       control={form.control}
@@ -16,9 +23,7 @@ export function EditDescriptionField() {
         <FormItem>
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Description</h2>
-            <div className="text-xs text-muted-foreground">
-              {charCount}/500
-            </div>
+            <div className="text-xs text-muted-foreground">{charCount}/500</div>
           </div>
           <FormControl>
             <Textarea
@@ -36,4 +41,4 @@ export function EditDescriptionField() {
       )}
     />
   );
-} 
+}

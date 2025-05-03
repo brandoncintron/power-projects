@@ -1,14 +1,22 @@
 import React from "react";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useProjectForm } from "../context/ProjectFormContext";
+
+import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
 
 /**
  * Component for the team name field
  */
 export function TeamNameField() {
   const { form } = useProjectForm();
-  
+
   return (
     <FormField
       control={form.control}
@@ -24,4 +32,4 @@ export function TeamNameField() {
       )}
     />
   );
-} 
+}

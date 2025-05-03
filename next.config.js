@@ -3,16 +3,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'avatars.githubusercontent.com',
+        hostname: "avatars.githubusercontent.com",
       },
       {
-        hostname: 'lh3.googleusercontent.com',
+        hostname: "lh3.googleusercontent.com",
       },
       {
-        hostname: 'github.com',
-      }
+        hostname: "github.com",
+      },
     ],
   },
-}
+};
 
-module.exports = nextConfig 
+module.exports = nextConfig;

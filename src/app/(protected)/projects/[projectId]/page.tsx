@@ -1,11 +1,14 @@
 import React from "react";
-import { db } from "@/lib/db";
-import { notFound } from "next/navigation";
+
 import { auth } from "@/auth";
-import { ProjectHeader } from "./components/ProjectHeader";
-import { ProjectTabs } from "./components/ProjectTabs";
+import { notFound } from "next/navigation";
+
 import { HideLoading } from "@/components/HideLoading";
 import { ShowToast } from "@/components/ShowToast";
+import { db } from "@/lib/db";
+
+import { ProjectHeader } from "./components/ProjectHeader";
+import { ProjectTabs } from "./components/ProjectTabs";
 
 /**
  * Project Detail Page - Displays comprehensive information about a specific project
@@ -82,11 +85,11 @@ async function ProjectDetailPage(props: {
 
   // Determine if current user is the project owner
   const isOwner = currentUserId === project.owner.id;
-  
+
   // Determine if current user is a collaborator
-  const isCollaborator = currentUserId ? 
-    project.collaborators.some(collab => collab.userId === currentUserId) : 
-    false;
+  const isCollaborator = currentUserId
+    ? project.collaborators.some((collab) => collab.userId === currentUserId)
+    : false;
 
   return (
     <div className="container mx-auto p-4 md:p-8 min-h-screen">

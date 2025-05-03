@@ -1,14 +1,15 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "lucide-react";
 
-interface CompletionDateCardProps {
-  completionDate: Date | null;
-}
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { CompletionDateCardProps } from "@@/projects/types/types";
 
 /* Completion Date Card - Displays the project's target completion date */
-export function CompletionDateCard({ completionDate }: CompletionDateCardProps) {
+export function CompletionDateCard({
+  completionDate,
+}: CompletionDateCardProps) {
   if (!completionDate) {
     return null;
   }
@@ -34,4 +35,4 @@ export function CompletionDateCard({ completionDate }: CompletionDateCardProps) 
       </CardContent>
     </Card>
   );
-} 
+}

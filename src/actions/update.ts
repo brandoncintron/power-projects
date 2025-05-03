@@ -1,13 +1,13 @@
 "use server";
 
+import { auth } from "@/auth";
 import * as z from "zod";
 
 import { db } from "@/lib/db";
 import { editProfileSchema } from "@/schema/profileSchema";
-import { auth } from "@/auth";
 
 export const updateProfile = async (
-  values: z.infer<typeof editProfileSchema>
+  values: z.infer<typeof editProfileSchema>,
 ) => {
   const validatedFields = editProfileSchema.safeParse(values);
 
