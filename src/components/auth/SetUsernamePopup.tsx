@@ -41,7 +41,7 @@ export function SetUsernamePopup() {
   const { isPending, error } = formState;
 
   const handleSubmit = async (values: UsernameFormType) => {
-    const result = await onSubmit(values);
+    await onSubmit(values);
 
     if (!error) {
       toast.success("Your profile information has been saved.", {
