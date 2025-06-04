@@ -38,7 +38,6 @@ model Notification {
   isRead      Boolean          @default(false)
   createdAt   DateTime         @default(now())
   
-  // Optional references
   projectId   String?
   senderId    String?
   
@@ -104,6 +103,7 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
  
   @@id([provider, providerAccountId])
+  @@index([userId, provider])
 }
 
 model Project {
@@ -120,6 +120,12 @@ model Project {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // --- GitHub Integration ---
+  githubRepoUrl     String?
+  githubRepoName    String?
+  githubRepoOwner   String?
+  githubConnectedAt DateTime?
 
   // --- Relationships ---
   // Relation to the owner (User)
