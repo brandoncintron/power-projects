@@ -50,7 +50,13 @@ export default async function RootLayout({
           >
             <AuthDialogProvider>
               <LoadingProvider>
-                {session ? (
+                {/* Full-screen username popup when username is not set */}
+                {session && user?.username === null ? (
+                  <div className="fixed inset-0 z-50 bg-background">
+                    <SetUsernamePopup />
+                    <Toaster richColors />
+                  </div>
+                ) : session ? (
                   <SidebarProvider defaultOpen={true}>
                     <AuthedNavMenu session={session} />
                     <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out">
@@ -63,11 +69,7 @@ export default async function RootLayout({
                       </div>
 
                       <div className="p-0 md:w-[80%] mx-auto">
-                        {user?.username === null ? (
-                          <SetUsernamePopup />
-                        ) : (
-                          <>{children}</>
-                        )}
+                        {children}
                       </div>
                       <Footer />
                     </div>

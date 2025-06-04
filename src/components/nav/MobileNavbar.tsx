@@ -96,7 +96,7 @@ const MobileNavbar = () => {
                   className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
                   onClick={() => {
                     setIsOpen(false);
-                    open("signin");
+                    open();
                   }}
                 >
                   Sign In
@@ -106,7 +106,7 @@ const MobileNavbar = () => {
                   className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
                   onClick={() => {
                     setIsOpen(false);
-                    open("signup");
+                    open();
                   }}
                 >
                   Get Started

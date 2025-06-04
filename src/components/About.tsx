@@ -83,7 +83,7 @@ export default function About({ session }: { session: Session | null }) {
                 <Button
                   size="lg"
                   className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
-                  onClick={() => open("signup")}
+                  onClick={() => open()}
                 >
                   Sign Up Now
                 </Button>

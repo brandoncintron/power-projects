@@ -7,7 +7,7 @@ const AccessButtons = () => {
   return (
     <div>
       <button
-        onClick={() => open("signin")}
+        onClick={() => open()}
         className="no-underline cursor-pointer"
       >
         <span className="text-base mr-4">Sign In</span>
@@ -15,7 +15,7 @@ const AccessButtons = () => {
 
       <Button
         className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 cursor-pointer"
-        onClick={() => open("signup")}
+        onClick={() => open()}
       >
         Get Started
       </Button>

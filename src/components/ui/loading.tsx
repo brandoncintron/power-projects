@@ -113,7 +113,7 @@ export function LoadingSpinner({
   return (
     <div className={cn("flex items-center justify-center", className)}>
       <LuLoader className="h-8 w-8 animate-spin text-muted-foreground" />
-      <span className="ml-2 text-muted-foreground">Loading {text}...</span>
+      <span className="ml-2 text-muted-foreground">{text}...</span>
     </div>
   );
 }

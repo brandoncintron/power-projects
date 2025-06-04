@@ -38,7 +38,7 @@ export default function Hero({ session }: HeroProps) {
               if (session) {
                 router.push("/create-project");
               } else {
-                open("signup");
+                open();
               }
             }}
           >

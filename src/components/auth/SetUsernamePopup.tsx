@@ -1,12 +1,14 @@
 "use client";
 
+import { useState, useTransition } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 import { LuLoader } from "react-icons/lu";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { updateProfile } from "@/actions/update";
-import { useAuth } from "@/components/auth/hooks/useAuth";
-import { UsernameFormType } from "@/components/auth/types/types";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,80 +25,103 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { UsernameFormType, usernameSchema } from "./types/types";
 
-const usernameSchema = z.object({
-  username: z
-    .string()
-    .min(1, "Username must be at least 1 character.")
-    .max(20, "Username must be less than 20 characters."),
-});
+
 
 export function SetUsernamePopup() {
-  const { form, formState, onSubmit } = useAuth<UsernameFormType>(
-    usernameSchema,
-    { username: "" },
-    updateProfile,
-  );
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string>("");
 
-  const { isPending, error } = formState;
+  const form = useForm<UsernameFormType>({
+    resolver: zodResolver(usernameSchema),
+    defaultValues: {
+      username: "",
+    },
+  });
 
   const handleSubmit = async (values: UsernameFormType) => {
-    await onSubmit(values);
-
-    if (!error) {
-      toast.success("Your profile information has been saved.", {
-        duration: 3000,
-        position: "bottom-right",
-      });
-      // Reload window to get the user back to where they were
-      window.location.reload();
-    } else {
-      toast.error("Could not update your profile. Please try again.", {
-        duration: 3000,
-        position: "bottom-right",
-      });
-    }
+    setError("");
+    
+    startTransition(async () => {
+      try {
+        const result = await updateProfile(values);
+        
+        if (result?.error) {
+          setError(result.error);
+          toast.error("Could not update your profile. Please try again.", {
+            duration: 3000,
+            position: "bottom-right",
+          });
+        } else if (result?.success) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("Username update failed:", error);
+        setError("An unexpected error occurred. Please try again.");
+        toast.error("An unexpected error occurred. Please try again.", {
+          duration: 3000,
+          position: "bottom-right",
+        });
+      }
+    });
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[90vh]">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Wait! Your username is not set.</CardTitle>
-          <CardDescription>Please set a username to continue.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleSubmit)}
-              className="space-y-2"
-            >
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        id="username-input"
-                        placeholder="Enter a desired username"
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button className="w-full" type="submit" disabled={isPending}>
-                {isPending && <LuLoader className="mr-2 size-4 animate-spin" />}
-                {isPending ? "Setting username..." : "Continue"}
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+    <div className="flex items-center justify-center min-h-screen w-full bg-background px-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold mb-2">Welcome to Power Projects!</h1>
+          <p className="text-muted-foreground">
+            Just one more step to get started
+          </p>
+        </div>
+        
+        <Card className="w-full shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle>Set Your Username</CardTitle>
+            <CardDescription>
+              Choose a username that others will see on your profile
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(handleSubmit)}
+                className="space-y-4"
+              >
+                {error && <p className="text-sm text-red-500">{error}</p>}
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          id="username-input"
+                          placeholder="Enter your username"
+                          disabled={isPending}
+                          className="h-12 text-base"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button 
+                  className="w-full h-12 text-base" 
+                  type="submit" 
+                  disabled={isPending}
+                >
+                  {isPending && <LuLoader className="mr-2 size-4 animate-spin" />}
+                  {isPending ? "Setting username..." : "Continue to Dashboard"}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
