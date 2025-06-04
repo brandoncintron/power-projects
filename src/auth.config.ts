@@ -5,6 +5,7 @@ import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
 import { signInSchema } from "@/schema/authSchema";
+
 import { getUserByEmail } from "./data/user";
 
 export default {
@@ -31,7 +32,6 @@ export default {
           const passwordsMatch = await bcrypt.compare(password, user.password);
 
           if (passwordsMatch) return user;
-
         }
 
         return null;

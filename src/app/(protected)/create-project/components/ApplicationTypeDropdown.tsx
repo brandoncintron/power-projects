@@ -1,5 +1,12 @@
 import React from "react";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -7,8 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { applicationTypes } from "../utils/form-data";
-import { useProjectForm } from "../context/ProjectFormContext";
+
+import { applicationTypes } from "@@/create-project/data/project-technology-data";
+import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
 
 /**
  * Component for the application type dropdown
@@ -16,14 +24,16 @@ import { useProjectForm } from "../context/ProjectFormContext";
 export function ApplicationTypeDropdown() {
   // Get values from context
   const { form, setApplicationType } = useProjectForm();
-  
+
   return (
     <FormField
       control={form.control}
       name="applicationType"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Application Type <span className="text-red-500">*</span></FormLabel>
+          <FormLabel>
+            Application Type <span className="text-red-500">*</span>
+          </FormLabel>
           <Select
             onValueChange={(value) => {
               field.onChange(value);
@@ -49,4 +59,4 @@ export function ApplicationTypeDropdown() {
       )}
     />
   );
-} 
+}

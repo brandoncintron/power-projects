@@ -1,18 +1,25 @@
 import React from "react";
-import Link from "next/link";
-import { db } from "@/lib/db";
-import { ProjectVisibility } from "@prisma/client";
-import { Button } from "@/components/ui/button";
-import FilteredProjectList from "./components/FilteredProjectList";
-import { ProjectWithDetails } from "./components/ProjectListItem";
+
 import { auth } from "@/auth";
+import { ProjectVisibility } from "@prisma/client";
+import Link from "next/link";
+
+import { HideLoading } from "@/components/HideLoading";
+import { Button } from "@/components/ui/button";
+import { db } from "@/lib/db";
+
+import { ProjectWithDetails } from "../types/types";
+import FilteredProjectList from "./components/FilteredProjectList";
 
 export default async function BrowseProjectsListPage() {
   const session = await auth();
+  const userId = session?.user?.id;
 
   let projects: ProjectWithDetails[] = [];
   let fetchError = null;
   let dynamicFilterTags: string[] = ["All"];
+  let userApplications: string[] = [];
+  let userCollaborations: string[] = [];
 
   try {
     // Fetch public projects sorted by creation date
@@ -22,15 +29,40 @@ export default async function BrowseProjectsListPage() {
       },
       include: {
         owner: { select: { username: true } },
-        _count: { select: { collaborators: true } },
+        _count: {
+          select: {
+            collaborators: true,
+            applicants: {
+              where: {
+                status: "pending",
+              },
+            },
+          },
+        },
       },
       orderBy: { createdAt: "desc" },
     })) as ProjectWithDetails[];
 
+    // If user is logged in, fetch their applications to other projects
+    if (userId) {
+      const applications = await db.projectApplication.findMany({
+        where: { userId },
+        select: { projectId: true },
+      });
+      userApplications = applications.map((app) => app.projectId);
+
+      // Fetch projects where the user is a collaborator
+      const collaborations = await db.projectCollaborator.findMany({
+        where: { userId },
+        select: { projectId: true },
+      });
+      userCollaborations = collaborations.map((collab) => collab.projectId);
+    }
+
     // Extract unique application types for filter tags
     if (projects.length > 0) {
       const uniqueApplicationTypes = Array.from(
-        new Set(projects.map((p) => p.applicationType))
+        new Set(projects.map((p) => p.applicationType)),
       ).sort();
       dynamicFilterTags = ["All", ...uniqueApplicationTypes];
     }
@@ -42,14 +74,15 @@ export default async function BrowseProjectsListPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="container mx-auto py-6 px-4 md:px-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
-          <h1 className="text-2xl font-semibold">Browse Projects</h1>
+      <HideLoading />
+      <main className="container mx-auto py-8 px-4 md:px-6">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+          <h1 className="text-3xl font-bold">Browse Projects</h1>
           {/* Create project button */}
           {session && (
             <Button
               asChild
-              className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full md:w-auto shadow-md transition-all hover:shadow-lg"
             >
               <Link href="/create-project">Create a project</Link>
             </Button>
@@ -57,7 +90,7 @@ export default async function BrowseProjectsListPage() {
         </div>
 
         {fetchError && (
-          <div className="text-center py-10 text-red-600 bg-red-50 rounded-md">
+          <div className="text-center py-10 text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm border border-red-200 dark:border-red-800/30">
             <p>{fetchError}</p>
           </div>
         )}
@@ -67,6 +100,9 @@ export default async function BrowseProjectsListPage() {
           <FilteredProjectList
             projects={projects}
             filterTags={dynamicFilterTags}
+            userApplications={userApplications}
+            userCollaborations={userCollaborations}
+            userId={userId}
           />
         )}
       </main>

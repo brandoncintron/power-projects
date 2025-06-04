@@ -1,12 +1,12 @@
 "use client";
 
+import { ChevronRight, Compass, Sparkles, Users } from "lucide-react";
 import type { Session } from "next-auth";
-
-import { Button } from "@/components/ui/button";
-import { useNavigation } from "@/hooks/useNavigation";
-import { ChevronRight, Users, Sparkles, Compass } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
+import { useNavigation } from "@/components/nav/hooks/useNavigation";
+import { Button } from "@/components/ui/button";
 
 interface HeroProps {
   session: Session | null;
@@ -48,7 +48,7 @@ export default function Hero({ session }: HeroProps) {
           <Button
             variant="outline"
             size="lg"
-            className="border-gray-600 hover:text-white hover:bg-gray-800 sm:mx-0 mx-auto"
+            className="border-gray-600 hover:text-white hover:bg-[#161722] sm:mx-0 mx-auto dark:bg-[#161722]"
             onClick={() => handleNavigation("about")}
           >
             Learn More <ChevronRight />

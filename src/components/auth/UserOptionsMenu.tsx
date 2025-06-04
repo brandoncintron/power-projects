@@ -1,5 +1,8 @@
-import { Settings, User } from "lucide-react";
-import { LogOut } from "lucide-react";
+import { LogOut, Settings, User } from "lucide-react";
+import type { Session } from "next-auth";
+import { signOut } from "next-auth/react";
+import Image from "next/image";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,9 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Image from "next/image";
-import { signOut } from "next-auth/react";
-import type { Session } from "next-auth";
 
 const UserOptionsMenu = ({ session }: { session: Session | null }) => {
   // If no session, return null

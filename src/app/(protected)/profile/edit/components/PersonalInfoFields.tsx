@@ -1,9 +1,5 @@
 "use client";
 
-import { UseFormReturn } from "react-hook-form";
-import { EditProfileSchemaType } from "@/schema/profileSchema";
-import { pronounOptions, languageOptions } from "../types/types";
-
 import {
   FormControl,
   FormDescription,
@@ -13,7 +9,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -21,17 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
-interface PersonalInfoFieldsProps {
-  form: UseFormReturn<EditProfileSchemaType>;
-  isPending: boolean;
-  email?: string | null;
-}
+import {
+  languageOptions,
+  PersonalInfoFieldsProps,
+  pronounOptions,
+} from "@@/profile/edit/types/types";
 
 export function PersonalInfoFields({
   form,
   isPending,
-  email
+  email,
 }: PersonalInfoFieldsProps) {
   return (
     <>
@@ -56,9 +52,7 @@ export function PersonalInfoFields({
 
       {/* Registered Email (Read-only) */}
       <div className="space-y-2">
-        <FormLabel className="text-sm font-medium">
-          Registered Email
-        </FormLabel>
+        <FormLabel className="text-sm font-medium">Registered Email</FormLabel>
         <Input
           type="email"
           value={email || "No email associated"}
@@ -171,4 +165,4 @@ export function PersonalInfoFields({
       />
     </>
   );
-} 
+}

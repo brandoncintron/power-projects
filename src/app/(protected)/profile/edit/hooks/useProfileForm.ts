@@ -1,9 +1,11 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useEffect, useTransition } from "react";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTransition, useEffect } from "react";
+import type { Session } from "next-auth";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { updateProfile } from "@/actions/update";
@@ -11,7 +13,6 @@ import {
   editProfileSchema,
   EditProfileSchemaType,
 } from "@/schema/profileSchema";
-import type { Session } from "next-auth";
 
 export function useProfileForm(session: Session | null) {
   const [isPending, startTransition] = useTransition();

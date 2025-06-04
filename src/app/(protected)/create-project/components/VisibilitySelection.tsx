@@ -1,21 +1,31 @@
 import React from "react";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useProjectForm } from "../context/ProjectFormContext";
+
+import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
 
 /**
  * Component for the project visibility radio buttons
  */
 export function VisibilitySelection() {
   const { form } = useProjectForm();
-  
+
   return (
     <FormField
       control={form.control}
       name="visibility"
       render={({ field }) => (
         <FormItem className="space-y-3">
-          <FormLabel>Who can see this project? <span className="text-red-500">*</span></FormLabel>
+          <FormLabel>
+            Who can see this project? <span className="text-red-500">*</span>
+          </FormLabel>
           <FormControl>
             <RadioGroup
               onValueChange={field.onChange}
@@ -56,4 +66,4 @@ export function VisibilitySelection() {
       )}
     />
   );
-} 
+}

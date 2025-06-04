@@ -1,28 +1,130 @@
+import { NotificationWithDetails } from "@/app/(protected)/notifications/types/types";
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { DialogCloser } from "@/components/auth/DialogCloser";
-import { HideLoading } from "./components/HideLoading";
-import { LoadingSpinner } from "@/components/ui/loading";
-import { Badge } from "@/components/ui/badge";
-import { FileCode2, Users, Clock } from 'lucide-react';
-import Link from 'next/link';
-import { Project } from '@prisma/client';
+import { AlertTriangle } from "lucide-react";
 
-interface ProjectWithDetails extends Project {
-  _count: {
-    collaborators: number;
+import { DialogCloser } from "@/components/auth/DialogCloser";
+import { HideLoading } from "@/components/HideLoading";
+import { ShowToast } from "@/components/ShowToast";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/ui/loading";
+import { db } from "@/lib/db";
+
+import { AppliedToProjectList } from "@@/dashboard/components/AppliedToProjectList";
+import { CollaborationsSection } from "@@/dashboard/components/CollaborationsSection";
+import { NotificationsSection } from "@@/dashboard/components/NotificationsSection";
+import { ProjectList } from "@@/dashboard/components/ProjectList";
+import { UserProfile } from "@@/dashboard/components/UserProfile";
+import { DashboardData } from "@@/dashboard/types/types";
+
+const fetchDashboardData = async (userId: string): Promise<DashboardData> => {
+  const userData = await db.user.findUnique({
+    where: { id: userId },
+    include: {
+      // Fetch projects user has applied to
+      applications: {
+        include: {
+          project: {
+            include: {
+              owner: {
+                select: { id: true, username: true, image: true },
+              },
+              _count: {
+                select: { collaborators: true, applicants: true },
+              },
+            },
+          },
+        },
+      },
+      // Fetch projects user owns
+      ownedProjects: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          _count: {
+            select: { collaborators: true, applicants: true },
+          },
+        },
+      },
+      // Fetch projects user is collaborating on
+      collaborations: {
+        include: {
+          project: {
+            include: {
+              owner: {
+                select: { id: true, username: true, image: true },
+              },
+              _count: {
+                select: { collaborators: true, applicants: true },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Transform collaboration data
+  const collaborations =
+    userData?.collaborations.map((collab) => ({
+      ...collab.project,
+      owner: collab.project.owner,
+    })) || [];
+
+  // Transform application data
+  const applications =
+    userData?.applications.map((app) => ({
+      ...app.project,
+      applicationStatus: app.status,
+    })) || [];
+
+  return {
+    ownedProjects: userData?.ownedProjects || [],
+    collaborations,
+    applications,
   };
-}
+};
+
+// Fetch user notifications
+const fetchUserNotifications = async (
+  userId: string,
+): Promise<{
+  notifications: NotificationWithDetails[];
+  totalCount: number;
+}> => {
+  // Count total notifications
+  const totalCount = await db.notification.count({
+    where: { userId },
+  });
+
+  // Fetch recent notifications
+  const notifications = await db.notification.findMany({
+    where: { userId },
+    include: {
+      sender: {
+        select: {
+          id: true,
+          username: true,
+          name: true,
+          image: true,
+        },
+      },
+      project: {
+        select: {
+          id: true,
+          projectName: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 5, // Get 5 most recent
+  });
+
+  return { notifications, totalCount };
+};
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -41,210 +143,90 @@ export default async function DashboardPage() {
     );
   }
 
-  // Fetch user's projects
-  let userProjects: ProjectWithDetails[] = [];
+  let dashboardData: DashboardData = {
+    ownedProjects: [],
+    collaborations: [],
+    applications: [],
+  };
+
+  let notificationsData = {
+    notifications: [] as NotificationWithDetails[],
+    totalCount: 0,
+  };
+
+  let fetchError: string | null = null;
+
   try {
-    userProjects = await db.project.findMany({
-      where: {
-        ownerId: user.id,
-      },
-      include: {
-        _count: { select: { collaborators: true } },
-      },
-      orderBy: { createdAt: "desc" },
-    });
+    if (!user.id) {
+      throw new Error("User ID not found in session.");
+    }
+
+    dashboardData = await fetchDashboardData(user.id);
+    notificationsData = await fetchUserNotifications(user.id);
   } catch (error) {
-    console.error("Failed to fetch user projects:", error);
+    console.error("Failed to fetch dashboard data:", error);
+    fetchError = "Could not load dashboard data. Please try again later.";
   }
 
   return (
-    <main className="container mx-auto py-10 px-4 md:px-6">
-      {/* This component will close the auth dialog when dashboard loads */}
+    <main className="py-6 px-4 md:px-6 min-h-screen">
       <DialogCloser />
-
-      {/* This component will disable the loading page when dashboard loads */}
       <HideLoading />
-      
-      <div className="flex flex-col gap-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
-          <Avatar className="h-20 w-20">
-            <AvatarImage
-              src={user?.image || ""}
-              alt={user?.username || "User"}
+      <ShowToast storageKey="dashboardToast" />
+
+      <div className="flex flex-col gap-6">
+        <UserProfile user={user} />
+
+        {fetchError ? (
+          <Alert variant="destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{fetchError}</AlertDescription>
+          </Alert>
+        ) : (
+          <>
+            {/* First Container - Collaborations & Applications */}
+            <Card className="rounded-4xl p-4 sm:p-6 border-0 dark:border">
+              <CardHeader className="px-2 sm:px-4">
+                <CardTitle className="text-lg sm:text-xl font-semibold">
+                  Start your project collaboration journey
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 px-2 pb-4 sm:px-6">
+                  {/* Left section - Collaborations */}
+                  <div className="rounded-xl">
+                    <CollaborationsSection
+                      collaborations={dashboardData.collaborations}
+                    />
+                  </div>
+
+                  {/* Right section - Applications */}
+                  <div className="rounded-xl">
+                    <AppliedToProjectList
+                      projects={dashboardData.applications}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Second Container - Projects */}
+            <Card className="rounded-4xl p-4 sm:p-6 border-0 dark:border">
+              <CardContent className="px-2 sm:px-6">
+                <ProjectList projects={dashboardData.ownedProjects} />
+              </CardContent>
+            </Card>
+
+            {/* Third Container - Notifications */}
+
+            <NotificationsSection
+              notifications={notificationsData.notifications}
+              totalCount={notificationsData.totalCount}
             />
-            <AvatarFallback>
-              {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-3xl font-bold">
-              {user?.username || "Username not set"}
-            </h1>
-            <p className="text-muted-foreground">{user?.email}</p>
-          </div>
-        </div>
-
-        <Separator />
-
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full md:w-[400px] grid-cols-2">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="projects">My Projects</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-6 mt-6">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle>Quick Stats</CardTitle>
-                  <CardDescription>Your project overview</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Active Projects</span>
-                      <span className="text-xl font-semibold">{userProjects.length}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Collaborating On</span>
-                      <span className="text-xl font-semibold">0</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Pending Invites</span>
-                      <span className="text-xl font-semibold">0</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle>Recent Activity</CardTitle>
-                  <CardDescription>Latest updates and notifications</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <div className="h-2 w-2 rounded-full bg-blue-500 mt-1.5" />
-                      <div>
-                        <p className="text-sm font-medium">No recent activity</p>
-                        <p className="text-xs text-muted-foreground">Check back later for updates</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle>Quick Actions</CardTitle>
-                  <CardDescription>Access your tools</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="/create-project">
-                      <div className="p-3 rounded-lg border hover:bg-muted transition-colors cursor-pointer">
-                        <p className="text-sm font-medium">Create Project</p>
-                        <p className="text-xs text-muted-foreground">Start a new project</p>
-                      </div>
-                    </Link>
-                    <Link href="/projects/browse">
-                      <div className="p-3 rounded-lg border hover:bg-muted transition-colors cursor-pointer">
-                        <p className="text-sm font-medium">Browse Projects</p>
-                        <p className="text-xs text-muted-foreground">Find projects to join</p>
-                      </div>
-                    </Link>
-                    <button>
-                      <div className="p-3 rounded-lg border hover:bg-muted transition-colors cursor-pointer">
-                        <p className="text-sm font-medium">Inbox</p>
-                        <p className="text-xs text-muted-foreground">Check messages</p>
-                      </div>
-                    </button>
-                    <button>
-                      <div className="p-3 rounded-lg border hover:bg-muted transition-colors cursor-pointer">
-                        <p className="text-sm font-medium">Scrum Board</p>
-                        <p className="text-xs text-muted-foreground">Manage tasks</p>
-                      </div>
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="projects" className="mt-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-semibold">My Projects</h2>
-              <Link href="/create-project">
-                <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
-                  Create New Project
-                </button>
-              </Link>
-            </div>
-            
-            {userProjects.length === 0 ? (
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <p className="text-muted-foreground">You haven&apos;t created any projects yet.</p>
-                  <Link href="/create-project" className="text-blue-600 hover:underline mt-2 inline-block">
-                    Create your first project
-                  </Link>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {userProjects.map((project) => (
-                  <Card key={project.id} className="relative">
-                    <CardContent className="p-4">
-                      <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
-                        <Badge variant="secondary" className="whitespace-nowrap flex items-center gap-1">
-                          <FileCode2 size={12} /> {project.applicationType}
-                        </Badge>
-                        <Badge variant="outline" className="whitespace-nowrap flex items-center gap-1">
-                          <Users size={12} /> {(project._count?.collaborators ?? 0) + 1} Members
-                        </Badge>
-                        <Badge variant="outline" className="whitespace-nowrap flex items-center gap-1">
-                          <Users size={12} /> {project.visibility.charAt(0).toUpperCase() + project.visibility.slice(1).toLowerCase()}
-                        </Badge>
-                      </div>
-                      <h3 className="text-lg font-semibold mb-1">{project.projectName}</h3>
-                      <p className="text-sm line-clamp-2 mb-2">{project.description}</p>
-                      <div className="flex items-center text-xs gap-1 text-muted-foreground">
-                        <Clock size={12} />
-                        <span>{formatRelativeTime(project.createdAt)}</span>
-                      </div>
-                      <Link href={`/projects/${project.id}`} className="absolute inset-0 rounded-lg" aria-label={`View details for ${project.projectName}`}></Link>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+          </>
+        )}
       </div>
     </main>
   );
-}
-
-// Utility function for formatting relative time
-function formatRelativeTime(date: Date | null | undefined): string {
-  if (!date) return '';
-  const now = new Date();
-  const past = new Date(date);
-  const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
-
-  if (diffInDays > 30) {
-    return `>30d ago`;
-  } else if (diffInDays > 0) {
-    return `${diffInDays}d ago`;
-  } else if (diffInHours > 0) {
-    return `${diffInHours}h ago`;
-  } else if (diffInMinutes > 0) {
-    return `${diffInMinutes}m ago`;
-  } else {
-    return `Just now`;
-  }
 }

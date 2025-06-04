@@ -1,7 +1,8 @@
 "use client";
 
+import { LuLoader } from "react-icons/lu";
+
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import {
   Card,
   CardContent,
@@ -10,15 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
 
-import { LuLoader } from "react-icons/lu";
-
-import { useProfileForm } from "../hooks/useProfileForm";
-import { ProfilePicture } from "./ProfilePicture";
-import { PersonalInfoFields } from "./PersonalInfoFields";
-import { SocialLinksFields } from "./SocialLinksFields";
-import { ProfileLoading } from "./ProfileLoadingState";
-import { ProfileFormProps } from "../types/types";
+import { PersonalInfoFields } from "@@/profile/edit/components/PersonalInfoFields";
+import { ProfileLoading } from "@@/profile/edit/components/ProfileLoadingState";
+import { ProfilePicture } from "@@/profile/edit/components/ProfilePicture";
+import { SocialLinksFields } from "@@/profile/edit/components/SocialLinksFields";
+import { useProfileForm } from "@@/profile/edit/hooks/useProfileForm";
+import { ProfileFormProps } from "@@/profile/edit/types/types";
 
 const EditProfileForm = ({ session }: ProfileFormProps) => {
   const { form, isPending, onSubmit, user } = useProfileForm(session);

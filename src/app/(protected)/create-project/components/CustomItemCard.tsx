@@ -1,22 +1,12 @@
 import React from "react";
-import { MdOutlineAddBox } from "react-icons/md";
-import { BiSolidCustomize } from "react-icons/bi";
-import { SelectableCard } from "./SelectableCard";
-import { CustomItemInput } from "./CustomItemInput";
-import { CustomItemsList } from "./CustomItemsList";
 
-interface CustomItemCardProps {
-  title: string;
-  itemName: string;
-  items: string[];
-  placeholder: string;
-  isSelected: boolean;
-  isLimitReached: boolean;
-  onNameChange: (value: string) => void;
-  onAddItem: () => void;
-  onRemoveItem: (name: string) => void;
-  itemType: 'framework' | 'database';
-}
+import { BiSolidCustomize } from "react-icons/bi";
+import { MdOutlineAddBox } from "react-icons/md";
+
+import { CustomItemInput } from "@@/create-project/components/CustomItemInput";
+import { CustomItemsList } from "@@/create-project/components/CustomItemsList";
+import { SelectableCard } from "@@/create-project/components/SelectableCard";
+import { CustomItemCardProps } from "@@/create-project/types/types";
 
 /**
  * Generic component for adding custom items (frameworks or databases)
@@ -31,7 +21,7 @@ export function CustomItemCard({
   onNameChange,
   onAddItem,
   onRemoveItem,
-  itemType
+  itemType,
 }: CustomItemCardProps) {
   // Handle adding item with limit check
   const handleAddItem = () => {
@@ -53,7 +43,11 @@ export function CustomItemCard({
           }
           isSelected={isSelected}
         >
-          <div className="mt-3">
+          <span className="text-xs text-gray-500">
+            Don&apos;t see your framework, library, or database listed? Add it
+            here!
+          </span>
+          <div>
             <CustomItemInput
               itemName={itemName}
               itemNamePlaceholder={placeholder}
@@ -91,4 +85,4 @@ export function CustomItemCard({
       </div>
     </div>
   );
-} 
+}

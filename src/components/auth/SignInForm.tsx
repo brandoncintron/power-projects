@@ -1,9 +1,10 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
 import { LuLoader } from "react-icons/lu";
+
+import { login } from "@/actions/login";
+import { DialogError } from "@/components/auth/DialogError";
+import { useAuth } from "@/components/auth/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,32 +16,18 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signInSchema, signInSchemaType } from "@/schema/authSchema";
-import { DialogError } from "./DialogError";
-import { login } from "@/actions/login";
 
 const SignInForm = () => {
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | undefined>("");
-
-  const form = useForm<signInSchemaType>({
-    resolver: zodResolver(signInSchema),
-    defaultValues: {
+  const { form, formState, onSubmit } = useAuth<signInSchemaType>(
+    signInSchema,
+    {
       email: "",
       password: "",
     },
-  });
+    login,
+  );
 
-  const onSubmit = async (values: signInSchemaType) => {
-    setError("");
-
-    startTransition(() => {
-      login(values).then((data) => {
-        if (data?.error) {
-          setError(data.error);
-        }
-      });
-    });
-  };
+  const { isPending, error } = formState;
 
   return (
     <Form {...form}>

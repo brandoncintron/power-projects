@@ -1,13 +1,10 @@
-import React, { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
+import React from "react";
+
 import { MdOutlineCancel } from "react-icons/md";
 
-interface CustomItemsListProps {
-  items: string[];
-  renderItemContent: (item: string) => ReactNode;
-  onRemove: (item: string) => void;
-  emptyMessage?: string;
-}
+import { Button } from "@/components/ui/button";
+
+import { CustomItemsListProps } from "@@/create-project/types/types";
 
 /**
  * Displays a list of custom items with ability to remove them.
@@ -28,9 +25,12 @@ export function CustomItemsList({
       <p className="text-xs font-medium mb-1">Your custom items:</p>
       <div className="flex flex-wrap gap-2">
         {items.map((item) => (
-          <div key={item} className="bg-muted py-1 px-2 rounded-md text-xs flex items-center gap-1 cursor-default">
+          <div
+            key={item}
+            className="bg-muted py-1 px-2 rounded-md text-xs flex items-center gap-1 cursor-default"
+          >
             {renderItemContent(item)}
-            {/* Button to remove custom item */} 
+            {/* Button to remove custom item */}
             <Button
               type="button"
               variant="ghost"
@@ -45,4 +45,4 @@ export function CustomItemsList({
       </div>
     </div>
   );
-} 
+}

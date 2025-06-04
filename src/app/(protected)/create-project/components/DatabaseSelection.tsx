@@ -1,15 +1,18 @@
 import React, { useCallback } from "react";
-import { Button } from "@/components/ui/button";
+
+import { ChevronLeft } from "lucide-react";
 import { BiSolidCustomize } from "react-icons/bi";
 import { MdOutlineCancel } from "react-icons/md";
-import { ChevronLeft } from "lucide-react";
-import { frameworkOptions } from "../utils/form-data";
-import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
-import { SelectableCard } from "./SelectableCard";
-import { useScrollTo } from "@/hooks/useScrollTo";
-import { FrameworkOption } from "../utils/types";
-import { useProjectForm } from "../context/ProjectFormContext";
-import { CustomDatabaseCard } from "./CustomDatabaseCard";
+
+import { useScrollTo } from "@/components/nav/hooks/useScrollTo";
+import { Button } from "@/components/ui/button";
+import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
+
+import { CustomDatabaseCard } from "@@/create-project/components/CustomDatabaseCard";
+import { SelectableCard } from "@@/create-project/components/SelectableCard";
+import { frameworkOptions } from "@@/create-project/data/project-technology-data";
+import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
+import { DatabaseOption, FrameworkOption } from "@@/create-project/types/types";
 
 /**
  * Database selection step component
@@ -56,7 +59,7 @@ export function DatabaseSelection() {
 
     // Then use the scrollToSection function to scroll to tech-stack-selection
     setTimeout(() => {
-      scrollToSection("tech-stack-selection");
+      scrollToSection({ sectionId: "tech-stack-selection" });
     }, 50);
   }, [goToFrameworkStep, scrollToSection]);
 
@@ -69,7 +72,7 @@ export function DatabaseSelection() {
           <div className="flex flex-wrap gap-2 sm:gap-3">
             <Button
               variant="outline"
-              size="sm"
+              size="md"
               onClick={handleBackNavigation}
               className="text-xs"
             >
@@ -77,7 +80,7 @@ export function DatabaseSelection() {
             </Button>
             <Button
               type="button"
-              size="sm"
+              size="md"
               className="text-xs"
               onClick={handleSubmit}
             >
@@ -110,7 +113,7 @@ export function DatabaseSelection() {
                     selectedAppType as keyof typeof frameworkOptions
                   ]?.forEach((category) => {
                     const found = category.options.find(
-                      (f) => f.name === frameworkName
+                      (f) => f.name === frameworkName,
                     );
                     if (found) framework = found;
                   });
@@ -161,32 +164,34 @@ export function DatabaseSelection() {
                       : "flex flex-wrap gap-2"
                   }
                 >
-                  {selectedDatabasesForDisplay.map((database) => {
-                    // Check if this is a custom database
-                    const isCustomDatabase = customDatabases.includes(
-                      database.name
-                    );
-                    const isNoneOption = database.name === "None";
+                  {selectedDatabasesForDisplay.map(
+                    (database: DatabaseOption) => {
+                      // Check if this is a custom database
+                      const isCustomDatabase = customDatabases.includes(
+                        database.name,
+                      );
+                      const isNoneOption = database.name === "None";
 
-                    return (
-                      <div
-                        key={database.name}
-                        className="bg-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium self-start"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          {isCustomDatabase ? (
-                            // Use default icon for custom databases
-                            <BiSolidCustomize />
-                          ) : isNoneOption ? (
-                            <MdOutlineCancel />
-                          ) : (
-                            getDatabaseIcon(database.name)
-                          )}
-                          <span>{database.name}</span>
+                      return (
+                        <div
+                          key={database.name}
+                          className="bg-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium self-start"
+                        >
+                          <div className="flex items-center gap-1.5">
+                            {isCustomDatabase ? (
+                              // Use default icon for custom databases
+                              <BiSolidCustomize />
+                            ) : isNoneOption ? (
+                              <MdOutlineCancel />
+                            ) : (
+                              getDatabaseIcon(database.name)
+                            )}
+                            <span>{database.name}</span>
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    },
+                  )}
                 </div>
               </div>
             )}
@@ -242,7 +247,7 @@ export function DatabaseSelection() {
       <div className="mt-8">
         <Button
           type="button"
-          size="sm"
+          size="md"
           className="text-xs"
           onClick={handleSubmit}
         >

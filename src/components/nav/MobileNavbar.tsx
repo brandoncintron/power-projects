@@ -1,23 +1,23 @@
 import { useState } from "react";
+
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Github, Menu, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import Link from "next/link";
-import Image from "next/image";
-import { Github, LogOut, Menu, Moon, Settings, Sun, User } from "lucide-react";
+
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
+import MobileNavLinks from "@/components/nav/MobileNavLinks";
+
+import { Button } from "../ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetTrigger,
-  SheetTitle,
   SheetDescription,
+  SheetTitle,
+  SheetTrigger,
 } from "../ui/sheet";
-import { Button } from "../ui/button";
-import MobileNavLinks from "@/components/nav/MobileNavLinks";
-import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { signOut } from "next-auth/react";
-import { useTheme } from "next-themes";
-import type { Session } from "next-auth";
 
-const MobileNavbar = ({ session }: { session: Session | null }) => {
+const MobileNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { open } = useAuthDialog();
   const { theme, setTheme } = useTheme();
@@ -57,7 +57,7 @@ const MobileNavbar = ({ session }: { session: Session | null }) => {
             {/* Mobile navigation links */}
             <div className="flex-grow">
               <div className="flex flex-col divide-y">
-                <MobileNavLinks setIsOpen={setIsOpen} session={session} />
+                <MobileNavLinks setIsOpen={setIsOpen} />
               </div>
             </div>
 
@@ -90,76 +90,28 @@ const MobileNavbar = ({ session }: { session: Session | null }) => {
             </div>
 
             <div className="p-4 space-y-4 border-t">
-              {/* Login/register buttons for unauthenticated users */}
-              {!session ? (
-                <div className="flex flex-col gap-3">
-                  <Button
-                    variant="outline"
-                    className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
-                    onClick={() => {
-                      setIsOpen(false);
-                      open("signin");
-                    }}
-                  >
-                    Sign In
-                  </Button>
+              <div className="flex flex-col gap-3">
+                <Button
+                  variant="outline"
+                  className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
+                  onClick={() => {
+                    setIsOpen(false);
+                    open("signin");
+                  }}
+                >
+                  Sign In
+                </Button>
 
-                  <Button
-                    className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
-                    onClick={() => {
-                      setIsOpen(false);
-                      open("signup");
-                    }}
-                  >
-                    Get Started
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-3">
-                  {/* User profile display */}
-                  <div className="flex items-center gap-3 p-2">
-                    {session.user?.image ? (
-                      <Image
-                        src={session.user.image}
-                        alt="User Avatar"
-                        width={40}
-                        height={40}
-                        className="rounded-full"
-                      />
-                    ) : (
-                      <User className="h-10 w-10 p-2 bg-gray-100 dark:bg-gray-800 rounded-full" />
-                    )}
-                    <span className="text-lg font-medium">
-                      {session.user?.username || "Username not set"}
-                    </span>
-                  </div>
-
-                  {/* Profile settings link */}
-                  <Link href="/profile/edit" className="block">
-                    <Button
-                      variant="outline"
-                      className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Settings className="mr-2 h-4 w-4" />
-                      Edit Profile
-                    </Button>
-                  </Link>
-
-                  {/* Sign out button */}
-                  <Button
-                    variant="destructive"
-                    className="w-full py-6 text-base font-medium"
-                    onClick={() => {
-                      setIsOpen(false);
-                      signOut({ redirectTo: "/" });
-                    }}
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign Out
-                  </Button>
-                </div>
-              )}
+                <Button
+                  className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
+                  onClick={() => {
+                    setIsOpen(false);
+                    open("signup");
+                  }}
+                >
+                  Get Started
+                </Button>
+              </div>
             </div>
           </div>
         </SheetContent>

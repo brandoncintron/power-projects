@@ -1,101 +1,99 @@
+"use client";
+
 import React from "react";
+
+import { CheckCircle, Clock, FileCode2, Loader, Users } from "lucide-react";
 import Link from "next/link";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FileCode2, Users, Clock } from "lucide-react";
-import { Project } from "@prisma/client";
-import { getTechnologyIcon, getDatabaseIcon } from "@/lib/language-icons";
+import { useLoading } from "@/components/ui/loading-context";
+import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
+import { formatRelativeTime } from "@/utils/formatRelativeTime";
 
-// Extends base Project type with additional fields needed for the list item display
-export interface ProjectWithDetails extends Project {
-  owner: {
-    username: string | null;
-  } | null;
-  _count: {
-    collaborators: number;
-  };
-  frameworks: string[];
-  databases: string[];
-  status: "OPEN" | "CLOSED";
-}
-
-// Formats a date into a human-readable relative time string (e.g., "2d ago", "3h ago")
-export function formatRelativeTime(date: Date | null | undefined): string {
-  if (!date) return "";
-  const now = new Date();
-  const past = new Date(date);
-  const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
-
-  if (diffInDays > 30) {
-    return `>30d ago`;
-  } else if (diffInDays > 0) {
-    return `${diffInDays}d ago`;
-  } else if (diffInHours > 0) {
-    return `${diffInHours}h ago`;
-  } else if (diffInMinutes > 0) {
-    return `${diffInMinutes}m ago`;
-  } else {
-    return `Just now`;
-  }
-}
+import { useProjectApplication } from "@@/projects/browse/hooks/useProjectApplication";
+import { ProjectListItemProps } from "@@/projects/types/types";
 
 export default function ProjectListItem({
   project,
-}: {
-  project: ProjectWithDetails;
-}) {
+  hasApplied = false,
+  isCollaborator = false,
+  userId,
+}: ProjectListItemProps) {
   // Project status management
-  const isOpen = project.status === "OPEN";
-  const statusLabel = isOpen ? "Open" : "Closed";
+  const isProjectOpen = project.status === "OPEN";
+  const statusLabel = isProjectOpen ? "Open" : "Closed";
 
   // Calculate member statistics for display
   const memberCount = (project._count?.collaborators ?? 0) + 1;
-  const maxMembers = 5; // Placeholder for max team size
-  const remainingSlots = Math.max(0, maxMembers - memberCount);
+
+  const {
+    hasApplied: applicationSubmitted,
+    isLoading: isSubmittingApplication,
+    submitApplication,
+  } = useProjectApplication(hasApplied);
+  const { showLoading } = useLoading();
+
+  // Check if user is the owner of the project
+  const isOwner = userId && project.ownerId === userId;
+
+  // Use either the local state or prop to determine the UI
+  const showAppliedState = applicationSubmitted || hasApplied;
 
   return (
-    <div className="relative border rounded-lg p-5 hover:shadow-lg transition-shadow duration-200 flex flex-col gap-3 bg-card">
-      {/* Project metadata badges */}
-      <div className="flex flex-wrap items-center gap-2 text-sm cursor-default">
+    <div
+      className={`relative rounded-3xl p-4 hover:shadow-md transition-all duration-300 flex flex-col gap-2.5 hover:translate-y-[-1px] bg-card w-full
+      ${isCollaborator ? "border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200 dark:ring-emerald-900" : ""}
+    `}
+    >
+      {/* Collaboration Badge */}
+      {isCollaborator && (
+        <div className="absolute -top-2 -right-2 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded-full px-2 py-0.5 text-xs font-medium border border-emerald-200 dark:border-emerald-800 flex items-center gap-0.5">
+          <CheckCircle size={12} />
+          You&apos;re on this project
+        </div>
+      )}
+
+      {/* Badges Section */}
+      <div className="flex flex-wrap items-center gap-1.5 text-xs cursor-default">
         <Badge
-          variant={isOpen ? "default" : "destructive"}
-          className={`whitespace-nowrap ${
-            isOpen ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+          variant={isProjectOpen ? "default" : "destructive"}
+          className={`whitespace-nowrap text-xs px-2 py-0.5 ${
+            isProjectOpen
+              ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800/40 hover:bg-emerald-100/80 dark:hover:bg-emerald-900/60"
+              : "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300 border-red-200 dark:border-red-800/40 hover:bg-red-100/80 dark:hover:bg-red-900/60"
           }`}
         >
           {statusLabel} Applications
         </Badge>
         <Badge
           variant="outline"
-          className="whitespace-nowrap flex items-center gap-1.5 dark:bg-gray-700/50"
+          className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
         >
-          <div className="flex h-5 w-5 shrink-0 items-center justify-center">
-            <FileCode2 size={14} /> 
-          </div>
+          <FileCode2 className="size-3" />
           <span>{project.applicationType}</span>
         </Badge>
         {project.frameworks?.map((fw) => (
           <Badge
             key={fw}
-            variant="outline"
-            className="whitespace-nowrap flex items-center gap-1.5 dark:bg-gray-700/50"
+            variant="secondary"
+            className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
           >
-            <div className="flex h-5 w-5 shrink-0 items-center justify-center">
+            <div className="flex size-4 shrink-0 items-center justify-center">
               {getTechnologyIcon(fw.toLowerCase())}
             </div>
-            <span>{fw}</span>
+            <span>
+              {fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()}
+            </span>
           </Badge>
         ))}
         {project.databases?.map((db) => (
           <Badge
             key={db}
-            variant="outline"
-            className="whitespace-nowrap flex items-center gap-1.5 dark:bg-gray-700/50"
+            variant="secondary"
+            className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
           >
-            <div className="flex h-5 w-5 shrink-0 items-center justify-center">
+            <div className="flex size-4 shrink-0 items-center justify-center">
               {getDatabaseIcon(db)}
             </div>
             <span>{db}</span>
@@ -104,77 +102,107 @@ export default function ProjectListItem({
       </div>
 
       {/* Project details section */}
-      <div>
-        <h2 className="text-xl font-semibold mb-1">{project.projectName}</h2>
-        <p className="text-base text-muted-foreground mb-2">
+      <div className="mt-1">
+        <h2 className="text-lg font-bold mb-0.5">{project.projectName}</h2>
+        <p className="text-sm mb-1.5 text-muted-foreground">
           by {project.owner?.username || "Unknown User"}
         </p>
-        <p className="text-base line-clamp-3">
+        <p className="text-sm line-clamp-2">
           {project.description || "No description provided."}
         </p>
       </div>
 
       {/* Member status and creation date */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground mt-auto pt-2">
-        <div className="flex items-center gap-2">
-          <div>
+      <div className="flex items-center justify-between text-xs mt-auto pt-1">
+        <div className="flex items-center gap-1.5">
+          <div className="flex -space-x-1.5">
             {Array.from({ length: Math.min(memberCount, 3) }).map((_, i) => (
               <div
                 key={i}
-                className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center"
+                className="w-6 h-6 rounded-full border-1 flex items-center justify-center bg-muted/30"
               >
-                <Users size={16} className="text-gray-600" />
+                <Users size={14} />
               </div>
             ))}
             {memberCount > 3 && (
-              <div className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium">
+              <div className="w-6 h-6 rounded-full border-1 flex items-center justify-center text-xs font-medium bg-muted/30">
                 +{memberCount - 3}
               </div>
             )}
           </div>
 
-          {isOpen ? (
-            remainingSlots > 0 ? (
-              <span className="text-sm text-gray-500">
-                {remainingSlots} {remainingSlots === 1 ? "spot" : "spots"}{" "}
-                available
-              </span>
-            ) : (
-              <span className="text-sm text-gray-500">
-                Team is full
-              </span>
-            )
-          ) : (
-            <span className="text-sm text-gray-500">
-              No spots available
-            </span>
-          )}
+          <span className="text-xs font-medium">
+            {memberCount} {memberCount === 1 ? "member" : "members"}
+          </span>
         </div>
 
-        <div className="flex items-center gap-1">
-          <Clock size={14} />
+        <div className="flex items-center gap-0.5 text-muted-foreground">
+          <Clock size={12} />
           <span>{formatRelativeTime(project.createdAt)}</span>
         </div>
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center gap-3 mt-3 border-t pt-3">
-        {isOpen && (
-          <Button size="sm" variant="outline" disabled>
-            Apply Now
-          </Button>
-        )}
-        {!isOpen && (
-          <Button size="sm" variant="outline" disabled>
-            Applications Closed
-          </Button>
-        )}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2 pt-2 border-t">
+        <div className="flex items-center gap-2">
+          {isProjectOpen && !isOwner && !isCollaborator && (
+            <>
+              {showAppliedState ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled
+                  className="text-teal-600 dark:text-teal-400 border-slate-300 dark:border-slate-600 h-7 text-xs px-2.5"
+                >
+                  Already Applied
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={isSubmittingApplication}
+                  onClick={() => submitApplication(project.id)}
+                  className="h-7 text-xs px-2.5"
+                >
+                  {isSubmittingApplication && (
+                    <Loader className="mr-1.5 size-3 animate-spin" />
+                  )}
+                  Apply Now
+                </Button>
+              )}
+            </>
+          )}
+          {!isProjectOpen && !isCollaborator && (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled
+              className="text-red-600 dark:text-red-400 border-red-300 dark:border-red-700/50 opacity-80 h-7 text-xs px-2.5"
+            >
+              Applications Closed
+            </Button>
+          )}
 
-        <Link href={`/projects/${project.id}`} passHref legacyBehavior>
-          <Button asChild size="sm" variant="default">
-            <a>View Details</a>
-          </Button>
-        </Link>
+          <Link href={`/projects/${project.id}`} passHref legacyBehavior>
+            <Button
+              asChild
+              size="sm"
+              variant="default"
+              className="h-7 text-xs px-2.5"
+            >
+              <a
+                onClick={() => {
+                  showLoading("Loading project details...");
+                }}
+              >
+                View Project
+              </a>
+            </Button>
+          </Link>
+        </div>
+        <span className="text-xs font-medium mt-1 sm:mt-0 text-muted-foreground">
+          {project._count.applicants} Applicants
+        </span>
       </div>
     </div>
   );

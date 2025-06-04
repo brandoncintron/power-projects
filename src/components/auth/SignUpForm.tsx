@@ -1,9 +1,10 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useTransition } from "react";
 import { LuLoader } from "react-icons/lu";
+
+import { register } from "@/actions/register";
+import { DialogError } from "@/components/auth/DialogError";
+import { useAuth } from "@/components/auth/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,32 +16,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { signUpSchema, signUpSchemaType } from "@/schema/authSchema";
-import { DialogError } from "./DialogError";
-import { register } from "@/actions/register";
 
 const SignUpForm = () => {
-  const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | undefined >("");
-  const form = useForm<signUpSchemaType>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: {
+  const { form, formState, onSubmit } = useAuth<signUpSchemaType>(
+    signUpSchema,
+    {
       email: "",
       username: "",
       password: "",
       confirmPassword: "",
     },
-  });
+    register,
+  );
 
-  const onSubmit = async (values: signUpSchemaType) => {
-    setError("");
-
-    startTransition(() => {
-      register(values)
-        .then((data) => {
-        setError(data?.error);
-      });
-    });
-  };
+  const { isPending, error } = formState;
 
   return (
     <Form {...form}>

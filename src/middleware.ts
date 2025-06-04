@@ -1,6 +1,6 @@
 import authConfig from "@/auth.config";
+import { apiAuthPrefix, DEFAULT_LOGIN_REDIRECT, publicRoutes } from "@/routes";
 import NextAuth from "next-auth";
-import { publicRoutes, apiAuthPrefix } from "@/routes";
 
 const { auth } = NextAuth(authConfig);
 
@@ -26,16 +26,21 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutePatterns.some(pattern => {
-    if (typeof pattern === 'string') {
-        return pattern === nextUrl.pathname; // Exact match for static routes
+  const isPublicRoute = publicRoutePatterns.some((pattern) => {
+    if (typeof pattern === "string") {
+      return pattern === nextUrl.pathname; // Exact match for static routes
     }
     return pattern.test(nextUrl.pathname); // Regex test for dynamic routes
-});
+  });
 
   // Allow all auth API routes
   if (isApiAuthRoute) {
     return;
+  }
+
+  // Redirect logged-in users trying to access home page
+  if (isLoggedIn && nextUrl.pathname === "/") {
+    return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
   // Allow public routes for everyone

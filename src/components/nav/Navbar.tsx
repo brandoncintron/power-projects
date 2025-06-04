@@ -1,27 +1,23 @@
 "use client";
 
-import type { Session } from "next-auth";
-
-import Link from "next/link";
 import { Github } from "lucide-react";
+import Link from "next/link";
 
-import { useScrollDetection } from "@/hooks/useScrollDetection";
-
+import AlertBanner from "@/components/AlertBanner";
 import AccessButtons from "@/components/auth/AccessButtons";
+import { useScrollDetection } from "@/components/nav/hooks/useScrollDetection";
 import MobileNavbar from "@/components/nav/MobileNavbar";
-import UserOptionsMenu from "@/components/auth/UserOptionsMenu";
 import NavLinks from "@/components/nav/NavLinks";
 import ThemeSelector from "@/components/nav/ThemeSelector";
-import AlertBanner from "@/components/AlertBanner";
 
-const Navbar = ({ session }: { session: Session | null }) => {
+const Navbar = () => {
   const { scrolled } = useScrollDetection(); // Check if user scrolled
 
   return (
     <div className="flex flex-col w-full sticky top-0 z-50">
       <AlertBanner />
       <nav
-        className={`w-full bg-background transition-all duration-200 py-4 ${
+        className={`w-full bg-white transition-all duration-200 py-4 dark:bg-[#161722] ${
           scrolled ? "border-b shadow-sm" : ""
         }`}
       >
@@ -33,11 +29,11 @@ const Navbar = ({ session }: { session: Session | null }) => {
           </div>
 
           {/* Desktop Navbar Links */}
-          <NavLinks session={session} />
+          <NavLinks />
 
           {/* Desktop Navbar Right Side */}
           <div className="hidden lg:flex items-center gap-6">
-            {!session ? <AccessButtons /> : <UserOptionsMenu session={session} />}
+            <AccessButtons />
 
             <Link
               href="https://github.com/brandoncintron/power-projects"
@@ -51,7 +47,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
           </div>
 
           {/* Mobile Hamburger Menu */}
-          <MobileNavbar session={session} />
+          <MobileNavbar />
         </div>
       </nav>
     </div>

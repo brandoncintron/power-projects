@@ -1,7 +1,8 @@
-import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import { getUserById } from "@/data/user";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import NextAuth from "next-auth";
+
 import { db } from "@/lib/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -47,7 +48,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const existingUser = await getUserById(token.sub);
 
       if (!existingUser) return token;
-      
+
       // Steps to extend data from the database to the session:
       // Step 1: Create custom token fields ^
       token.username = existingUser.username;

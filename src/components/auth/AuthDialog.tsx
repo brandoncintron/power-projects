@@ -1,5 +1,17 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { DialogError } from "@/components/auth/DialogError";
+import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
+import OAuthButtons from "@/components/auth/OAuthButtons";
+import SignInForm from "@/components/auth/SignInForm";
+import SignUpForm from "@/components/auth/SignUpForm";
+import { handleAuthErrors } from "@/components/auth/utils/handleAuthErrors";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -7,17 +19,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import SignInForm from "@/components/auth/SignInForm";
-import SignUpForm from "@/components/auth/SignUpForm";
-import { DialogError } from "@/components/auth/DialogError";
-import { useAuthDialog } from "@/components/auth/hooks/useAuthDialog";
-import OAuthButtons from "@/components/auth/OAuthButtons";
-import { useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function AuthDialog() {
   const { isOpen, close, view, setView, error, open } = useAuthDialog();
@@ -25,33 +28,10 @@ export function AuthDialog() {
   const errorCheckedRef = useRef(false);
   const router = useRouter();
 
-  // Check for auth errors in URL params once on component mount
+  // Check for auth errors in URL params once on component mount (for duplicate OAuth email addresses)
   useEffect(() => {
-    // Skip if we've already checked for errors
-    if (errorCheckedRef.current) return;
-    
     const authError = searchParams.get("error");
-    if (authError === "OAuthAccountNotLinked") {
-      open("signin", "Email has already been used with a different provider. Please sign in using the original provider.");
-      // Mark error as checked and remove error from URL
-      errorCheckedRef.current = true;
-      // Use replace to remove the error parameter from URL
-      if (typeof window !== 'undefined') {
-        const url = new URL(window.location.href);
-        url.searchParams.delete("error");
-        router.replace(url.pathname + url.search);
-      }
-    } else if (authError) {
-      open("signin", "An authentication error occurred. Please try again.");
-      // Mark error as checked and remove error from URL
-      errorCheckedRef.current = true;
-      // Use replace to remove the error parameter from URL
-      if (typeof window !== 'undefined') {
-        const url = new URL(window.location.href);
-        url.searchParams.delete("error");
-        router.replace(url.pathname + url.search);
-      }
-    }
+    handleAuthErrors(authError, open, router, errorCheckedRef);
   }, [searchParams, open, router]);
 
   return (
@@ -76,7 +56,7 @@ export function AuthDialog() {
           onValueChange={(val) => setView(val as "signin" | "signup")}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-2 bg-primary/3 dark:bg-secondary">
             <TabsTrigger value="signin" className="cursor-pointer">
               Sign In
             </TabsTrigger>
@@ -85,7 +65,7 @@ export function AuthDialog() {
             </TabsTrigger>
           </TabsList>
 
-          {/* --- Sign In Tab --- */}
+          {/* Sign In Tab */}
           <TabsContent value="signin">
             <Card className="border-none shadow-none">
               <CardContent className="space-y-4 p-0">
@@ -93,7 +73,9 @@ export function AuthDialog() {
 
                 <div className="flex items-center gap-4">
                   <Separator className="flex-1" />
-                  <span className="text-xs text-muted-foreground">or login with:</span>
+                  <span className="text-xs text-muted-foreground">
+                    or login with:
+                  </span>
                   <Separator className="flex-1" />
                 </div>
 
@@ -102,7 +84,7 @@ export function AuthDialog() {
             </Card>
           </TabsContent>
 
-          {/* --- Sign Up Tab --- */}
+          {/* Sign Up Tab */}
           <TabsContent value="signup">
             <Card className="border-none shadow-none">
               <CardContent className="space-y-4 p-0">
@@ -110,7 +92,9 @@ export function AuthDialog() {
 
                 <div className="flex items-center gap-4">
                   <Separator className="flex-1" />
-                  <span className="text-xs text-muted-foreground">or login with:</span>
+                  <span className="text-xs text-muted-foreground">
+                    or login with:
+                  </span>
                   <Separator className="flex-1" />
                 </div>
 

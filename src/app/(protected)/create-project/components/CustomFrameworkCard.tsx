@@ -1,15 +1,15 @@
 import React from "react";
-import { useProjectForm } from "../context/ProjectFormContext";
-import { CustomItemCard } from "./CustomItemCard";
 
-interface CustomFrameworkCardProps {
-  isPredefinedFramework: (frameworkName: string) => boolean;
-}
+import { CustomItemCard } from "@@/create-project/components/CustomItemCard";
+import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
+import { CustomFrameworkCardProps } from "@@/create-project/types/types";
 
 /**
  * Component for adding custom frameworks that aren't in the predefined list
  */
-export function CustomFrameworkCard({ isPredefinedFramework }: CustomFrameworkCardProps) {
+export function CustomFrameworkCard({
+  isPredefinedFramework,
+}: CustomFrameworkCardProps) {
   const {
     form,
     customFramework,
@@ -17,10 +17,12 @@ export function CustomFrameworkCard({ isPredefinedFramework }: CustomFrameworkCa
     addCustomFramework,
     removeCustomFramework,
   } = useProjectForm();
-  
+
   // Get custom frameworks (those not in the predefined options)
   const getCustomFrameworks = () => {
-    return form.watch("frameworks").filter((fw: string) => !isPredefinedFramework(fw));
+    return form
+      .watch("frameworks")
+      .filter((fw: string) => !isPredefinedFramework(fw));
   };
 
   // Check if custom frameworks limit reached
@@ -41,4 +43,4 @@ export function CustomFrameworkCard({ isPredefinedFramework }: CustomFrameworkCa
       itemType="framework"
     />
   );
-} 
+}
