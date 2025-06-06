@@ -14,8 +14,8 @@ Power Projects is a collaborative platform designed to help developers of all sk
 
 ### Collaborative Tools
 - Built-in real-time chat and direct messaging
-- Agile development tools including Scrum boards and task tracking
-- GitHub integration for seamless code management
+- Agile development tools including Scrum boards for task tracking
+- GitHub integration for seamless CI/CD tools
 
 ### For All Skill Levels
 - Beginner-friendly projects with mentorship opportunities
@@ -25,24 +25,25 @@ Power Projects is a collaborative platform designed to help developers of all sk
 ## Tech Stack
 
 1. **Frontend**
-*  ![Next.js](https://img.shields.io/badge/-Next.js-000000?style=flat&logo=next.js) ![TailwindCSS](https://img.shields.io/badge/-TailwindCSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white) [![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000?logo=shadcnui&logoColor=fff)](#) ![Radix UI](https://img.shields.io/badge/-Radix%20UI-161618?style=flat&logo=radix-ui)
-
+*  ![Next.js](https://img.shields.io/badge/-Next.js-000000?style=flat&logo=next.js) ![React](https://img.shields.io/badge/React-%2320232a.svg?style=flat&logo=react&logoColor=%2361DAFB) ![TailwindCSS](https://img.shields.io/badge/-TailwindCSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white) [![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000?logo=shadcnui&logoColor=fff)](#)
 * React-beautiful-dnd for scrum board (TBD)
 2. **Backend**
 * ![Next.js](https://img.shields.io/badge/-Next.js%20API-000000?style=flat&logo=next.js)
-* ![GitHub](https://img.shields.io/badge/-GitHub%20OAuth-181717?style=flat&logo=github)
+* ![TanStack Query](https://img.shields.io/badge/-TanStack%20Query-FF4154?style=flat&logo=react%20query&logoColor=white)
 * ![Socket.io](https://img.shields.io/badge/-Socket.io-010101?style=flat&logo=socket.io)
 3. **Authentication**
-* ![NextAuth.js](https://img.shields.io/badge/-NextAuth.js-000000?style=flat&logo=next.js)
+* ![Auth.js](https://img.shields.io/badge/-Auth.js-000000?style=flat&logo=next.js)
+* ![GitHub](https://img.shields.io/badge/-GitHub%20OAuth-181717?style=flat&logo=github)
 * Student e-mail verification (TBD)
 4. **Database and Storage**
 * ![Supabase](https://img.shields.io/badge/-Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
+* ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
 5. **Hosting**
 * ![Vercel](https://img.shields.io/badge/-Vercel-000000?style=flat&logo=vercel)
 
 
 ## Getting Started
-Visit https://powerprojects.vercel.app/home and check back for more features!
+Visit https://powerprojects.vercel.app/ and check back for more features!
 
 or
 
@@ -90,7 +91,7 @@ npm run dev
 I welcome contributions to Power Projects! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated.
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create your feature branch (`git checkout -b new-feature`)
+3. Commit your changes (`git commit -m 'Add a new feature'`)
+4. Push to the branch (`git push origin new-feature`)
 5. Open a Pull Request
