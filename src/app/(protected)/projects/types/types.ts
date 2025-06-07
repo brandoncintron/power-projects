@@ -7,7 +7,6 @@ export interface Owner {
 }
 
 export interface Applicants {
-  // Also export if needed elsewhere
   userId: string;
   status: string | null;
   appliedAt: Date;
@@ -109,19 +108,8 @@ export interface ProjectTabsProps {
   projectId: string;
 }
 
-export interface ProjectListItemProps {
+export interface AnimatedProjectItem {
   project: ProjectWithDetails;
-  hasApplied?: boolean;
-  isCollaborator?: boolean;
-  userId?: string;
-}
-
-export interface FilteredProjectListProps {
-  projects: ProjectWithDetails[];
-  filterTags: string[];
-  userApplications?: string[];
-  userCollaborations?: string[];
-  userId?: string;
 }
 
 export interface ActivityItem {

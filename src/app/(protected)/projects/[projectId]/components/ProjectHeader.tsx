@@ -1,12 +1,19 @@
 "use client";
 
-import { Clock, GitBranch, Pencil, Users } from "lucide-react";
-import Link from "next/link";
+import { useState } from "react";
 
+import { Clock, GitBranch, Pencil, Users, ExternalLink, Unlink } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { useGitHubDialog } from "@/app/(protected)/projects/[projectId]/hooks/useGitHubDialog";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/ui/loading-context";
+import { Badge } from "@/components/ui/badge";
+import { setToast } from "@/components/ShowToast";
+import { LoadingSpinner } from "@/components/ui/loading";
 
-import { ProjectHeaderProps } from "@@/projects/types/types";
+import { ProjectHeaderProps } from "../types/types";
 
 /* Project Header - Displays project title, metadata and owner actions */
 export function ProjectHeader({
@@ -15,12 +22,65 @@ export function ProjectHeader({
   projectId,
   createdAt,
   isOwner,
+  githubConnection,
 }: ProjectHeaderProps) {
   const { showLoading } = useLoading();
+  const { open: openGitHubDialog } = useGitHubDialog();
+  const router = useRouter();
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
+
+  const isGitHubConnected = githubConnection?.githubRepoUrl && githubConnection?.githubRepoName;
+
+  const handleDisconnectRepository = async () => {
+    if (!isGitHubConnected) return;
+
+    setIsDisconnecting(true);
+    try {
+      const response = await fetch("/api/github/connect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          projectId,
+          // No repository parameter = disconnect
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to disconnect repository");
+      }
+
+      // Set success toast
+      setToast(
+        "Repository disconnected successfully!",
+        "success",
+        "githubDisconnectStatus"
+      );
+
+      // Refresh the page to show updated header
+      router.refresh();
+      
+    } catch (error) {
+      console.error("Failed to disconnect repository:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to disconnect repository";
+      
+      // Set error toast
+      setToast(
+        errorMessage,
+        "error",
+        "githubDisconnectStatus"
+      );
+    } finally {
+      setIsDisconnecting(false);
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-      <div>
+      <div className="flex-1">
         <h1 className="text-3xl font-bold mb-2">{projectName}</h1>
         <div className="flex items-center gap-4 text-muted-foreground">
           <span className="flex items-center gap-1">
@@ -32,13 +92,58 @@ export function ProjectHeader({
             Created {createdAt.toLocaleDateString()}
           </span>
         </div>
+        
+        {/* GitHub Connection Status */}
+        {isGitHubConnected && (
+          <div className="mt-3 flex items-center gap-2">
+            <Badge variant="secondary" className="flex items-center gap-1">
+              <GitBranch size={12} />
+              Connected to GitHub
+            </Badge>
+            <Link
+              href={githubConnection.githubRepoUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
+            >
+              <span>
+                {githubConnection.githubRepoOwner}/{githubConnection.githubRepoName}
+              </span>
+              <ExternalLink size={12} />
+            </Link>
+          </div>
+        )}
       </div>
+      
       {isOwner && (
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <GitBranch className="mr-2 h-4 w-4" />
-            Connect GitHub
-          </Button>
+          {!isGitHubConnected ? (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => openGitHubDialog()}
+            >
+              <GitBranch className="mr-2 h-4 w-4" />
+              Connect GitHub
+            </Button>
+          ) : (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleDisconnectRepository}
+              disabled={isDisconnecting}
+              className="min-w-[140px]"
+            >
+              {isDisconnecting ? (
+                <LoadingSpinner className="h-4 w-4" />
+              ) : (
+                <>
+                  <Unlink className="mr-2 h-4 w-4" />
+                  Disconnect Repository
+                </>
+              )}
+            </Button>
+          )}
           <Link
             href={`/projects/${projectId}/edit`}
             onClick={() => showLoading("Loading project editor...")}

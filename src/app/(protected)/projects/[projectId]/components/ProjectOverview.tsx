@@ -1,13 +1,10 @@
 "use client";
 
-import { ApplicationTypeCard } from "@@/projects/[projectId]/components/ApplicationTypeCard";
-import { CompletionDateCard } from "@@/projects/[projectId]/components/CompletionDateCard";
-import { DatabasesCard } from "@@/projects/[projectId]/components/DatabasesCard";
-import { DescriptionCard } from "@@/projects/[projectId]/components/DescriptionCard";
-import { FrameworksCard } from "@@/projects/[projectId]/components/FrameworksCard";
-import { RecentActivityCard } from "@@/projects/[projectId]/components/RecentActivityCard";
-import { TeamMembersCard } from "@@/projects/[projectId]/components/TeamMembersCard";
-import { ProjectOverviewProps } from "@@/projects/types/types";
+import { DescriptionCard } from "./DescriptionCard";
+import { ProjectDetailsCard } from "./ProjectDetailsCard";
+import { RecentActivityCard } from "./RecentActivityCard";
+import { TeamMembersCard } from "./TeamMembersCard";
+import { ProjectOverviewProps } from "../types/types";
 
 export function ProjectOverview({
   applicationType,
@@ -19,8 +16,11 @@ export function ProjectOverview({
   collaborators = [],
   isOwner = false,
   projectId = "",
+  githubConnection,
+  session,
 }: ProjectOverviewProps) {
-  // Convert string date to Date object if needed
+  
+  
   const dateObject = completionDate
     ? typeof completionDate === "string"
       ? new Date(completionDate)
@@ -40,33 +40,22 @@ export function ProjectOverview({
           <DescriptionCard description={description || ""} />
 
           {/* Recent Activity Card */}
-          <RecentActivityCard />
+          <RecentActivityCard 
+            projectId={projectId}
+            githubConnection={githubConnection}
+            session={session}
+          />
         </div>
 
         {/* Right Column: Project Details + Team */}
         <div className="space-y-6">
-          <div className="p-6 bg-card shadow-sm border rounded-md">
-            <h2 className="text-xl font-semibold mb-4">Project Details</h2>
-            <div className="space-y-4">
-              {/* Application Type */}
-              <ApplicationTypeCard
-                applicationType={applicationType as string}
-              />
-
-              {/* Frameworks & Technologies */}
-              {frameworks && frameworks.length > 0 && (
-                <FrameworksCard frameworks={frameworks} />
-              )}
-
-              {/* Databases */}
-              {databases && databases.length > 0 && (
-                <DatabasesCard databases={databases} />
-              )}
-
-              {/* Completion Date */}
-              <CompletionDateCard completionDate={dateObject} />
-            </div>
-          </div>
+          {/* Project Details Card */}
+          <ProjectDetailsCard
+            applicationType={applicationType as string}
+            frameworks={frameworks}
+            databases={databases}
+            completionDate={dateObject}
+          />
 
           {/* Team Members Card */}
           <TeamMembersCard
