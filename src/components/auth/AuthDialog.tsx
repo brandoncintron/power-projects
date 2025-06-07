@@ -18,7 +18,7 @@ export function AuthDialog() {
 
   return (
     <Dialog open={isOpen} onOpenChange={close}>
-      <DialogContent className="sm:max-w-[400px] rounded-2xl p-8 shadow-xl border bg-white dark:bg-zinc-900">
+      <DialogContent className="sm:max-w-[400px] rounded-2xl p-8 shadow-xl border bg-card">
         <VisuallyHidden>
           <DialogDescription />
         </VisuallyHidden>

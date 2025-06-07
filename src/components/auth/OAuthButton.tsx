@@ -13,13 +13,13 @@ import { LoadingSpinner } from "@/components/ui/loading";
  * Sign in with Github button
  */
 
-export default function OAuthButton() {
+export default function OAuthButton({ callbackUrl }: { callbackUrl: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const onClick = () => {
     setIsLoading(true);
     signIn("github", {
-      callbackUrl: DEFAULT_LOGIN_REDIRECT,
+      callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
     });
   };
 
@@ -27,7 +27,7 @@ export default function OAuthButton() {
     <div className="w-full">
       <Button
         onClick={onClick}
-        className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white font-medium text-base border-0 transition-colors duration-200"
+        className="w-full h-12 bg-slate-900 hover:bg-slate-800 text-white font-medium text-base border-0 transition-colors duration-200"
         disabled={isLoading}
       >
         {isLoading ? (

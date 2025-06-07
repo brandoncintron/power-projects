@@ -110,7 +110,7 @@ export default async function MyProjectsPage() {
 
         {/* Display error if any */}
         {fetchError && (
-          <div className="text-center py-10 text-red-600 bg-red-50 rounded-md mb-6">
+          <div className="text-center py-10 text-destructive bg-destructive/5 rounded-md mb-6">
             <p>{fetchError}</p>
           </div>
         )}

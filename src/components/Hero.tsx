@@ -33,7 +33,7 @@ export default function Hero({ session }: HeroProps) {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-20">
           <Button
             size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-white sm:mx-0 mx-auto"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground sm:mx-0 mx-auto"
             onClick={() => {
               if (session) {
                 router.push("/create-project");
@@ -48,7 +48,7 @@ export default function Hero({ session }: HeroProps) {
           <Button
             variant="outline"
             size="lg"
-            className="border-gray-600 hover:text-white hover:bg-[#161722] sm:mx-0 mx-auto dark:bg-[#161722]"
+            className="border-muted-foreground hover:text-primary-foreground hover:bg-primary sm:mx-0 mx-auto"
             onClick={() => handleNavigation("about")}
           >
             Learn More <ChevronRight />
@@ -59,12 +59,12 @@ export default function Hero({ session }: HeroProps) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left px-4 pt-6 max-w-5xl mx-auto">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Compass className="h-5 w-5 text-blue-400" />
-              <h3 className="text-xl font-semibold text-blue-400">
+              <Compass className="h-5 w-5 text-primary" />
+              <h3 className="text-xl font-semibold text-primary">
                 Discover Projects
               </h3>
             </div>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Find projects that match your skill level or explore new
               technologies. Connect with students from your university or
               collaborate on open-source projects.
@@ -73,12 +73,12 @@ export default function Hero({ session }: HeroProps) {
 
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="h-5 w-5 text-blue-400" />
-              <h3 className="text-xl font-semibold text-blue-400">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <h3 className="text-xl font-semibold text-primary">
                 Create or Contribute
               </h3>
             </div>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               <span className="font-bold">
                 Build your portfolio while making connections.{" "}
               </span>
@@ -89,12 +89,12 @@ export default function Hero({ session }: HeroProps) {
 
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Users className="h-5 w-5 text-blue-400" />
-              <h3 className="text-xl font-semibold text-blue-400">
+              <Users className="h-5 w-5 text-primary" />
+              <h3 className="text-xl font-semibold text-primary">
                 For All Skill Levels
               </h3>
             </div>
-            <p className="text-gray-400">
+            <p className="text-muted-foreground">
               Whether you&apos;re creating your first project or building a
               complex one, there&apos;s a place for you here. Learn from
               experienced developers or mentor newcomers.

@@ -79,8 +79,8 @@ export function NotificationsClient({
             <Separator className="mb-4" />
 
             {initialError && (
-              <div className="py-8 text-center">
-                <p className="text-red-500">{initialError}</p>
+              <div className="text-center py-8">
+                <p className="text-destructive">{initialError}</p>
               </div>
             )}
 

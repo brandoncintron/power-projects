@@ -49,7 +49,7 @@ export function LoadingScreen({
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           className={cn(
-            "lg:ml-[250px] fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-background to-background/95 backdrop-blur-sm",
+            "fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-background to-background/95 backdrop-blur-sm",
           )}
           style={{ zIndex }}
         >
@@ -113,7 +113,7 @@ export function LoadingSpinner({
   return (
     <div className={cn("flex items-center justify-center", className)}>
       <LuLoader className="h-8 w-8 animate-spin text-muted-foreground" />
-      <span className="ml-2 text-muted-foreground">{text}...</span>
+      <span className="ml-2 text-muted-foreground">{text}</span>
     </div>
   );
 }

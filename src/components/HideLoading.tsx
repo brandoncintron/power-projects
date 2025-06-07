@@ -13,7 +13,7 @@ import { useLoading } from "@/components/ui/loading-context";
 export function HideLoading() {
   const { hideLoading } = useLoading();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   useEffect(() => {
     hideLoading();
   }, []);

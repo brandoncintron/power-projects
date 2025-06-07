@@ -8,8 +8,8 @@ import { HideLoading } from "@/components/HideLoading";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 
-import { ProjectWithDetails } from "../types/types";
 import FilteredProjectList from "./components/FilteredProjectList";
+import { ProjectWithDetails } from "./types/types";
 
 export default async function BrowseProjectsListPage() {
   const session = await auth();
@@ -90,7 +90,7 @@ export default async function BrowseProjectsListPage() {
         </div>
 
         {fetchError && (
-          <div className="text-center py-10 text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg shadow-sm border border-red-200 dark:border-red-800/30">
+          <div className="text-center py-10 text-destructive bg-destructive/5 dark:bg-destructive/10 rounded-lg shadow-sm border border-destructive/20">
             <p>{fetchError}</p>
           </div>
         )}
@@ -103,6 +103,7 @@ export default async function BrowseProjectsListPage() {
             userApplications={userApplications}
             userCollaborations={userCollaborations}
             userId={userId}
+            session={session}
           />
         )}
       </main>
