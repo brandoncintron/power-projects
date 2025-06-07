@@ -21,9 +21,7 @@ export function ProjectDetailsCard({
       <h2 className="text-xl font-semibold mb-4">Project Details</h2>
       <div className="space-y-4">
         {/* Application Type */}
-        <ApplicationTypeCard
-          applicationType={applicationType as string}
-        />
+        <ApplicationTypeCard applicationType={applicationType as string} />
 
         {/* Frameworks & Technologies */}
         {frameworks && frameworks.length > 0 && (
@@ -40,4 +38,4 @@ export function ProjectDetailsCard({
       </div>
     </div>
   );
-} 
+}

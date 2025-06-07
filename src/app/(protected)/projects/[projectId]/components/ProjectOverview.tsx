@@ -1,10 +1,10 @@
 "use client";
 
+import { ProjectOverviewProps } from "../types/types";
 import { DescriptionCard } from "./DescriptionCard";
 import { ProjectDetailsCard } from "./ProjectDetailsCard";
 import { RecentActivityCard } from "./RecentActivityCard";
 import { TeamMembersCard } from "./TeamMembersCard";
-import { ProjectOverviewProps } from "../types/types";
 
 export function ProjectOverview({
   applicationType,
@@ -19,8 +19,6 @@ export function ProjectOverview({
   githubConnection,
   session,
 }: ProjectOverviewProps) {
-  
-  
   const dateObject = completionDate
     ? typeof completionDate === "string"
       ? new Date(completionDate)
@@ -40,7 +38,7 @@ export function ProjectOverview({
           <DescriptionCard description={description || ""} />
 
           {/* Recent Activity Card */}
-          <RecentActivityCard 
+          <RecentActivityCard
             projectId={projectId}
             githubConnection={githubConnection}
             session={session}

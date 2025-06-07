@@ -46,4 +46,4 @@ export function useGitHubDialog() {
   if (!context)
     throw new Error("useGitHubDialog must be used within GitHubDialogProvider");
   return context;
-} 
+}

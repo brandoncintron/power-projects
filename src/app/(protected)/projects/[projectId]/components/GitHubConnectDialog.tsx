@@ -3,10 +3,11 @@
 import { useState } from "react";
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { LuGithub, LuRefreshCw } from "react-icons/lu";
 import { useRouter } from "next/navigation";
+import { LuGithub, LuRefreshCw } from "react-icons/lu";
 
 import { DialogError } from "@/components/auth/DialogError";
+import { setToast } from "@/components/ShowToast";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,7 +18,6 @@ import {
 } from "@/components/ui/dialog";
 import { LoadingSpinner } from "@/components/ui/loading";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { setToast } from "@/components/ShowToast";
 
 import { useGitHubDialog } from "../hooks/useGitHubDialog";
 import { useGitHubRepos } from "../hooks/useGitHubRepos";
@@ -32,28 +32,29 @@ interface GitHubConnectDialogProps {
 export function GitHubConnectDialog({ projectId }: GitHubConnectDialogProps) {
   const router = useRouter();
   const { isOpen, close, error } = useGitHubDialog();
-  const { 
-    repositories, 
+  const {
+    repositories,
     allRepositories,
-    isLoading, 
-    error: reposError, 
-    searchTerm, 
-    setSearchTerm, 
-    refetch 
+    isLoading,
+    error: reposError,
+    searchTerm,
+    setSearchTerm,
+    refetch,
   } = useGitHubRepos();
-  
-  const [selectedRepository, setSelectedRepository] = useState<GitHubRepository | null>(null);
+
+  const [selectedRepository, setSelectedRepository] =
+    useState<GitHubRepository | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
 
   const handleRepositorySelect = (repository: GitHubRepository) => {
     setSelectedRepository(
-      selectedRepository?.id === repository.id ? null : repository
+      selectedRepository?.id === repository.id ? null : repository,
     );
   };
 
   const handleConnectRepository = async () => {
     if (!selectedRepository) return;
-    
+
     setIsConnecting(true);
     try {
       const response = await fetch("/api/github/connect", {
@@ -72,28 +73,24 @@ export function GitHubConnectDialog({ projectId }: GitHubConnectDialogProps) {
       if (!response.ok) {
         throw new Error(data.error || "Failed to connect repository");
       }
-      
+
       // Set success toast
       setToast(
         `Successfully connected to ${selectedRepository.name}!`,
         "success",
-        "githubConnectStatus"
+        "githubConnectStatus",
       );
 
       // Close dialog and refresh the page to show updated header
       close();
       router.refresh();
-      
     } catch (error) {
       console.error("Failed to connect repository:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to connect repository";
-      
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to connect repository";
+
       // Set error toast
-      setToast(
-        errorMessage,
-        "error",
-        "githubConnectStatus"
-      );
+      setToast(errorMessage, "error", "githubConnectStatus");
     } finally {
       setIsConnecting(false);
     }
@@ -107,7 +104,7 @@ export function GitHubConnectDialog({ projectId }: GitHubConnectDialogProps) {
         <VisuallyHidden>
           <DialogDescription />
         </VisuallyHidden>
-        
+
         <DialogHeader className="p-6 pb-4">
           <DialogTitle className="text-2xl font-semibold flex items-center gap-2">
             <LuGithub className="h-6 w-6" />
@@ -120,7 +117,7 @@ export function GitHubConnectDialog({ projectId }: GitHubConnectDialogProps) {
 
         <div className="px-6">
           {displayError && <DialogError message={displayError} />}
-          
+
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12">
               <LoadingSpinner text="Loading repositories" />
@@ -149,10 +146,9 @@ export function GitHubConnectDialog({ projectId }: GitHubConnectDialogProps) {
               {/* Repository Count */}
               <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span>
-                  {repositories.length === allRepositories.length 
+                  {repositories.length === allRepositories.length
                     ? `${allRepositories.length} repositories`
-                    : `${repositories.length} of ${allRepositories.length} repositories`
-                  }
+                    : `${repositories.length} of ${allRepositories.length} repositories`}
                 </span>
               </div>
 
@@ -162,10 +158,9 @@ export function GitHubConnectDialog({ projectId }: GitHubConnectDialogProps) {
                   <div className="flex flex-col items-center justify-center py-8 text-center">
                     <LuGithub className="h-12 w-12 text-muted-foreground mb-4" />
                     <p className="text-muted-foreground">
-                      {searchTerm 
-                        ? "No repositories match your search" 
-                        : "No repositories found"
-                      }
+                      {searchTerm
+                        ? "No repositories match your search"
+                        : "No repositories found"}
                     </p>
                     {searchTerm && (
                       <Button
@@ -214,4 +209,4 @@ export function GitHubConnectDialog({ projectId }: GitHubConnectDialogProps) {
       </DialogContent>
     </Dialog>
   );
-} 
+}

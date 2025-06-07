@@ -1,34 +1,37 @@
+import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { Octokit } from "octokit";
-import { auth } from "@/auth";
+
 import { db } from "@/lib/db";
 
 export async function GET(
   request: NextRequest,
   props: { params: Promise<{ projectId: string }> },
 ) {
+  const session = await auth();
 
-    const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const params = await props.params;
-    const { projectId } = params;
+  const params = await props.params;
+  const { projectId } = params;
 
   const project = await db.project.findFirst({
     where: {
       id: projectId,
       OR: [
         { ownerId: session.user.id },
-        { collaborators: { some: { userId: session.user.id } } }
-      ]
+        { collaborators: { some: { userId: session.user.id } } },
+      ],
     },
   });
 
   if (!project || !project.githubRepoOwner || !project.githubRepoName) {
-    return NextResponse.json({ error: "Project or GitHub repo not configured" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Project or GitHub repo not configured" },
+      { status: 404 },
+    );
   }
 
   const githubAccount = await db.account.findFirst({
@@ -36,7 +39,10 @@ export async function GET(
   });
 
   if (!githubAccount?.access_token) {
-    return NextResponse.json({ error: "GitHub account not connected" }, { status: 400 });
+    return NextResponse.json(
+      { error: "GitHub account not connected" },
+      { status: 400 },
+    );
   }
 
   const octokit = new Octokit({ auth: githubAccount.access_token });
@@ -63,37 +69,63 @@ export async function GET(
             { data: latestPullRequests },
             { data: latestCommits },
           ] = await Promise.all([
-            octokit.rest.issues.listForRepo({ owner, repo, state: "all", sort: "updated", per_page: 1 }),
-            octokit.rest.pulls.list({ owner, repo, state: "all", sort: "updated", per_page: 1 }),
+            octokit.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: "all",
+              sort: "updated",
+              per_page: 1,
+            }),
+            octokit.rest.pulls.list({
+              owner,
+              repo,
+              state: "all",
+              sort: "updated",
+              per_page: 1,
+            }),
             octokit.rest.repos.listCommits({ owner, repo, per_page: 1 }),
           ]);
 
           // Collect all potential new events into one array with their timestamps
           const allRecentEvents = [];
           if (latestIssues[0]) {
-            allRecentEvents.push({ type: 'issue', timestamp: new Date(latestIssues[0].updated_at) });
+            allRecentEvents.push({
+              type: "issue",
+              timestamp: new Date(latestIssues[0].updated_at),
+            });
           }
           if (latestPullRequests[0]) {
-            allRecentEvents.push({ type: 'pull_request', timestamp: new Date(latestPullRequests[0].updated_at) });
+            allRecentEvents.push({
+              type: "pull_request",
+              timestamp: new Date(latestPullRequests[0].updated_at),
+            });
           }
           if (latestCommits[0]) {
-            allRecentEvents.push({ type: 'commit', timestamp: new Date(latestCommits[0].commit.author!.date!) });
+            allRecentEvents.push({
+              type: "commit",
+              timestamp: new Date(latestCommits[0].commit.author!.date!),
+            });
           }
-          
+
           // If there are no events, do nothing.
           if (allRecentEvents.length === 0) return;
 
           // Find the most recent event among all types
-          allRecentEvents.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+          allRecentEvents.sort(
+            (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
+          );
           const mostRecentEvent = allRecentEvents[0];
 
           // If a new event has appeared since our last check, send an update.
           if (mostRecentEvent.timestamp > lastCheckTimestamp) {
-            console.log(`New event found: ${mostRecentEvent.type} at ${mostRecentEvent.timestamp.toISOString()}`);
+            console.log(
+              `New event found: ${mostRecentEvent.type} at ${mostRecentEvent.timestamp.toISOString()}`,
+            );
             lastCheckTimestamp = mostRecentEvent.timestamp;
-            sendEvent({ message: `New event of type ${mostRecentEvent.type} detected.` });
+            sendEvent({
+              message: `New event of type ${mostRecentEvent.type} detected.`,
+            });
           }
-
         } catch (error) {
           console.error("SSE: Error fetching GitHub events:", error);
 
@@ -106,7 +138,7 @@ export async function GET(
       const intervalId = setInterval(checkForUpdates, 30000);
 
       // Clean up when the client disconnects
-      request.signal.addEventListener('abort', () => {
+      request.signal.addEventListener("abort", () => {
         // DEBUG - console.log("SSE: Client disconnected, closing stream.");
         clearInterval(intervalId);
         controller.close();
@@ -121,7 +153,7 @@ export async function GET(
   return new NextResponse(stream, {
     headers: {
       "Content-Type": "text/event-stream",
-      "Connection": "keep-alive",
+      Connection: "keep-alive",
       "Cache-Control": "no-cache, no-transform",
     },
   });

@@ -1,18 +1,16 @@
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 import { Octokit } from "octokit";
-import { auth } from "@/auth";
+
 import { db } from "@/lib/db";
 
 export async function GET() {
   try {
     // Get the current session
     const session = await auth();
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Get the user's GitHub account from the database
@@ -26,7 +24,7 @@ export async function GET() {
     if (!githubAccount?.access_token) {
       return NextResponse.json(
         { error: "GitHub account not connected or access token not found" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -51,8 +49,10 @@ export async function GET() {
     } catch (authError) {
       console.error("Token validation failed:", authError);
       return NextResponse.json(
-        { error: "Invalid GitHub token. Please reconnect your GitHub account." },
-        { status: 401 }
+        {
+          error: "Invalid GitHub token. Please reconnect your GitHub account.",
+        },
+        { status: 401 },
       );
     }
 
@@ -68,21 +68,20 @@ export async function GET() {
       repositories: repos,
       count: repos.length,
     });
-
   } catch (error) {
     console.error("GitHub API Error:", error);
-    
+
     // Handle specific GitHub API errors
     if (error instanceof Error) {
       return NextResponse.json(
         { error: `GitHub API Error: ${error.message}` },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     return NextResponse.json(
       { error: "Failed to fetch repositories" },
-      { status: 500 }
+      { status: 500 },
     );
   }
-} 
+}

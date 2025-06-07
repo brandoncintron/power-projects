@@ -167,4 +167,4 @@ export interface ProjectTabsProps {
   projectId: string;
   githubConnection?: GitHubConnectionData;
   session: Session | null;
-} 
+}

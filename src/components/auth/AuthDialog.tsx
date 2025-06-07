@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export function AuthDialog() {
   const { isOpen, close, error } = useAuthDialog();
@@ -34,7 +35,7 @@ export function AuthDialog() {
         {error && <DialogError message={error} />}
 
         <div className="flex flex-col items-center space-y-4">
-          <OAuthButton />
+          <OAuthButton callbackUrl={DEFAULT_LOGIN_REDIRECT} />
         </div>
       </DialogContent>
     </Dialog>

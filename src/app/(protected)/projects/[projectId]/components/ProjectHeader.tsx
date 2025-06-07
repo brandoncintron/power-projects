@@ -2,16 +2,23 @@
 
 import { useState } from "react";
 
-import { Clock, GitBranch, Pencil, Users, ExternalLink, Unlink } from "lucide-react";
+import { useGitHubDialog } from "@/app/(protected)/projects/[projectId]/hooks/useGitHubDialog";
+import {
+  Clock,
+  ExternalLink,
+  GitBranch,
+  Pencil,
+  Unlink,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { useGitHubDialog } from "@/app/(protected)/projects/[projectId]/hooks/useGitHubDialog";
-import { Button } from "@/components/ui/button";
-import { useLoading } from "@/components/ui/loading-context";
-import { Badge } from "@/components/ui/badge";
 import { setToast } from "@/components/ShowToast";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading";
+import { useLoading } from "@/components/ui/loading-context";
 
 import { ProjectHeaderProps } from "../types/types";
 
@@ -29,7 +36,8 @@ export function ProjectHeader({
   const router = useRouter();
   const [isDisconnecting, setIsDisconnecting] = useState(false);
 
-  const isGitHubConnected = githubConnection?.githubRepoUrl && githubConnection?.githubRepoName;
+  const isGitHubConnected =
+    githubConnection?.githubRepoUrl && githubConnection?.githubRepoName;
 
   const handleDisconnectRepository = async () => {
     if (!isGitHubConnected) return;
@@ -57,22 +65,20 @@ export function ProjectHeader({
       setToast(
         "Repository disconnected successfully!",
         "success",
-        "githubDisconnectStatus"
+        "githubDisconnectStatus",
       );
 
       // Refresh the page to show updated header
       router.refresh();
-      
     } catch (error) {
       console.error("Failed to disconnect repository:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to disconnect repository";
-      
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to disconnect repository";
+
       // Set error toast
-      setToast(
-        errorMessage,
-        "error",
-        "githubDisconnectStatus"
-      );
+      setToast(errorMessage, "error", "githubDisconnectStatus");
     } finally {
       setIsDisconnecting(false);
     }
@@ -92,7 +98,7 @@ export function ProjectHeader({
             Created {createdAt.toLocaleDateString()}
           </span>
         </div>
-        
+
         {/* GitHub Connection Status */}
         {isGitHubConnected && (
           <div className="mt-3 flex items-center gap-2">
@@ -107,29 +113,30 @@ export function ProjectHeader({
               className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
             >
               <span>
-                {githubConnection.githubRepoOwner}/{githubConnection.githubRepoName}
+                {githubConnection.githubRepoOwner}/
+                {githubConnection.githubRepoName}
               </span>
               <ExternalLink size={12} />
             </Link>
           </div>
         )}
       </div>
-      
+
       {isOwner && (
         <div className="flex gap-2">
           {!isGitHubConnected ? (
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => openGitHubDialog()}
             >
               <GitBranch className="mr-2 h-4 w-4" />
               Connect GitHub
             </Button>
           ) : (
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleDisconnectRepository}
               disabled={isDisconnecting}
               className="min-w-[140px]"

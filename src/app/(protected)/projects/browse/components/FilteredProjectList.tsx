@@ -10,7 +10,11 @@ import { Input } from "@/components/ui/input";
 
 import { useAnimatedItemsInView } from "../hooks/useAnimatedItemsInView";
 import { useProjectFiltering } from "../hooks/useProjectFiltering";
-import { AnimatedProjectItemProps, FilteredProjectListProps, ProjectWithDetails } from "../types/types";
+import {
+  AnimatedProjectItemProps,
+  FilteredProjectListProps,
+  ProjectWithDetails,
+} from "../types/types";
 import ProjectListItem from "./ProjectListItem";
 
 // Animated project item that fades in when in view

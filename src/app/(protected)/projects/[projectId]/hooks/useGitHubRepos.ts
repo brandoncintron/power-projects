@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 
 import type {
-  GitHubRepository,
   GitHubReposError,
+  GitHubRepository,
   GitHubReposResponse,
   UseGitHubReposState,
 } from "../types/types";
@@ -19,16 +19,20 @@ export function useGitHubRepos() {
 
     try {
       const response = await fetch("/api/github/repos");
-      const data: GitHubReposResponse | GitHubReposError = await response.json();
+      const data: GitHubReposResponse | GitHubReposError =
+        await response.json();
 
       if (!response.ok) {
-        throw new Error((data as GitHubReposError).error || "Failed to fetch repositories");
+        throw new Error(
+          (data as GitHubReposError).error || "Failed to fetch repositories",
+        );
       }
 
       const successData = data as GitHubReposResponse;
       setRepositories(successData.repositories);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred";
       setError(errorMessage);
       setRepositories([]);
     } finally {
@@ -37,10 +41,11 @@ export function useGitHubRepos() {
   }, []);
 
   // Filter repositories based on search term
-  const filteredRepositories = repositories.filter((repo) =>
-    repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    repo.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    repo.language?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredRepositories = repositories.filter(
+    (repo) =>
+      repo.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      repo.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      repo.language?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   // Fetch repositories on mount
@@ -61,4 +66,4 @@ export function useGitHubRepos() {
     searchTerm: string;
     setSearchTerm: (term: string) => void;
   };
-} 
+}

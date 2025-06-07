@@ -7,9 +7,9 @@ import { HideLoading } from "@/components/HideLoading";
 import { ShowToast } from "@/components/ShowToast";
 import { db } from "@/lib/db";
 
+import { GitHubConnectDialog } from "./components/GitHubConnectDialog";
 import { ProjectHeader } from "./components/ProjectHeader";
 import { ProjectTabs } from "./components/ProjectTabs";
-import { GitHubConnectDialog } from "./components/GitHubConnectDialog";
 
 /**
  * Project Detail Page - Displays comprehensive information about a specific project

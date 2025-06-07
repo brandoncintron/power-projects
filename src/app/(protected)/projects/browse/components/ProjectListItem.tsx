@@ -12,6 +12,7 @@ import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
 
 import { useProjectApplication } from "@@/projects/browse/hooks/useProjectApplication";
+
 import { ProjectListItemProps } from "../types/types";
 
 export default function ProjectListItem({

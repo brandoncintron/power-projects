@@ -3,8 +3,8 @@
 import { useState, useTransition } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LuLoader } from "react-icons/lu";
 import { useForm } from "react-hook-form";
+import { LuLoader } from "react-icons/lu";
 import { toast } from "sonner";
 
 import { updateProfile } from "@/actions/update";
@@ -24,6 +24,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+
 import { UsernameFormType, usernameSchema } from "./types/types";
 
 export function SetUsernamePopup() {
@@ -39,11 +40,11 @@ export function SetUsernamePopup() {
 
   const handleSubmit = async (values: UsernameFormType) => {
     setError("");
-    
+
     startTransition(async () => {
       try {
         const result = await updateProfile(values);
-        
+
         if (result?.error) {
           setError(result.error);
           toast.error("Could not update your profile. Please try again.", {
@@ -68,12 +69,14 @@ export function SetUsernamePopup() {
     <div className="flex items-center justify-center min-h-screen w-full bg-background px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">Welcome to Power Projects!</h1>
+          <h1 className="text-3xl font-bold mb-2">
+            Welcome to Power Projects!
+          </h1>
           <p className="text-muted-foreground">
             Just one more step to get started
           </p>
         </div>
-        
+
         <Card className="w-full shadow-lg">
           <CardHeader className="text-center">
             <CardTitle>Set Your Username</CardTitle>
@@ -106,12 +109,14 @@ export function SetUsernamePopup() {
                     </FormItem>
                   )}
                 />
-                <Button 
-                  className="w-full h-12 text-base" 
-                  type="submit" 
+                <Button
+                  className="w-full h-12 text-base"
+                  type="submit"
                   disabled={isPending}
                 >
-                  {isPending && <LuLoader className="mr-2 size-4 animate-spin" />}
+                  {isPending && (
+                    <LuLoader className="mr-2 size-4 animate-spin" />
+                  )}
                   {isPending ? "Setting username..." : "Continue to Dashboard"}
                 </Button>
               </form>

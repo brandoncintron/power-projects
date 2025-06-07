@@ -6,10 +6,7 @@ const AccessButtons = () => {
 
   return (
     <div>
-      <button
-        onClick={() => open()}
-        className="no-underline cursor-pointer"
-      >
+      <button onClick={() => open()} className="no-underline cursor-pointer">
         <span className="text-base mr-4">Sign In</span>
       </button>
 

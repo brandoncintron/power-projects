@@ -1,4 +1,5 @@
 import { Session } from "next-auth";
+
 import { ProjectWithDetails as BaseProjectWithDetails } from "../../types/types";
 
 // Re-export for local use
@@ -29,4 +30,4 @@ export interface ProjectListItemProps {
   isCollaborator?: boolean;
   userId?: string;
   session: Session | null;
-} 
+}

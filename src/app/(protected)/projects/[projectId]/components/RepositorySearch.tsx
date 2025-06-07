@@ -6,10 +6,10 @@ import { Input } from "@/components/ui/input";
 
 import type { RepositorySearchProps } from "../types/types";
 
-export function RepositorySearch({ 
-  value, 
-  onChange, 
-  placeholder = "Search repositories..." 
+export function RepositorySearch({
+  value,
+  onChange,
+  placeholder = "Search repositories...",
 }: RepositorySearchProps) {
   return (
     <div className="relative">
@@ -23,4 +23,4 @@ export function RepositorySearch({
       />
     </div>
   );
-} 
+}

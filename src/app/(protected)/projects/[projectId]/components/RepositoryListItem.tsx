@@ -8,10 +8,10 @@ import { cn } from "@/lib/utils";
 
 import type { RepositoryListItemProps } from "../types/types";
 
-export function RepositoryListItem({ 
-  repository, 
-  isSelected, 
-  onSelect 
+export function RepositoryListItem({
+  repository,
+  isSelected,
+  onSelect,
 }: RepositoryListItemProps) {
   const formatLanguageColor = (language: string | null) => {
     // Simple color mapping for common languages
@@ -29,7 +29,7 @@ export function RepositoryListItem({
       Kotlin: "bg-purple-600",
       Dart: "bg-blue-400",
     };
-    
+
     return colors[language || ""] || "bg-gray-500";
   };
 
@@ -37,9 +37,9 @@ export function RepositoryListItem({
     <div
       className={cn(
         "p-4 border rounded-lg cursor-pointer transition-all hover:shadow-md",
-        isSelected 
-          ? "border-primary bg-primary/5 shadow-sm" 
-          : "border-border hover:border-primary/50"
+        isSelected
+          ? "border-primary bg-primary/5 shadow-sm"
+          : "border-border hover:border-primary/50",
       )}
       onClick={() => onSelect(repository)}
     >
@@ -66,13 +66,16 @@ export function RepositoryListItem({
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             {repository.language && (
               <div className="flex items-center gap-1">
-                <div 
-                  className={cn("w-3 h-3 rounded-full", formatLanguageColor(repository.language))}
+                <div
+                  className={cn(
+                    "w-3 h-3 rounded-full",
+                    formatLanguageColor(repository.language),
+                  )}
                 />
                 <span>{repository.language}</span>
               </div>
             )}
-            
+
             <div className="flex items-center gap-1">
               <LuStar className="h-3 w-3" />
               <span>{repository.stargazers_count}</span>
@@ -84,7 +87,10 @@ export function RepositoryListItem({
             </div>
 
             <span>
-              Updated {formatDistanceToNow(new Date(repository.updated_at), { addSuffix: true })}
+              Updated{" "}
+              {formatDistanceToNow(new Date(repository.updated_at), {
+                addSuffix: true,
+              })}
             </span>
           </div>
         </div>
@@ -98,4 +104,4 @@ export function RepositoryListItem({
       </div>
     </div>
   );
-} 
+}

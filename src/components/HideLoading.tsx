@@ -13,7 +13,6 @@ import { useLoading } from "@/components/ui/loading-context";
 export function HideLoading() {
   const { hideLoading } = useLoading();
 
-   
   useEffect(() => {
     hideLoading();
   }, []);
