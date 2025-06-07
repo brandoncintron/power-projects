@@ -12,13 +12,14 @@ import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
 
 import { useProjectApplication } from "@@/projects/browse/hooks/useProjectApplication";
-import { ProjectListItemProps } from "@@/projects/types/types";
+import { ProjectListItemProps } from "../types/types";
 
 export default function ProjectListItem({
   project,
   hasApplied = false,
   isCollaborator = false,
   userId,
+  session,
 }: ProjectListItemProps) {
   // Project status management
   const isProjectOpen = project.status === "OPEN";
@@ -43,7 +44,7 @@ export default function ProjectListItem({
   return (
     <div
       className={`relative rounded-3xl p-4 hover:shadow-md transition-all duration-300 flex flex-col gap-2.5 hover:translate-y-[-1px] bg-card w-full
-      ${isCollaborator ? "border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200 dark:ring-emerald-900" : ""}
+      ${isCollaborator ? "border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200 dark:ring-emerald-900" : "border"}
     `}
     >
       {/* Collaboration Badge */}
@@ -145,7 +146,7 @@ export default function ProjectListItem({
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2 pt-2 border-t">
         <div className="flex items-center gap-2">
-          {isProjectOpen && !isOwner && !isCollaborator && (
+          {isProjectOpen && !isOwner && !isCollaborator && session && (
             <>
               {showAppliedState ? (
                 <Button
