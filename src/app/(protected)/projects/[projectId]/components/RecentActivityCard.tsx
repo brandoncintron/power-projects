@@ -1,108 +1,169 @@
 "use client";
 
-import { Activity, CircleUser, GitCommit, MessageSquare } from "lucide-react";
+import { Activity, ExternalLink, Github } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
+import OAuthButton from "@/components/auth/OAuthButton";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LoadingSpinner } from "@/components/ui/loading";
 
-import { ActivityItem, RecentActivityCardProps } from "@@/projects/types/types";
+import {
+  GitHubEventsRealtimeUpdater,
+  useGitHubEvents,
+} from "../hooks/useGitHubEvents";
+import { RecentActivityCardProps } from "../types/types";
+import { formatTimeAgo } from "../utils/formatTimeAgo";
+import { getActivityIcon } from "../utils/getActivityIcon";
 
 /* Recent Activity Card - Displays the most recent project activities */
 export function RecentActivityCard({
-  activities = [],
+  projectId,
+  githubConnection,
+  session,
 }: RecentActivityCardProps) {
-  // Placeholder activities for now
-  const placeholderActivities: ActivityItem[] =
-    activities.length > 0
-      ? activities
-      : [
-          {
-            id: "1",
-            type: "join",
-            user: { name: "Alex Chen" },
-            timestamp: new Date(Date.now() - 3600000), // 1 hour ago
-            content: "joined the project",
-          },
-          {
-            id: "2",
-            type: "commit",
-            user: { name: "Maria Lopez" },
-            timestamp: new Date(Date.now() - 7200000), // 2 hours ago
-            content: "pushed 3 commits to main",
-          },
-          {
-            id: "3",
-            type: "comment",
-            user: { name: "Jordan Taylor" },
-            timestamp: new Date(Date.now() - 86400000), // 1 day ago
-            content: 'commented on task "Implement user authentication"',
-          },
-        ];
+  const isGitHubConnected =
+    githubConnection?.githubRepoUrl && githubConnection?.githubRepoName;
 
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "comment":
-        return <MessageSquare size={16} className="text-blue-500" />;
-      case "commit":
-        return <GitCommit size={16} className="text-green-500" />;
-      case "join":
-        return <CircleUser size={16} className="text-purple-500" />;
-      default:
-        return <Activity size={16} className="text-orange-500" />;
-    }
-  };
+  const {
+    data: githubData,
+    isPending,
+    error,
+    isFetching,
+  } = useGitHubEvents({
+    projectId,
+    enabled: !!isGitHubConnected && !!projectId && !!session,
+  });
 
-  const formatTimeAgo = (date: Date) => {
-    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-
-    let interval = seconds / 31536000; // seconds in a year
-    if (interval > 1) return Math.floor(interval) + "y ago";
-
-    interval = seconds / 2592000; // seconds in a month
-    if (interval > 1) return Math.floor(interval) + "mo ago";
-
-    interval = seconds / 86400; // seconds in a day
-    if (interval > 1) return Math.floor(interval) + "d ago";
-
-    interval = seconds / 3600; // seconds in an hour
-    if (interval > 1) return Math.floor(interval) + "h ago";
-
-    interval = seconds / 60; // seconds in a minute
-    if (interval > 1) return Math.floor(interval) + "m ago";
-
-    return Math.floor(seconds) + "s ago";
-  };
+  const githubActivities = githubData?.activities || [];
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Activity size={18} />
-          Recent Activity
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {placeholderActivities.map((activity) => (
-            <div
-              key={activity.id}
-              className="flex items-start gap-3 pb-3 border-b border-border last:border-0 last:pb-0"
-            >
-              <div className="mt-1">{getActivityIcon(activity.type)}</div>
-              <div className="flex-1">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                  <span className="font-medium">{activity.user.name}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {formatTimeAgo(activity.timestamp)}
-                  </span>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Activity size={18} />
+              Recent Activity
+              {isGitHubConnected && (
+                <Github size={14} className="text-muted-foreground" />
+              )}
+              {isFetching && !isPending && (
+                <div className="text-xs text-muted-foreground ml-2">
+                  Updating...
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {activity.content}
+              )}
+            </div>
+            {isGitHubConnected &&
+              githubConnection?.githubRepoUrl &&
+              session && (
+                <Link
+                  href={githubConnection.githubRepoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2 text-xs"
+                  >
+                    View on GitHub <ExternalLink size={12} className="ml-1" />
+                  </Button>
+                </Link>
+              )}
+          </CardTitle>
+        </CardHeader>
+
+        {session ? (
+          <CardContent>
+            <GitHubEventsRealtimeUpdater projectId={projectId} />
+            {!isGitHubConnected ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground mb-4">
+                  Connect a GitHub repository to view activity.
                 </p>
               </div>
+            ) : isPending ? (
+              <div className="flex items-center justify-center py-8">
+                <LoadingSpinner text="Loading GitHub activity" />
+              </div>
+            ) : error ? (
+              <div className="text-center py-8 text-destructive">
+                <p>{error.message}</p>
+              </div>
+            ) : githubActivities.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">
+                  No recent activity found.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {githubActivities.map((activity) => (
+                  <div
+                    key={activity.id}
+                    className="flex items-start gap-3 pb-3 border-b last:border-0"
+                  >
+                    {activity.user.avatar ? (
+                      <Image
+                        height={24}
+                        width={24}
+                        src={activity.user.avatar}
+                        alt={activity.user.name}
+                        className="w-6 h-6 rounded-full mt-1"
+                      />
+                    ) : (
+                      <div className="mt-1">
+                        {getActivityIcon(activity.type)}
+                      </div>
+                    )}
+                    <div className="flex-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                        <span className="font-medium">
+                          {activity.user.name}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {formatTimeAgo(activity.timestamp)}
+                        </span>
+                      </div>
+                      <div className="flex items-start justify-between">
+                        <p className="text-sm text-muted-foreground mt-1 flex-1">
+                          {activity.content}
+                        </p>
+                        {activity.url && (
+                          <Link
+                            href={activity.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="ml-2 mt-1"
+                          >
+                            <ExternalLink
+                              size={12}
+                              className="text-muted-foreground hover:text-primary"
+                            />
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        ) : (
+          <CardContent>
+            <div className=" text-center py-8">
+              <div className="flex flex-col items-center justify-center">
+                <p className="text-muted-foreground mb-4">
+                  Sign in with GitHub to view recent activity for this project.
+                </p>
+                <div className="w-fit">
+                  <OAuthButton callbackUrl={`/projects/${projectId}`}/>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+          </CardContent>
+        )}
+      </Card>
   );
 }
