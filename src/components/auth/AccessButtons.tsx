@@ -11,7 +11,7 @@ const AccessButtons = () => {
       </button>
 
       <Button
-        className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-3 cursor-pointer"
+        className="font-medium px-4 py-3 cursor-pointer"
         onClick={() => open()}
       >
         Get Started

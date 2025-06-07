@@ -82,7 +82,6 @@ export default function About({ session }: { session: Session | null }) {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                   onClick={() => open()}
                 >
                   Sign Up Now
