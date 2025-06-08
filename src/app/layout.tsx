@@ -70,7 +70,7 @@ export default async function RootLayout({
                           </div>
 
                           <div className="fixed top-18 right-5 lg:left-auto md:right-4 z-50">
-                            <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground lg:hidden" />
+                            <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground max-[1439px]:block hidden" />
                           </div>
 
                           <div className="p-0 md:w-[80%] mx-auto">

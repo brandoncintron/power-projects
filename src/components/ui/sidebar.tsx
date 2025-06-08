@@ -208,7 +208,7 @@ function Sidebar({
 
   return (
     <div
-      className="group peer text-sidebar-foreground hidden lg:block bg-background"
+      className="group peer text-sidebar-foreground hidden min-[1440px]:block bg-background"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
@@ -280,7 +280,9 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon className="transition-transform duration-300 data-[state=expanded]:rotate-180" />
+      <div className="flex items-center justify-center">
+        <PanelLeftIcon className="transition-transform duration-300 data-[state=expanded]:rotate-180" />
+      </div>
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

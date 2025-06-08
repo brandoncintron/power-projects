@@ -1,7 +1,7 @@
 import * as React from "react";
 
 // Mobile breakpoint in pixels - screen widths below this are considered mobile
-const MOBILE_BREAKPOINT = 1024;
+const MOBILE_BREAKPOINT = 1440;
 
 /**
  * useIsMobile - Custom hook to detect if the current viewport is mobile
