@@ -29,7 +29,10 @@ export async function GET(
 
   if (!project || !project.githubRepoOwner || !project.githubRepoName) {
     return NextResponse.json(
-      { error: "Project or GitHub repo not configured" },
+      {
+        error:
+          "Project not found, access denied, or GitHub repository not configured. You must be the project owner or a collaborator to view GitHub activity.",
+      },
       { status: 404 },
     );
   }

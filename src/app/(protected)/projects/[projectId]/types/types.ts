@@ -67,6 +67,10 @@ export interface UseGitHubReposState {
 }
 
 // Component Props Types
+export interface GitHubConnectDialogProps {
+  projectId: string;
+}
+
 export interface RepositoryListItemProps {
   repository: GitHubRepository;
   isSelected: boolean;
@@ -103,6 +107,8 @@ export interface RecentActivityCardProps {
   projectId?: string;
   githubConnection?: GitHubConnectionData;
   session: Session | null;
+  isCollaborator?: boolean;
+  isOwner?: boolean;
 }
 
 // Project Overview Props
@@ -127,6 +133,7 @@ export interface ProjectOverviewProps {
     };
   }>;
   isOwner: boolean;
+  isCollaborator?: boolean;
   projectId: string;
   githubConnection?: GitHubConnectionData;
   session: Session | null;

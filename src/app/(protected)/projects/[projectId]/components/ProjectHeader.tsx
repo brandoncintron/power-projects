@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { useGitHubDialog } from "@/app/(protected)/projects/[projectId]/hooks/useGitHubDialog";
 import {
   Clock,
@@ -12,14 +10,13 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-import { setToast } from "@/components/ShowToast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LoadingSpinner } from "@/components/ui/loading";
 import { useLoading } from "@/components/ui/loading-context";
 
+import { useGitHubConnection } from "../hooks/useGitHubConnection";
 import { ProjectHeaderProps } from "../types/types";
 
 /* Project Header - Displays project title, metadata and owner actions */
@@ -33,55 +30,16 @@ export function ProjectHeader({
 }: ProjectHeaderProps) {
   const { showLoading } = useLoading();
   const { open: openGitHubDialog } = useGitHubDialog();
-  const router = useRouter();
-  const [isDisconnecting, setIsDisconnecting] = useState(false);
+  const { disconnectRepository, isDisconnecting } = useGitHubConnection({
+    projectId,
+  });
 
   const isGitHubConnected =
     githubConnection?.githubRepoUrl && githubConnection?.githubRepoName;
 
   const handleDisconnectRepository = async () => {
     if (!isGitHubConnected) return;
-
-    setIsDisconnecting(true);
-    try {
-      const response = await fetch("/api/github/connect", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          projectId,
-          // No repository parameter = disconnect
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to disconnect repository");
-      }
-
-      // Set success toast
-      setToast(
-        "Repository disconnected successfully!",
-        "success",
-        "githubDisconnectStatus",
-      );
-
-      // Refresh the page to show updated header
-      router.refresh();
-    } catch (error) {
-      console.error("Failed to disconnect repository:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to disconnect repository";
-
-      // Set error toast
-      setToast(errorMessage, "error", "githubDisconnectStatus");
-    } finally {
-      setIsDisconnecting(false);
-    }
+    await disconnectRepository();
   };
 
   return (
@@ -142,7 +100,7 @@ export function ProjectHeader({
               className="min-w-[140px]"
             >
               {isDisconnecting ? (
-                <LoadingSpinner className="h-4 w-4" />
+                <LoadingSpinner className="h-4 w-4" text="Disconnecting..." />
               ) : (
                 <>
                   <Unlink className="mr-2 h-4 w-4" />

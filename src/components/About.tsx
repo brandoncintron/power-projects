@@ -80,10 +80,7 @@ export default function About({ session }: { session: Session | null }) {
                 creating and collaborating on Power Projects.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  size="lg"
-                  onClick={() => open()}
-                >
+                <Button size="lg" onClick={() => open()}>
                   Sign Up Now
                 </Button>
               </div>

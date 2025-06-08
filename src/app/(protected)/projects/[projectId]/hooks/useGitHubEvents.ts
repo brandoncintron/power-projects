@@ -22,13 +22,15 @@ interface UseGitHubEventsProps {
 /* GitHub Events Realtime Updater - Updates the GitHub events in realtime */
 export function GitHubEventsRealtimeUpdater({
   projectId,
+  enabled = true,
 }: {
   projectId: string | undefined;
+  enabled?: boolean;
 }) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!projectId) return;
+    if (!projectId || !enabled) return;
 
     const eventSource = new EventSource(
       `/api/github/events-stream/${projectId}`,
@@ -47,7 +49,7 @@ export function GitHubEventsRealtimeUpdater({
     return () => {
       eventSource.close();
     };
-  }, [projectId, queryClient]);
+  }, [projectId, queryClient, enabled]);
 
   return null; // This component does not render anything.
 }

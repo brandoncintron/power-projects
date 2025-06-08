@@ -39,6 +39,7 @@ export function ProjectTabs({
             owner={owner}
             collaborators={collaborators}
             isOwner={isOwner}
+            isCollaborator={isCollaborator}
             projectId={projectId}
             githubConnection={githubConnection}
             session={session}
@@ -52,7 +53,7 @@ export function ProjectTabs({
   return (
     <Tabs defaultValue="overview" className="w-full">
       <TabsList
-        className={`grid w-full ${isOwner ? "grid-cols-5 md:w-[600px]" : "grid-cols-4 md:w-[500px]"}`}
+        className={`grid w-full ${isOwner ? "grid-cols-2 md:grid-cols-5 md:w-[600px]" : "grid-cols-2 md:grid-cols-4 md:w-[500px]"}`}
       >
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="tasks">Project Tasks</TabsTrigger>
@@ -63,7 +64,7 @@ export function ProjectTabs({
         )}
       </TabsList>
 
-      <TabsContent value="overview" className="mt-6">
+      <TabsContent value="overview" className="mt-18 md:mt-6">
         <ProjectOverview
           applicationType={applicationType}
           frameworks={frameworks}
@@ -73,26 +74,27 @@ export function ProjectTabs({
           owner={owner}
           collaborators={collaborators}
           isOwner={isOwner}
+          isCollaborator={isCollaborator}
           projectId={projectId}
           githubConnection={githubConnection}
           session={session}
         />
       </TabsContent>
 
-      <TabsContent value="tasks" className="mt-6">
+      <TabsContent value="tasks" className="mt-18 md:mt-6">
         <ProjectTasksCard />
       </TabsContent>
 
-      <TabsContent value="scrum" className="mt-6">
+      <TabsContent value="scrum" className="mt-18 md:mt-6">
         <ScrumBoard />
       </TabsContent>
 
-      <TabsContent value="chat" className="mt-6">
+      <TabsContent value="chat" className="mt-18 md:mt-6">
         <ProjectChatCard />
       </TabsContent>
 
       {isOwner && (
-        <TabsContent value="applications" className="mt-6">
+        <TabsContent value="applications" className="mt-18 md:mt-6">
           <ProjectApplicationsSection
             owner={owner}
             applicants={applicants}

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/ui/loading";
 
+import { useGitHubDialog } from "../hooks/useGitHubDialog";
 import {
   GitHubEventsRealtimeUpdater,
   useGitHubEvents,
@@ -22,9 +23,16 @@ export function RecentActivityCard({
   projectId,
   githubConnection,
   session,
+  isCollaborator = false,
+  isOwner = false,
 }: RecentActivityCardProps) {
+  const { open: openGitHubDialog } = useGitHubDialog();
+
   const isGitHubConnected =
     githubConnection?.githubRepoUrl && githubConnection?.githubRepoName;
+
+  // User has access if they are the owner or a collaborator
+  const hasAccess = isOwner || isCollaborator;
 
   const {
     data: githubData,
@@ -33,7 +41,7 @@ export function RecentActivityCard({
     isFetching,
   } = useGitHubEvents({
     projectId,
-    enabled: !!isGitHubConnected && !!projectId && !!session,
+    enabled: !!isGitHubConnected && !!projectId && !!session && hasAccess,
   });
 
   const githubActivities = githubData?.activities || [];
@@ -70,11 +78,26 @@ export function RecentActivityCard({
 
       {session ? (
         <CardContent>
-          <GitHubEventsRealtimeUpdater projectId={projectId} />
+          <GitHubEventsRealtimeUpdater
+            projectId={projectId}
+            enabled={hasAccess}
+          />
           {!isGitHubConnected ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground mb-4">
-                Connect a GitHub repository to view activity.
+                <button
+                  onClick={() => openGitHubDialog()}
+                  className="text-primary hover:underline cursor-pointer bg-transparent border-none p-0 font-inherit"
+                >
+                  Connect a GitHub repository
+                </button>{" "}
+                to view activity.
+              </p>
+            </div>
+          ) : !hasAccess ? (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">
+                You need to be a project owner or collaborator to view activity.
               </p>
             </div>
           ) : isPending ? (

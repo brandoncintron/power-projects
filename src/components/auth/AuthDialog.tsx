@@ -1,5 +1,6 @@
 "use client";
 
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import { DialogError } from "@/components/auth/DialogError";
@@ -12,7 +13,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export function AuthDialog() {
   const { isOpen, close, error } = useAuthDialog();

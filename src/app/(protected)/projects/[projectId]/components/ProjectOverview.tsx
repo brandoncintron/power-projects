@@ -15,6 +15,7 @@ export function ProjectOverview({
   owner,
   collaborators = [],
   isOwner = false,
+  isCollaborator = false,
   projectId = "",
   githubConnection,
   session,
@@ -42,6 +43,8 @@ export function ProjectOverview({
             projectId={projectId}
             githubConnection={githubConnection}
             session={session}
+            isCollaborator={isCollaborator}
+            isOwner={isOwner}
           />
         </div>
 
