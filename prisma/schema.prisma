@@ -126,6 +126,7 @@ model Project {
   githubRepoName    String?
   githubRepoOwner   String?
   githubConnectedAt DateTime?
+  githubRepoCreatedViaApp Boolean @default(false)
 
   // --- Relationships ---
   // Relation to the owner (User)

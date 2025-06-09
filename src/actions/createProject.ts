@@ -34,17 +34,19 @@ export async function createProject(values: ProjectFormData) {
       prismaVisibility = ProjectVisibility.UNIVERSITY;
       break;
     default:
-      // This case should ideally not be reachable if Zod validation passed
-      console.error(
-        `Unexpected visibility value on server: ${data.visibility}`,
-      );
       throw new Error("Invalid visibility value.");
   }
 
+  // Prepare data for database insertion
+  const { createGitHubRepository, ...projectData } = data;
+
   const dataForPrisma = {
-    ...data, // Spread validated & typed data
+    ...projectData,
     visibility: prismaVisibility,
     ownerId: ownerId,
+    githubRepoCreatedViaApp: createGitHubRepository,
+    // Set githubConnectedAt if repository should be created
+    githubConnectedAt: createGitHubRepository ? new Date() : undefined,
   };
 
   try {

@@ -36,6 +36,8 @@ export const projectFormSchema = z.object({
   }),
 
   databases: z.array(z.string()).optional(),
+
+  createGitHubRepository: z.boolean().default(false),
 });
 
 // Type for form data
