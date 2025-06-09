@@ -1,7 +1,10 @@
 import React from "react";
 
+import { useFormContext } from "react-hook-form";
+
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,32 +17,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ProjectFormData } from "@/schema/projectFormSchema";
 
 import { applicationTypes } from "@@/create-project/data/project-technology-data";
-import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
 
 /**
- * Component for the application type dropdown
+ * Component for selecting application type
  */
 export function ApplicationTypeDropdown() {
-  // Get values from context
-  const { form, setApplicationType } = useProjectForm();
+  const { control, setValue } = useFormContext<ProjectFormData>();
+
+  const handleApplicationTypeChange = (value: string) => {
+    setValue("applicationType", value);
+    // Reset framework and database selections when app type changes
+    setValue("frameworks", []);
+    setValue("databases", []);
+  };
 
   return (
     <FormField
-      control={form.control}
+      control={control}
       name="applicationType"
       render={({ field }) => (
         <FormItem>
           <FormLabel>
             Application Type <span className="text-red-500">*</span>
           </FormLabel>
+          <FormDescription>
+            What type of application are you planning to build?
+          </FormDescription>
           <Select
-            onValueChange={(value) => {
-              field.onChange(value);
-              setApplicationType(value);
-            }}
-            defaultValue={field.value}
+            onValueChange={handleApplicationTypeChange}
+            value={field.value}
           >
             <FormControl>
               <SelectTrigger>

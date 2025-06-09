@@ -1,64 +1,60 @@
 import React from "react";
 
+import { useFormContext } from "react-hook-form";
+
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
+import { ProjectFormData } from "@/schema/projectFormSchema";
 
 /**
- * Component for the project visibility radio buttons
+ * Component for project visibility selection
  */
 export function VisibilitySelection() {
-  const { form } = useProjectForm();
+  const { control } = useFormContext<ProjectFormData>();
 
   return (
     <FormField
-      control={form.control}
+      control={control}
       name="visibility"
       render={({ field }) => (
         <FormItem className="space-y-3">
           <FormLabel>
-            Who can see this project? <span className="text-red-500">*</span>
+            Project Visibility <span className="text-red-500">*</span>
           </FormLabel>
+          <FormDescription>
+            Choose who can see and apply to your project.
+          </FormDescription>
           <FormControl>
             <RadioGroup
               onValueChange={field.onChange}
-              defaultValue={field.value}
-              className="flex flex-col space-y-1"
+              value={field.value}
+              className="flex flex-col space-y-2"
             >
-              <FormItem className="flex items-center space-x-3 space-y-0">
-                <FormControl>
-                  <RadioGroupItem value="public" />
-                </FormControl>
-                <FormLabel className="font-normal">
-                  Public (Anyone can see this project)
-                </FormLabel>
-              </FormItem>
-              <FormItem className="flex items-center space-x-3 space-y-0">
-                <FormControl>
-                  <RadioGroupItem value="private" />
-                </FormControl>
-                <FormLabel className="font-normal">
-                  Private (Only you and your team can see this project)
-                </FormLabel>
-              </FormItem>
-              {/*
-              <FormItem className="flex items-center space-x-3 space-y-0">
-                <FormControl>
-                  <RadioGroupItem value="university" />
-                </FormControl>
-                 TODO: add a check to see if the user is a student at the university}
-                <FormLabel className="font-normal">
-                  My University (Only students at your university can see this project)
-                </FormLabel>
-              </FormItem>
-              */}
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="public" id="public" />
+                <label
+                  htmlFor="public"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Public - Anyone can see and apply
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="private" id="private" />
+                <label
+                  htmlFor="private"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Private - Only you can see this project
+                </label>
+              </div>
             </RadioGroup>
           </FormControl>
           <FormMessage />

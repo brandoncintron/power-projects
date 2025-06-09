@@ -1,259 +1,178 @@
-import React, { useCallback } from "react";
+import React, { useState } from "react";
 
-import { ChevronLeft } from "lucide-react";
 import { BiSolidCustomize } from "react-icons/bi";
 import { MdOutlineCancel } from "react-icons/md";
 
-import { useScrollTo } from "@/components/nav/hooks/useScrollTo";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
 
-import { CustomDatabaseCard } from "@@/create-project/components/CustomDatabaseCard";
-import { SelectableCard } from "@@/create-project/components/SelectableCard";
-import { frameworkOptions } from "@@/create-project/data/project-technology-data";
-import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
-import { DatabaseOption, FrameworkOption } from "@@/create-project/types/types";
+import { useCreateProjectForm } from "../hooks/useCreateProjectForm";
+import { SelectableCard } from "./SelectableCard";
 
 /**
- * Database selection step component
- * Shows available database options based on selected frameworks
+ * Pure Database selection component - all logic handled by useCreateProjectForm hook
  */
 export function DatabaseSelection() {
-  // Get values from context
+  const [customDatabase, setCustomDatabase] = useState("");
+
+  // Get handlers and state from the main form hook
   const {
-    form,
-    state,
-    customDatabases,
-    toggleDatabase,
-    goToFrameworkStep,
+    frameworks,
+    databases,
     getDatabaseOptions,
-    onSubmit,
+    toggleDatabase,
     isDatabaseSelected,
-  } = useProjectForm();
+    addCustomDatabase,
+    removeCustomDatabase,
+  } = useCreateProjectForm();
 
-  const { applicationType: selectedAppType } = state;
-  const { scrollToSection } = useScrollTo();
+  // Local handler for custom database input
+  const handleAddCustomDatabase = () => {
+    addCustomDatabase(customDatabase);
+    setCustomDatabase("");
+  };
 
-  const selectedDatabasesForDisplay = state.selectedDatabases;
+  const availableDatabases = getDatabaseOptions();
 
-  const dbOptions = getDatabaseOptions();
+  const isPredefinedDatabase = (databaseName: string) => {
+    return availableDatabases.some(
+      (db: { name: string; description: string }) => db.name === databaseName,
+    );
+  };
 
-  // Handle form submission with transition
-  const handleSubmit = useCallback(() => {
-    form.handleSubmit(onSubmit)();
-  }, [form, onSubmit]);
-
-  // Handle back navigation with smooth scroll
-  const handleBackNavigation = useCallback(() => {
-    // Store current scroll position before navigation
-    const currentScrollPosition = window.scrollY;
-
-    // First navigate back to frameworks
-    goToFrameworkStep();
-
-    // Immediately restore scroll position to prevent jumping
-    window.scrollTo({
-      top: currentScrollPosition,
-      behavior: "auto",
-    });
-
-    // Then use the scrollToSection function to scroll to tech-stack-selection
-    setTimeout(() => {
-      scrollToSection({ sectionId: "tech-stack-selection" });
-    }, 50);
-  }, [goToFrameworkStep, scrollToSection]);
+  if (frameworks.length === 0) {
+    return null;
+  }
 
   return (
-    <>
-      {/* DATABASE HEADER - Title and navigation buttons */}
-      <div className="mb-4 sm:mb-6">
-        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 sm:gap-0">
-          <h3 className="text-xl font-semibold">Database Options</h3>
-          <div className="flex flex-wrap gap-2 sm:gap-3">
-            <Button
-              variant="outline"
-              size="md"
-              onClick={handleBackNavigation}
-              className="text-xs"
-            >
-              <ChevronLeft /> Back to Frameworks
-            </Button>
-            <Button
-              type="button"
-              size="md"
-              className="text-xs"
-              onClick={handleSubmit}
-            >
-              Submit Project
-            </Button>
+    <div className="space-y-6 border-t pt-6">
+      {/* Database Selection Header */}
+      <div className="mb-4">
+        <h4 className="text-lg font-semibold mb-2">Select Databases</h4>
+        <p className="text-sm text-muted-foreground">
+          Choose the database(s) you plan to use, or select &quot;None&quot; if
+          no database is needed.
+        </p>
+      </div>
+
+      {/* Selected Frameworks Summary */}
+      <div className="p-4 bg-muted rounded-md">
+        <div className="flex flex-col space-y-3">
+          {/* Frameworks */}
+          <div>
+            <span className="text-sm font-medium">Selected Frameworks:</span>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {frameworks.map((framework) => (
+                <div
+                  key={framework}
+                  className="bg-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-1.5"
+                >
+                  {getTechnologyIcon(framework)}
+                  <span>{framework}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* SELECTED FRAMEWORKS SUMMARY - Shows currently selected frameworks */}
-        <div className="mt-2 p-3 sm:p-4 bg-muted rounded-md flex flex-col mb-4">
-          <div className="flex flex-wrap gap-3 sm:gap-4">
-            {/* Frameworks column */}
-            <div className="flex-1 min-w-[45%]">
-              <div className="w-full flex items-center mb-1">
-                <span className="text-sm font-medium mr-1">
-                  Selected Frameworks:
-                </span>
-              </div>
-              <div
-                className={
-                  form.watch("frameworks").length > 3
-                    ? "grid grid-cols-1 sm:grid-cols-2 gap-2 w-full"
-                    : "flex flex-wrap gap-2"
-                }
-              >
-                {form.watch("frameworks").map((frameworkName: string) => {
-                  // Find the framework in the options to get its languages
-                  let framework: FrameworkOption | undefined;
-                  frameworkOptions[
-                    selectedAppType as keyof typeof frameworkOptions
-                  ]?.forEach((category) => {
-                    const found = category.options.find(
-                      (f) => f.name === frameworkName,
-                    );
-                    if (found) framework = found;
-                  });
-
-                  // If it's a custom framework (not found in options)
-                  const isCustomFramework =
-                    !framework && frameworkName !== "Custom";
-
+          {/* Databases */}
+          {databases.length > 0 && (
+            <div>
+              <span className="text-sm font-medium">Selected Databases:</span>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {databases.map((database) => {
+                  const isCustom = !isPredefinedDatabase(database);
                   return (
                     <div
-                      key={frameworkName}
-                      className="bg-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium self-start"
+                      key={database}
+                      className="bg-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-2"
                     >
                       <div className="flex items-center gap-1.5">
-                        {isCustomFramework ? (
+                        {isCustom ? (
                           <BiSolidCustomize />
                         ) : (
-                          getTechnologyIcon(frameworkName)
+                          getDatabaseIcon(database)
                         )}
-                        <span>{frameworkName}</span>
+                        <span>{database}</span>
                       </div>
+                      {isCustom && (
+                        <button
+                          onClick={() => removeCustomDatabase(database)}
+                          className="ml-1 text-muted-foreground hover:text-destructive"
+                          title="Remove custom database"
+                        >
+                          ×
+                        </button>
+                      )}
                     </div>
                   );
                 })}
               </div>
             </div>
-
-            {/* Divider (vertical for desktop, horizontal for mobile) */}
-            {selectedDatabasesForDisplay.length > 0 && (
-              <>
-                <div className="border-r h-auto self-stretch mx-1 border-muted-foreground/20 hidden sm:block"></div>
-                <div className="border-t w-full my-2 border-muted-foreground/20 sm:hidden"></div>
-              </>
-            )}
-
-            {/* Databases column */}
-            {selectedDatabasesForDisplay.length > 0 && (
-              <div className="flex-1 min-w-[45%]">
-                <div className="w-full flex items-center mb-1">
-                  <span className="text-sm font-medium mr-1">
-                    Selected Databases:
-                  </span>
-                </div>
-                <div
-                  className={
-                    selectedDatabasesForDisplay.length > 3
-                      ? "grid grid-cols-1 sm:grid-cols-2 gap-2 w-full"
-                      : "flex flex-wrap gap-2"
-                  }
-                >
-                  {selectedDatabasesForDisplay.map(
-                    (database: DatabaseOption) => {
-                      // Check if this is a custom database
-                      const isCustomDatabase = customDatabases.includes(
-                        database.name,
-                      );
-                      const isNoneOption = database.name === "None";
-
-                      return (
-                        <div
-                          key={database.name}
-                          className="bg-primary-foreground px-3 py-1.5 rounded-md text-sm font-medium self-start"
-                        >
-                          <div className="flex items-center gap-1.5">
-                            {isCustomDatabase ? (
-                              // Use default icon for custom databases
-                              <BiSolidCustomize />
-                            ) : isNoneOption ? (
-                              <MdOutlineCancel />
-                            ) : (
-                              getDatabaseIcon(database.name)
-                            )}
-                            <span>{database.name}</span>
-                          </div>
-                        </div>
-                      );
-                    },
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+          )}
         </div>
       </div>
 
-      {/* DATABASE OPTIONS HEADER */}
-      <div className="mb-3">
-        <h4 className="text-sm font-medium">Available Database Options</h4>
-        <p className="text-sm text-muted-foreground">
-          Click on databases below to select or deselect. Your selections will
-          appear in the summary at the top.
-        </p>
+      {/* Database Options */}
+      <div>
+        <h5 className="font-medium mb-3">Available Database Options</h5>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {availableDatabases.map(
+            (database: { name: string; description: string }) => {
+              const isSelected = isDatabaseSelected(database.name);
+              const isNoneOption = database.name === "None";
+
+              return (
+                <SelectableCard
+                  key={database.name}
+                  title={
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-6 w-6 shrink-0 items-center justify-center">
+                        {isNoneOption ? (
+                          <MdOutlineCancel />
+                        ) : (
+                          getDatabaseIcon(database.name)
+                        )}
+                      </div>
+                      <span>{database.name}</span>
+                    </div>
+                  }
+                  description={database.description}
+                  isSelected={isSelected}
+                  onClick={() => toggleDatabase(database.name)}
+                  className={isNoneOption && !isSelected ? "border-dashed" : ""}
+                />
+              );
+            },
+          )}
+        </div>
       </div>
 
-      {/* DATABASE OPTIONS GRID - displays available database options as cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4">
-        {dbOptions.map((database) => {
-          // Use the isDatabaseSelected function which has been updated to handle "None" correctly
-          const isSelected = isDatabaseSelected(database.name);
-
-          const isNoneOption = database.name === "None";
-
-          return (
-            <SelectableCard
-              key={database.name}
-              title={
-                <div className="flex items-center gap-2">
-                  <div className="flex h-6 w-6 shrink-0 items-center justify-center">
-                    {isNoneOption ? (
-                      <MdOutlineCancel />
-                    ) : (
-                      getDatabaseIcon(database.name)
-                    )}
-                  </div>
-                  <span>{database.name}</span>
-                </div>
+      {/* Custom Database Section */}
+      <div className="border-t pt-4">
+        <h5 className="font-medium mb-2">Add Custom Database</h5>
+        <div className="flex gap-2">
+          <Input
+            placeholder="Enter custom database name"
+            value={customDatabase}
+            onChange={(e) => setCustomDatabase(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddCustomDatabase();
               }
-              description={database.description}
-              isSelected={isSelected}
-              onClick={() => toggleDatabase(database.name)}
-              className={isNoneOption && !isSelected ? "border-dashed" : ""}
-            ></SelectableCard>
-          );
-        })}
+            }}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleAddCustomDatabase}
+            disabled={!customDatabase.trim()}
+          >
+            Add
+          </Button>
+        </div>
       </div>
-
-      {/* CUSTOM DATABASE SECTION */}
-      <CustomDatabaseCard />
-
-      {/* SUBMIT SECTION */}
-      <div className="mt-8">
-        <Button
-          type="button"
-          size="md"
-          className="text-xs"
-          onClick={handleSubmit}
-        >
-          Submit Project
-        </Button>
-      </div>
-    </>
+    </div>
   );
 }

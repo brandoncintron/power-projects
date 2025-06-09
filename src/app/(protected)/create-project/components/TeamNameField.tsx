@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useFormContext } from "react-hook-form";
+
 import {
   FormControl,
   FormField,
@@ -8,24 +10,23 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
+import { ProjectFormData } from "@/schema/projectFormSchema";
 
 /**
- * Component for the team name field
+ * Component for the optional team name field
  */
 export function TeamNameField() {
-  const { form } = useProjectForm();
+  const { control } = useFormContext<ProjectFormData>();
 
   return (
     <FormField
-      control={form.control}
+      control={control}
       name="teamName"
       render={({ field }) => (
         <FormItem>
           <FormLabel>Team Name (Optional)</FormLabel>
           <FormControl>
-            <Input placeholder="Enter team or group name" {...field} />
+            <Input placeholder="Enter team name" {...field} />
           </FormControl>
           <FormMessage />
         </FormItem>

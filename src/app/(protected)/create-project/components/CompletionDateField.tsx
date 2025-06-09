@@ -1,12 +1,14 @@
 import React from "react";
 
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,29 +20,31 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-
-import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
+import { ProjectFormData } from "@/schema/projectFormSchema";
 
 /**
- * Component for the completion date calendar field
+ * Component for optional project completion date selection
  */
 export function CompletionDateField() {
-  const { form } = useProjectForm();
+  const { control } = useFormContext<ProjectFormData>();
 
   return (
     <FormField
-      control={form.control}
+      control={control}
       name="completionDate"
       render={({ field }) => (
         <FormItem className="flex flex-col">
           <FormLabel>Expected Completion Date (Optional)</FormLabel>
+          <FormDescription>
+            When do you expect to complete this project?
+          </FormDescription>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
-                  variant="outline"
+                  variant={"outline"}
                   className={cn(
-                    "pl-3 text-left font-normal",
+                    "w-[280px] pl-3 text-left font-normal",
                     !field.value && "text-muted-foreground",
                   )}
                 >
@@ -58,7 +62,9 @@ export function CompletionDateField() {
                 mode="single"
                 selected={field.value}
                 onSelect={field.onChange}
-                disabled={(date) => date < new Date()}
+                disabled={(date) =>
+                  date < new Date() || date < new Date("1900-01-01")
+                }
                 initialFocus
               />
             </PopoverContent>

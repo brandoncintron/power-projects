@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-import { SelectableCardProps } from "@@/create-project/types/types";
+import { SelectableCardProps } from "../types/types";
 
 /**
  * Component used to display framework or database details

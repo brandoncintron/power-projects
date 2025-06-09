@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useFormContext } from "react-hook-form";
+
 import {
   FormControl,
   FormField,
@@ -8,18 +10,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { useProjectForm } from "@@/create-project/hooks/useProjectForm";
+import { ProjectFormData } from "@/schema/projectFormSchema";
 
 /**
  * Component for the project name field
  */
 export function ProjectNameField() {
-  const { form } = useProjectForm();
+  const { control } = useFormContext<ProjectFormData>();
 
   return (
     <FormField
-      control={form.control}
+      control={control}
       name="projectName"
       render={({ field }) => (
         <FormItem>
