@@ -1,7 +1,7 @@
 // import { auth } from "@/auth";
 import { HideLoading } from "@/components/HideLoading";
 
-import { CreateProjectForm } from "./components/create-project-form";
+import { CreateProjectForm } from "./components/CreateProjectForm";
 
 export default async function CreateProjectPage() {
   // const session = await auth();

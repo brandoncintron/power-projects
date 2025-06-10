@@ -7,18 +7,13 @@ export const frameworkData: ApplicationTypeData[] = [
       {
         name: "Full-Stack Development",
         description:
-          "Frameworks for building complete web applications with frontend and backend capabilities.",
+          "Technologies for building complete web applications with frontend and backend capabilities.",
         options: [
           {
-            name: "Next.js",
-            description: "A React framework for server-side rendering.",
-            primaryLanguages: ["JavaScript"],
-          },
-          {
-            name: "SvelteKit",
+            name: "ASP.NET Core",
             description:
-              "A web framework powered by Svelte for high performance.",
-            primaryLanguages: ["Svelte"],
+              "A cross-platform, open-source framework for building modern, cloud-enabled, Internet-connected apps.",
+            primaryLanguages: ["C#"],
           },
           {
             name: "Django",
@@ -26,27 +21,45 @@ export const frameworkData: ApplicationTypeData[] = [
             primaryLanguages: ["Python"],
           },
           {
+            name: "Laravel",
+            description:
+              "A PHP web application framework with expressive, elegant syntax.",
+            primaryLanguages: ["PHP"],
+          },
+          {
+            name: "Next.js",
+            description:
+              "A React framework for building full-stack web applications.",
+            primaryLanguages: ["JavaScript", "TypeScript"],
+          },
+          {
             name: "Ruby on Rails",
             description: "A web application framework written in Ruby.",
             primaryLanguages: ["Ruby"],
+          },
+          {
+            name: "SvelteKit",
+            description:
+              "A web framework powered by Svelte for high performance.",
+            primaryLanguages: ["Svelte", "TypeScript"],
           },
         ],
       },
       {
         name: "Frontend Development",
         description:
-          "Libraries and frameworks for the user interface of a web application.",
+          "Libraries and technologies for the user interface of a web application.",
         options: [
-          {
-            name: "React",
-            description: "A JavaScript library for building user interfaces.",
-            primaryLanguages: ["JavaScript"],
-          },
           {
             name: "Angular",
             description:
               "A platform for building single-page client applications.",
             primaryLanguages: ["TypeScript"],
+          },
+          {
+            name: "React",
+            description: "A JavaScript library for building user interfaces.",
+            primaryLanguages: ["JavaScript", "TypeScript"],
           },
           {
             name: "Vue.js",
@@ -59,28 +72,34 @@ export const frameworkData: ApplicationTypeData[] = [
       {
         name: "Backend Development",
         description:
-          "Frameworks for building the server-side of a web application.",
+          "Technologies for building the server-side of a web application.",
         options: [
-          {
-            name: "Flask",
-            description: "A lightweight Python framework for APIs.",
-            primaryLanguages: ["Python"],
-          },
           {
             name: "Express.js",
             description: "A fast, minimalist web framework for Node.js.",
             primaryLanguages: ["JavaScript"],
           },
           {
-            name: "Spring Boot",
-            description: "A Java-based framework for creating microservices.",
-            primaryLanguages: ["Java"],
-          },
-          {
             name: "FastAPI",
             description:
               "A high-performance web framework for building APIs with Python.",
             primaryLanguages: ["Python"],
+          },
+          {
+            name: "Flask",
+            description: "A lightweight Python framework for APIs.",
+            primaryLanguages: ["Python"],
+          },
+          {
+            name: "Nest.js",
+            description:
+              "A progressive Node.js framework for building efficient, reliable and scalable server-side applications.",
+            primaryLanguages: ["TypeScript"],
+          },
+          {
+            name: "Spring Boot",
+            description: "A Java-based framework for creating microservices.",
+            primaryLanguages: ["Java"],
           },
         ],
       },
@@ -90,27 +109,33 @@ export const frameworkData: ApplicationTypeData[] = [
     name: "Desktop Application",
     categories: [
       {
-        name: "Desktop Application Frameworks",
+        name: "Desktop Application Technologies",
         description:
-          "Frameworks for building native desktop applications across different operating systems.",
+          "Technologies for building native desktop applications across different operating systems.",
         options: [
           {
-            name: "Tkinter",
+            name: ".NET MAUI",
             description:
-              "A built-in Python library for creating simple GUI applications.",
-            primaryLanguages: ["Python"],
+              "A cross-platform framework for creating native mobile and desktop apps with C# and XAML.",
+            primaryLanguages: ["C#"],
           },
           {
             name: "Electron",
             description:
               "Build cross-platform desktop apps with web technologies.",
-            primaryLanguages: ["JavaScript"],
+            primaryLanguages: ["JavaScript", "TypeScript"],
           },
           {
             name: "Qt",
             description:
               "A C++ framework for developing native desktop applications.",
             primaryLanguages: ["C++"],
+          },
+          {
+            name: "Tauri",
+            description:
+              "Build smaller, faster, and more secure desktop applications with a web frontend.",
+            primaryLanguages: ["Rust", "JavaScript", "TypeScript"],
           },
         ],
       },
@@ -122,13 +147,8 @@ export const frameworkData: ApplicationTypeData[] = [
       {
         name: "Cross-Platform Development",
         description:
-          "Frameworks for building mobile applications that run on both Android and iOS.",
+          "Technologies for building mobile applications that run on both Android and iOS.",
         options: [
-          {
-            name: "React Native",
-            description: "Build native mobile apps using React and JavaScript.",
-            primaryLanguages: ["JavaScript"],
-          },
           {
             name: "Flutter",
             description:
@@ -140,6 +160,11 @@ export const frameworkData: ApplicationTypeData[] = [
             description: "Share business logic across Android and iOS.",
             primaryLanguages: ["Kotlin"],
           },
+          {
+            name: "React Native",
+            description: "Build native mobile apps using React and JavaScript.",
+            primaryLanguages: ["JavaScript", "TypeScript"],
+          },
         ],
       },
       {
@@ -147,16 +172,15 @@ export const frameworkData: ApplicationTypeData[] = [
         description: "Develop applications specifically for Android or iOS.",
         options: [
           {
-            name: "Swift",
-            description:
-              "A powerful language for developing native iOS applications.",
-            primaryLanguages: ["Swift"],
+            name: "Jetpack Compose",
+            description: "Android's modern toolkit for building native UI.",
+            primaryLanguages: ["Kotlin"],
           },
           {
-            name: "Kotlin",
+            name: "SwiftUI",
             description:
-              "A modern language for developing native Android applications.",
-            primaryLanguages: ["Kotlin"],
+              "A modern declarative framework for building apps for all Apple platforms.",
+            primaryLanguages: ["Swift"],
           },
         ],
       },
@@ -168,35 +192,41 @@ export const frameworkData: ApplicationTypeData[] = [
       {
         name: "Deep Learning",
         description:
-          "Frameworks for building and training complex neural networks.",
+          "Technologies for building and training complex neural networks.",
         options: [
-          {
-            name: "TensorFlow",
-            description:
-              "An open-source platform for machine learning by Google.",
-            primaryLanguages: ["Python"],
-          },
           {
             name: "PyTorch",
             description:
               "An open-source ML framework known for its flexibility.",
             primaryLanguages: ["Python"],
           },
+          {
+            name: "TensorFlow",
+            description:
+              "An open-source platform for machine learning by Google.",
+            primaryLanguages: ["Python"],
+          },
         ],
       },
       {
-        name: "Data Science",
+        name: "Data Analysis & Machine Learning",
         description:
           "Libraries for data manipulation, analysis, and classical ML.",
         options: [
           {
-            name: "Scikit-learn",
-            description: "Library for classical ML algorithms and evaluation.",
+            name: "NumPy",
+            description:
+              "The fundamental package for scientific computing with Python.",
             primaryLanguages: ["Python"],
           },
           {
             name: "Pandas",
             description: "Library for data manipulation and analysis.",
+            primaryLanguages: ["Python"],
+          },
+          {
+            name: "Scikit-learn",
+            description: "Library for classical ML algorithms and evaluation.",
             primaryLanguages: ["Python"],
           },
         ],
@@ -207,8 +237,13 @@ export const frameworkData: ApplicationTypeData[] = [
 
 export const databaseOptions: SelectableCardData[] = [
   {
-    name: "PostgreSQL",
-    description: "A powerful, open-source object-relational database system.",
+    name: "Firebase",
+    description:
+      "A platform by Google, offering NoSQL databases like Firestore and Realtime Database.",
+  },
+  {
+    name: "MongoDB",
+    description: "A cross-platform, document-oriented NoSQL database program.",
   },
   {
     name: "MySQL",
@@ -216,8 +251,13 @@ export const databaseOptions: SelectableCardData[] = [
       "A widely used, open-source relational database management system.",
   },
   {
-    name: "MongoDB",
-    description: "A cross-platform, document-oriented NoSQL database program.",
+    name: "Pinecone",
+    description:
+      "A vector database for building high-performance vector search applications.",
+  },
+  {
+    name: "PostgreSQL",
+    description: "A powerful, open-source object-relational database system.",
   },
   {
     name: "Redis",
@@ -230,8 +270,7 @@ export const databaseOptions: SelectableCardData[] = [
       "A C-language library that implements a small, fast SQL database engine.",
   },
   {
-    name: "Firebase",
-    description:
-      "A platform by Google for creating mobile and web applications.",
+    name: "Supabase",
+    description: "An open source Firebase alternative based on PostgreSQL.",
   },
 ];

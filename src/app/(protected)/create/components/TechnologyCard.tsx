@@ -10,6 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { technologyIconMap } from "@/lib/technology-icons";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +30,7 @@ export function SelectableCard({
   return (
     <Card
       className={cn(
-        "cursor-pointer transition-all duration-200 hover:shadow-md h-full",
+        "cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 h-full",
         isSelected && "border-primary ring-2 ring-primary ring-inset",
       )}
       onClick={() => onToggle(item.name)}
@@ -53,7 +58,19 @@ export function SelectableCard({
                     return null;
                   }
 
-                  return langIcon ? <div key={lang}>{langIcon}</div> : null;
+                  return langIcon ? (
+                    <Tooltip key={lang} delayDuration={100}>
+                      <TooltipTrigger asChild>
+                        <div>{langIcon}</div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          Primary Language:{" "}
+                          <span className="font-semibold">{lang}</span>
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : null;
                 })}
               </div>
             </div>
@@ -67,7 +84,9 @@ export function SelectableCard({
           </div>
         </div>
         {/* Bottom row */}
-        <CardDescription className="mt-2">{item.description}</CardDescription>
+        <CardDescription className="mt-2 text-muted-foreground/80">
+          {item.description}
+        </CardDescription>
       </CardHeader>
     </Card>
   );

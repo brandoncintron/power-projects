@@ -24,7 +24,7 @@ export function CustomItemCard({ name, onRemove }: CustomItemCardProps) {
   return (
     <Card
       className={cn(
-        "transition-all duration-200 border-primary ring-2 ring-primary ring-inset",
+        "transition-all duration-300 border-primary ring-2 ring-primary ring-inset hover:shadow-lg hover:-translate-y-1",
       )}
     >
       <CardHeader className="flex h-full flex-col justify-between p-4">
@@ -50,7 +50,9 @@ export function CustomItemCard({ name, onRemove }: CustomItemCardProps) {
             </button>
           </div>
         </div>
-        <CardDescription className="mt-2">Custom item</CardDescription>
+        <CardDescription className="mt-2 text-muted-foreground/80">
+          Custom item
+        </CardDescription>
       </CardHeader>
     </Card>
   );
