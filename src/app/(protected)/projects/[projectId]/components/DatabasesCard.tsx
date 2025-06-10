@@ -1,7 +1,9 @@
 "use client";
 
+import { FileCode2 } from "lucide-react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getDatabaseIcon } from "@/lib/language-icons";
+import { technologyIconMap } from "@/lib/technology-icons";
 
 import { DatabasesCardProps } from "@@/projects/types/types";
 
@@ -24,7 +26,7 @@ export function DatabasesCard({ databases }: DatabasesCardProps) {
               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs"
             >
               <div className="flex h-4 w-4 shrink-0 items-center justify-center">
-                {getDatabaseIcon(db)}
+                {technologyIconMap[db.toLowerCase()] || <FileCode2 size={16} />}
               </div>
               <span className="font-medium">{db}</span>
             </div>

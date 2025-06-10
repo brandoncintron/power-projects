@@ -25,7 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
+import { technologyIconMap } from "@/lib/technology-icons";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
 
 import { ConfirmDialog } from "@@/projects/my-projects/components/ConfirmDialog";
@@ -148,7 +148,9 @@ export default function CompactProjectCard({
                 className="text-xs py-0.5 px-2 bg-teal-100 dark:bg-teal-900/30 text-teal-800 dark:text-teal-300 border-teal-200 dark:border-teal-800/40"
               >
                 <span className="flex items-center gap-1">
-                  {getTechnologyIcon(framework)}
+                  {technologyIconMap[framework.toLowerCase()] || (
+                    <FileCode2 size={16} />
+                  )}
                   {framework}
                 </span>
               </Badge>
@@ -160,7 +162,9 @@ export default function CompactProjectCard({
                 className="text-xs py-0.5 px-2 bg-fuchsia-100 dark:bg-fuchsia-900/30 text-fuchsia-800 dark:text-fuchsia-300 border-fuchsia-200 dark:border-fuchsia-800/40"
               >
                 <span className="flex items-center gap-1">
-                  {getDatabaseIcon(database)}
+                  {technologyIconMap[database.toLowerCase()] || (
+                    <FileCode2 size={16} />
+                  )}
                   {database}
                 </span>
               </Badge>

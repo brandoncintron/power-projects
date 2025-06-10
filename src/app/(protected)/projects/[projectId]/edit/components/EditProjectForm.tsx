@@ -1,11 +1,12 @@
 "use client";
 
+import { FileCode2 } from "lucide-react";
 import { FaCode, FaCube, FaDatabase } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useLoading } from "@/components/ui/loading-context";
-import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
+import { technologyIconMap } from "@/lib/technology-icons";
 
 import { TeamMembersCard } from "@@/projects/[projectId]/components/TeamMembersCard";
 import { EditCompletionDateField } from "@@/projects/[projectId]/edit/components/EditCompletionDateField";
@@ -134,7 +135,9 @@ function EditProjectFormContent({
                               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs"
                             >
                               <div className="flex h-4 w-4 shrink-0 items-center justify-center">
-                                {getTechnologyIcon(fw.toLowerCase())}
+                                {technologyIconMap[fw.toLowerCase()] || (
+                                  <FileCode2 size={16} />
+                                )}
                               </div>
                               <span className="font-medium">
                                 {fw.charAt(0).toUpperCase() +
@@ -159,7 +162,9 @@ function EditProjectFormContent({
                               className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-xs"
                             >
                               <div className="flex h-4 w-4 shrink-0 items-center justify-center">
-                                {getDatabaseIcon(db)}
+                                {technologyIconMap[db.toLowerCase()] || (
+                                  <FileCode2 size={16} />
+                                )}
                               </div>
                               <span className="font-medium">{db}</span>
                             </div>

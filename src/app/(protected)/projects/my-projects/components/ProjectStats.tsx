@@ -9,7 +9,7 @@ import {
   XCircle,
 } from "lucide-react";
 
-import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
+import { technologyIconMap } from "@/lib/technology-icons";
 
 import { ProjectStatsProps } from "@@/projects/types/types";
 
@@ -156,7 +156,9 @@ export default function ProjectStats({ projects }: ProjectStatsProps) {
                 {mostCommonFramework.name !== "None" && (
                   <div className="flex items-center text-sm">
                     <div className="mr-2 flex items-center justify-center w-5 h-5">
-                      {getTechnologyIcon(mostCommonFramework.name)}
+                      {technologyIconMap[
+                        mostCommonFramework.name.toLowerCase()
+                      ] || <FileCode2 size={20} />}
                     </div>
                     <div>
                       <span className="font-medium">
@@ -169,7 +171,9 @@ export default function ProjectStats({ projects }: ProjectStatsProps) {
                 {mostCommonDatabase.name !== "None" && (
                   <div className="flex items-center text-sm">
                     <div className="mr-2 flex items-center justify-center w-5 h-5">
-                      {getDatabaseIcon(mostCommonDatabase.name)}
+                      {technologyIconMap[
+                        mostCommonDatabase.name.toLowerCase()
+                      ] || <FileCode2 size={20} />}
                     </div>
                     <div>
                       <span className="font-medium">

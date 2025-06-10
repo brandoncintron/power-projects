@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import { HideLoading } from "@/components/HideLoading";
+import { ShowToast } from "@/components/ShowToast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
@@ -91,6 +92,7 @@ export default async function MyProjectsPage() {
   return (
     <div className="min-h-screen">
       <HideLoading />
+      <ShowToast storageKey="myProjectsToast" />
       <main className="container mx-auto py-6 px-4 md:px-6">
         {/* Header with action button */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">

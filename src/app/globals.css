@@ -265,6 +265,8 @@
   --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
   --sidebar-border: oklch(1 0 0 / 15%);
   --sidebar-ring: oklch(0.746 0.16 232.661);
+
+  --icon-color-default: #ffffff;
 }
 
 @layer base {
@@ -280,4 +282,8 @@
   textarea::placeholder {
     color: var(--color-muted-foreground);
   }
+}
+
+.theme-aware-icon path {
+  fill: currentColor;
 }

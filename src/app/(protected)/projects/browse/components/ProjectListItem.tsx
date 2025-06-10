@@ -8,7 +8,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/ui/loading-context";
-import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
+import { technologyIconMap } from "@/lib/technology-icons";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
 
 import { useProjectApplication } from "@@/projects/browse/hooks/useProjectApplication";
@@ -71,22 +71,22 @@ export default function ProjectListItem({
         <Badge
           variant="outline"
           className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
+          icon={<FileCode2 className="size-3" />}
         >
-          <FileCode2 className="size-3" />
-          <span>{project.applicationType}</span>
+          {project.applicationType}
         </Badge>
         {project.frameworks?.map((fw) => (
           <Badge
             key={fw}
             variant="secondary"
             className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
+            icon={
+              <div className="flex size-4 shrink-0 items-center justify-center">
+                {technologyIconMap[fw.toLowerCase()] || <FileCode2 size={16} />}
+              </div>
+            }
           >
-            <div className="flex size-4 shrink-0 items-center justify-center">
-              {getTechnologyIcon(fw.toLowerCase())}
-            </div>
-            <span>
-              {fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()}
-            </span>
+            {fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()}
           </Badge>
         ))}
         {project.databases?.map((db) => (
@@ -94,11 +94,13 @@ export default function ProjectListItem({
             key={db}
             variant="secondary"
             className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
+            icon={
+              <div className="flex size-4 shrink-0 items-center justify-center">
+                {technologyIconMap[db.toLowerCase()] || <FileCode2 size={16} />}
+              </div>
+            }
           >
-            <div className="flex size-4 shrink-0 items-center justify-center">
-              {getDatabaseIcon(db)}
-            </div>
-            <span>{db}</span>
+            {db}
           </Badge>
         ))}
       </div>

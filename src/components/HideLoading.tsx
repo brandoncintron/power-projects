@@ -15,7 +15,7 @@ export function HideLoading() {
 
   useEffect(() => {
     hideLoading();
-  }, [hideLoading]);
+  }, []);
 
   return null;
 }
