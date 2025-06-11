@@ -71,9 +71,9 @@ export function ProjectHeader({
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-sm text-primary hover:text-primary/80 transition-colors"
             >
-              <span>
-                {githubConnection.githubRepoOwner}/
-                {githubConnection.githubRepoName}
+              <span> 
+                  {/* All repoUrls will have https://github.com/ prefix, removing for shorter link */}
+                {githubConnection.githubRepoUrl!.replace("https://github.com/", "")}
               </span>
               <ExternalLink size={12} />
             </Link>

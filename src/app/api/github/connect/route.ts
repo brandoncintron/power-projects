@@ -4,7 +4,6 @@ import { z } from "zod";
 
 import { db } from "@/lib/db";
 
-// Request body validation schema - repository is now optional for disconnect
 const connectRepoSchema = z.object({
   projectId: z.string(),
   repository: z
@@ -36,7 +35,7 @@ export async function POST(request: NextRequest) {
     // Check if project exists and user is the owner
     const project = await db.project.findFirst({
       where: {
-        id: projectId,
+        id: projectId, 
         ownerId: session.user.id,
       },
     });
@@ -54,9 +53,10 @@ export async function POST(request: NextRequest) {
     if (!repository) {
       const updatedProject = await db.project.update({
         where: {
-          id: projectId,
+          id: projectId, // PowerProjects ID
         },
         data: {
+          githubRepoId: null, // GitHub Repo ID
           githubRepoUrl: null,
           githubRepoName: null,
           githubRepoOwner: null,
@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
         message: "Repository disconnected successfully",
         project: {
           id: updatedProject.id,
+          githubRepoId: updatedProject.githubRepoId,
           githubRepoUrl: updatedProject.githubRepoUrl,
           githubRepoName: updatedProject.githubRepoName,
           githubRepoOwner: updatedProject.githubRepoOwner,
@@ -83,6 +84,7 @@ export async function POST(request: NextRequest) {
         id: projectId,
       },
       data: {
+        githubRepoId: repository.id.toString(),
         githubRepoUrl: repository.html_url,
         githubRepoName: repository.name,
         githubRepoOwner: repository.owner.login,
@@ -95,6 +97,7 @@ export async function POST(request: NextRequest) {
       message: "Repository connected successfully",
       project: {
         id: updatedProject.id,
+        githubRepoId: updatedProject.githubRepoId,
         githubRepoUrl: updatedProject.githubRepoUrl,
         githubRepoName: updatedProject.githubRepoName,
         githubRepoOwner: updatedProject.githubRepoOwner,
