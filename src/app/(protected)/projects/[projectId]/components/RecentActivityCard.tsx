@@ -1,18 +1,14 @@
 "use client";
 
 import { Activity, ExternalLink, Github } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 import OAuthButton from "@/components/auth/OAuthButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LoadingSpinner } from "@/components/ui/loading";
 
 import { useGitHubDialog } from "../hooks/useGitHubDialog";
 import { RecentActivityCardProps } from "../types/types";
-import { formatTimeAgo } from "../utils/formatTimeAgo";
-import { getActivityIcon } from "../utils/getActivityIcon";
 
 /* Recent Activity Card - Displays the most recent project activities */
 export function RecentActivityCard({
