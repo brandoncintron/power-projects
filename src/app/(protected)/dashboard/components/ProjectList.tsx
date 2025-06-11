@@ -28,7 +28,7 @@ export function ProjectList({ projects }: ProjectListProps) {
           Your Projects
         </h2>
         {hasProjects && (
-          <Link href="/create-project" className="inline-flex">
+          <Link href="/create" className="inline-flex">
             <Button
               variant="outline"
               size="sm"
@@ -47,7 +47,7 @@ export function ProjectList({ projects }: ProjectListProps) {
           <p className="text-muted-foreground mb-4 text-sm text-center px-4">
             You haven&apos;t created any projects yet.
           </p>
-          <Link href="/create-project" className="w-fit">
+          <Link href="/create" className="w-fit">
             <Button
               variant="default"
               size="sm"

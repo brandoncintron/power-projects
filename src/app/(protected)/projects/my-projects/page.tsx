@@ -103,7 +103,7 @@ export default async function MyProjectsPage() {
             </p>
           </div>
           <Button asChild>
-            <Link href="/create-project">
+            <Link href="/create">
               <Plus className="mr-2 h-4 w-4" />
               Create Project
             </Link>
@@ -129,7 +129,7 @@ export default async function MyProjectsPage() {
               project to start collaborating with others.
             </p>
             <Button asChild>
-              <Link href="/create-project">Create Your First Project</Link>
+              <Link href="/create">Create Your First Project</Link>
             </Button>
           </Card>
         )}

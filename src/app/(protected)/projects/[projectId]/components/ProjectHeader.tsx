@@ -27,6 +27,7 @@ export function ProjectHeader({
   createdAt,
   isOwner,
   githubConnection,
+  githubRepoCreatedViaApp,
 }: ProjectHeaderProps) {
   const { showLoading } = useLoading();
   const { open: openGitHubDialog } = useGitHubDialog();
@@ -92,22 +93,24 @@ export function ProjectHeader({
               Connect GitHub
             </Button>
           ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleDisconnectRepository}
-              disabled={isDisconnecting}
-              className="min-w-[140px]"
-            >
-              {isDisconnecting ? (
-                <LoadingSpinner className="h-4 w-4" text="Disconnecting..." />
-              ) : (
-                <>
-                  <Unlink className="mr-2 h-4 w-4" />
-                  Disconnect Repository
-                </>
-              )}
-            </Button>
+            !githubRepoCreatedViaApp && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDisconnectRepository}
+                disabled={isDisconnecting}
+                className="min-w-[140px]"
+              >
+                {isDisconnecting ? (
+                  <LoadingSpinner className="h-4 w-4" text="Disconnecting..." />
+                ) : (
+                  <>
+                    <Unlink className="mr-2 h-4 w-4" />
+                    Disconnect Repository
+                  </>
+                )}
+              </Button>
+            )
           )}
           <Link
             href={`/projects/${projectId}/edit`}

@@ -84,7 +84,7 @@ export default async function BrowseProjectsListPage() {
               asChild
               className="w-full md:w-auto shadow-md transition-all hover:shadow-lg"
             >
-              <Link href="/create-project">Create a project</Link>
+              <Link href="/create">Create a project</Link>
             </Button>
           )}
         </div>

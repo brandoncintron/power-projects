@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
 
+import { createGithubRepository } from "@/app/api/github/repos/create/route";
 import { ProjectFormData, projectSchema } from "./schemas/project-schema";
 
 export async function createProject(data: ProjectFormData) {
@@ -25,12 +26,44 @@ export async function createProject(data: ProjectFormData) {
   }
 
   try {
-    const { visibility, ...rest } = validatedFields.data;
+    const { githubRepoCreatedViaApp, ...restOfData } = validatedFields.data;
+    let githubConnectionData = {};
+
+    if (githubRepoCreatedViaApp) {
+      const { projectName, description, visibility } = restOfData;
+
+      try {
+        const repoData = await createGithubRepository({
+          projectName,
+          description,
+          visibility: visibility as "PUBLIC" | "PRIVATE",
+          session,
+        });
+
+        githubConnectionData = {
+          githubRepoName: repoData.githubRepoName,
+          githubRepoOwner: repoData.githubRepoOwner,
+          githubRepoUrl: repoData.githubRepoUrl,
+          githubConnectedAt: new Date(),
+        };
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred.";
+        return {
+          error: `Failed to create GitHub repository: ${errorMessage}`,
+        };
+      }
+    }
+
     await db.project.create({
       data: {
-        ...rest,
-        visibility: visibility as "PUBLIC" | "PRIVATE" | "UNIVERSITY",
+        ...restOfData,
+        visibility: restOfData.visibility as "PUBLIC" | "PRIVATE" | "UNIVERSITY",
         ownerId: session.user.id,
+        ...githubConnectionData,
+        githubRepoCreatedViaApp,
       },
     });
   } catch (error) {

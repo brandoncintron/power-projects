@@ -113,6 +113,7 @@ async function ProjectDetailPage(props: {
         createdAt={project.createdAt}
         isOwner={isOwner}
         githubConnection={githubConnection}
+        githubRepoCreatedViaApp={project.githubRepoCreatedViaApp}
       />
 
       {/* Main Content */}

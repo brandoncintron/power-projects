@@ -187,7 +187,7 @@ export const frameworkData: ApplicationTypeData[] = [
     ],
   },
   {
-    name: "AI/ML",
+    name: "ML/Data Science",
     categories: [
       {
         name: "Deep Learning",

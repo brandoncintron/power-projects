@@ -91,6 +91,7 @@ export interface ProjectHeaderProps {
   createdAt: Date;
   isOwner: boolean;
   githubConnection?: GitHubConnectionData;
+  githubRepoCreatedViaApp?: boolean;
 }
 
 // Activity and Recent Activity Types
