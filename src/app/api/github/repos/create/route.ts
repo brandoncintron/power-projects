@@ -1,48 +1,11 @@
-import { Octokit } from "octokit";
 import { NextRequest, NextResponse } from "next/server";
-import { Session } from "next-auth";
+
 
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
-
-interface CreateRepoOptions {
-  projectName: string;
-  description?: string;
-  visibility: "PUBLIC" | "PRIVATE";
-  session: Session;
-}
-
-export async function createGithubRepository({
-  projectName,
-  description,
-  visibility,
-  session,
-}: CreateRepoOptions) {
-  const githubAccount = await db.account.findFirst({
-    where: {
-      userId: session.user.id,
-      provider: "github",
-    },
-  });
-
-  if (!githubAccount?.access_token) {
-    throw new Error("GitHub account not connected or access token is missing.");
-  }
-
-  const octokit = new Octokit({ auth: githubAccount.access_token });
-
-  const { data: repo } = await octokit.rest.repos.createForAuthenticatedUser({
-    name: projectName,
-    description: description || "",
-    private: visibility === "PRIVATE",
-  });
-
-  return {
-    githubRepoName: repo.name,
-    githubRepoOwner: repo.owner.login,
-    githubRepoUrl: repo.html_url,
-  };
-}
+import {
+  createGithubRepository,
+  GithubServiceError,
+} from "@/lib/github/services";
 
 export async function POST(req: NextRequest) {
   try {
@@ -61,16 +24,20 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const repoData = await createGithubRepository({
+    const repoData = await createGithubRepository(session, {
       projectName,
       description,
       visibility,
-      session,
     });
 
     return NextResponse.json(repoData);
   } catch (error) {
     console.error("Failed to create GitHub repository:", error);
+
+    if (error instanceof GithubServiceError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+
     const errorMessage =
       error instanceof Error ? error.message : "An unknown error occurred.";
     return NextResponse.json(

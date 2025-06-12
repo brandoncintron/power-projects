@@ -1,13 +1,17 @@
 "use client";
 
+import { formatDistanceToNow } from "date-fns";
 import { Activity, ExternalLink, Github } from "lucide-react";
 import Link from "next/link";
 
 import OAuthButton from "@/components/auth/OAuthButton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { useGitHubDialog } from "../hooks/useGitHubDialog";
+import { useProjectActivity } from "../hooks/useProjectActivity";
 import { RecentActivityCardProps } from "../types/types";
 
 /* Recent Activity Card - Displays the most recent project activities */
@@ -26,6 +30,15 @@ export function RecentActivityCard({
   // User has access if they are the owner or a collaborator
   const hasAccess = isOwner || isCollaborator;
 
+  const shouldFetchActivity =
+    !!(projectId && isRepositoryConnected && hasAccess && session);
+
+  const {
+    data: activities,
+    isLoading,
+    isError,
+    error,
+  } = useProjectActivity(projectId!, shouldFetchActivity);
 
   return (
     <Card>
@@ -69,13 +82,110 @@ export function RecentActivityCard({
           ) : !hasAccess ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground">
-                You need to be a project owner or collaborator to view activity.
+                You need to be a collaborator to view this project&apos;s activity.
               </p>
             </div>
           ) : 
           (
             <div className="space-y-4">
-              Display the repository activities here
+              {isLoading && (
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-4">
+                    <Skeleton className="h-9 w-9 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[250px]" />
+                      <Skeleton className="h-3 w-[200px]" />
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <Skeleton className="h-9 w-9 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[250px]" />
+                      <Skeleton className="h-3 w-[200px]" />
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <Skeleton className="h-9 w-9 rounded-full" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-[250px]" />
+                      <Skeleton className="h-3 w-[200px]" />
+                    </div>
+                  </div>
+                </div>
+              )}
+              {isError && (
+                <div className="text-center text-sm text-destructive py-8">
+                  {error?.message.includes("Repository not found") ? (
+                    <>
+                      <p>Repository not found on GitHub.</p>
+                      <p className="text-xs text-muted-foreground">
+                        It might have been deleted or permissions have changed.
+                      </p>
+                      {isOwner && (
+                        <Button
+                          variant="link"
+                          size="sm"
+                          onClick={() => openGitHubDialog()}
+                          className="mt-2"
+                        >
+                          Connect a different repository
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p>Could not load project activity.</p>
+                      <p className="text-xs text-muted-foreground">
+                        {error?.message}
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
+              {activities && activities.length > 0 && !isLoading && (
+                <ul className="space-y-4">
+                  {activities.map((activity) => (
+                    <li key={activity.id} className="flex items-start gap-3">
+                      <Avatar className="h-9 w-9 border">
+                        <AvatarImage
+                          src={activity.actor.avatarUrl}
+                          alt={activity.actor.name}
+                        />
+                        <AvatarFallback>
+                          {activity.actor.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 text-sm pt-1">
+                        <p className="leading-tight">
+                          <span className="font-semibold">
+                            {activity.actor.name}
+                          </span>{" "}
+                          <Link
+                            href={activity.primaryUrl || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline"
+                          >
+                            {activity.summary}
+                          </Link>
+                        </p>
+                        <p className="text-xs text-muted-foreground pt-1">
+                          {formatDistanceToNow(new Date(activity.timestamp), {
+                            addSuffix: true,
+                          })}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {activities?.length === 0 && !isLoading && !isError && (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">
+                    No recent repository activity to display.
+                  </p>
+                </div>
+              )}
             </div>
           )}
         </CardContent>

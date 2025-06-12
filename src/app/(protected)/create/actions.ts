@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
 
-import { createGithubRepository } from "@/app/api/github/repos/create/route";
+import { createGithubRepository } from "@/lib/github/services";
 import { ProjectFormData, projectSchema } from "./schemas/project-schema";
 
 export async function createProject(data: ProjectFormData) {
@@ -33,11 +33,10 @@ export async function createProject(data: ProjectFormData) {
       const { projectName, description, visibility } = restOfData;
 
       try {
-        const repoData = await createGithubRepository({
+        const repoData = await createGithubRepository(session, {
           projectName,
           description,
           visibility: visibility as "PUBLIC" | "PRIVATE",
-          session,
         });
 
         githubConnectionData = {
