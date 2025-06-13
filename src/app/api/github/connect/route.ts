@@ -95,6 +95,7 @@ export async function POST(request: NextRequest) {
     });
 
     // --- Create the webhook on GitHub ---
+    // Debug - remove later
     console.log(`Attempting to create webhook for ${repository.full_name}...`);
     try {
       const session = await auth(); // Re-auth to get a fresh session for Octokit
@@ -113,18 +114,16 @@ export async function POST(request: NextRequest) {
         active: true,
       });
 
+      // Debug - remove later
       console.log(`Webhook created successfully for ${repository.full_name}. ID: ${response.data.id}`);
 
     } catch (webhookError) {
-      // If webhook creation fails, it's not a critical error.
-      // The main connection is already saved. We should log this for debugging.
+      // Debug - remove later
       console.error(
         `Failed to create webhook for ${repository.full_name}. Project ID: ${projectId}`,
         webhookError,
       );
-      // Optionally, you could store a flag on the project to retry later.
     }
-    // ------------------------------------
 
     return NextResponse.json({
       success: true,
