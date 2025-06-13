@@ -1,8 +1,10 @@
 import { auth } from "@/auth";
+import { getOctokitInstance } from "@/lib/github/services";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
+import { absoluteUrl } from "@/lib/utils";
 
 const connectRepoSchema = z.object({
   projectId: z.string(),
@@ -91,6 +93,38 @@ export async function POST(request: NextRequest) {
         githubConnectedAt: new Date(),
       },
     });
+
+    // --- Create the webhook on GitHub ---
+    console.log(`Attempting to create webhook for ${repository.full_name}...`);
+    try {
+      const session = await auth(); // Re-auth to get a fresh session for Octokit
+      const octokit = await getOctokitInstance(session);
+      const webhookUrl = absoluteUrl("/api/github/webhook");
+
+      const response = await octokit.rest.repos.createWebhook({
+        owner: repository.owner.login,
+        repo: repository.name,
+        events: ["push", "issues", "pull_request", "issue_comment"],
+        config: {
+          url: webhookUrl,
+          content_type: "json",
+          secret: process.env.GITHUB_WEBHOOK_SECRET,
+        },
+        active: true,
+      });
+
+      console.log(`Webhook created successfully for ${repository.full_name}. ID: ${response.data.id}`);
+
+    } catch (webhookError) {
+      // If webhook creation fails, it's not a critical error.
+      // The main connection is already saved. We should log this for debugging.
+      console.error(
+        `Failed to create webhook for ${repository.full_name}. Project ID: ${projectId}`,
+        webhookError,
+      );
+      // Optionally, you could store a flag on the project to retry later.
+    }
+    // ------------------------------------
 
     return NextResponse.json({
       success: true,
