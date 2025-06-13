@@ -2,25 +2,27 @@
 
 import { useQuery } from "@tanstack/react-query";
 
-export interface ProcessedActivity {
+export interface GitHubActivity {
   id: string;
-  type: "COMMIT" | "ISSUE" | "PULL_REQUEST" | "PUSH" | "COMMENT";
-  actor: {
-    name: string;
-    avatarUrl: string;
-  };
+  projectId: string;
+  githubEventId: string;
+  eventType: string;
+  action: string | null;
+  actorUsername: string;
+  actorAvatarUrl: string | null;
   summary: string;
-  timestamp: string;
-  primaryUrl?: string;
+  targetUrl: string;
+  branch: string | null;
+  timestamp: string; // ISO 8601 date string
 }
 
 async function fetchProjectActivity(
   projectId: string,
-): Promise<ProcessedActivity[]> {
-  const response = await fetch(`/api/github/events/${projectId}`);
+): Promise<GitHubActivity[]> {
+  const response = await fetch(`/api/projects/${projectId}/activity`);
 
   if (!response.ok) {
-    const errorBody = await response.json().catch(() => ({})); // Catch if body is not json
+    const errorBody = await response.json().catch(() => ({}));
     throw new Error(errorBody.error || "Failed to fetch project activity.");
   }
 
@@ -28,10 +30,10 @@ async function fetchProjectActivity(
 }
 
 export const useProjectActivity = (projectId: string, isEnabled: boolean) => {
-  return useQuery<ProcessedActivity[], Error>({
+  return useQuery<GitHubActivity[], Error>({
     queryKey: ["projectActivity", projectId],
     queryFn: () => fetchProjectActivity(projectId),
-    enabled: isEnabled, // Only fetch if the github repo is connected and user has access
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: isEnabled,
+    staleTime: 1000 * 60 * 3, // 3 minutes
   });
 }; 

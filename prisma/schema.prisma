@@ -188,6 +188,7 @@ model GitHubActivity {
   actorAvatarUrl  String?
   summary         String   // A human-readable summary like "pushed 3 commits to main"
   targetUrl       String   // The direct URL to the issue, PR, or commit
+  branch          String?  // The branch name, if applicable (e.g., for push events)
   timestamp       DateTime @default(now())
 
   @@index([projectId])

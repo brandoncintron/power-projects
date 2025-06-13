@@ -39,12 +39,6 @@ export function useGitHubConnection({
         throw new Error(data.error || "Failed to connect repository");
       }
 
-      setToast(
-        `Successfully connected to ${repository.name}!`,
-        "success",
-        "githubConnectStatus",
-      );
-
       onSuccess?.();
       router.refresh();
 

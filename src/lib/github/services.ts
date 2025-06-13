@@ -72,3 +72,136 @@ export async function createGithubRepository(
     githubRepoUrl: repo.html_url,
   };
 }
+
+export async function fetchAndStoreRecentActivity(
+  project: { id: string; githubRepoOwner: string | null; githubRepoName: string | null },
+  octokit: any,
+) {
+  if (!project.githubRepoOwner || !project.githubRepoName) {
+    console.error(`Project ${project.id} is missing repository details. Skipping activity fetch.`);
+    return;
+  }
+
+  const owner = project.githubRepoOwner;
+  const repo = project.githubRepoName;
+
+  console.log(`Starting to backfill activity for ${owner}/${repo}...`);
+
+  try {
+    const { data: events } = await octokit.rest.activity.listRepoEvents({
+      owner,
+      repo,
+      per_page: 50, // Fetch the last 50 events
+    });
+
+    console.log(`Total events fetched from API: ${events.length}`);
+
+    const activitiesToCreate = [];
+
+    for (const event of events) {
+      console.log(`Processing event type: ${event.type}, ID: ${event.id}`);
+      let action = (event.payload as any).action || '';
+
+      switch (event.type) {
+        case "PushEvent": {
+          const pushPayload = event.payload as any;
+          if (pushPayload.commits) {
+            for (const commit of pushPayload.commits) {
+              const branch = pushPayload.ref.split("/").pop();
+              activitiesToCreate.push({
+                githubEventId: commit.sha,
+                projectId: project.id,
+                eventType: "push",
+                action: "pushed",
+                branch: branch,
+                actorUsername: event.actor.login,
+                actorAvatarUrl: event.actor.avatar_url,
+                summary: `pushed commit: ${commit.message.split('\n')[0]}`,
+                targetUrl: `https://github.com/${owner}/${repo}/commit/${commit.sha}`,
+                timestamp: new Date(event.created_at!),
+              });
+              console.log(`Prepared PushEvent commit. SHA: ${commit.sha}`);
+            }
+          }
+          break;
+        }
+
+        case "IssuesEvent": {
+          const issuePayload = event.payload as any;
+          activitiesToCreate.push({
+            githubEventId: event.id,
+            projectId: project.id,
+            eventType: event.type,
+            action: action,
+            branch: null,
+            actorUsername: event.actor.login,
+            actorAvatarUrl: event.actor.avatar_url,
+            summary: `issue #${issuePayload.issue.number}: ${issuePayload.issue.title}`,
+            targetUrl: issuePayload.issue.html_url,
+            timestamp: new Date(event.created_at!),
+          });
+          console.log(`Matched IssuesEvent. Summary: ${issuePayload.issue.title}`);
+          break;
+        }
+
+        case "PullRequestEvent": {
+          const prPayload = event.payload as any;
+          activitiesToCreate.push({
+            githubEventId: event.id,
+            projectId: project.id,
+            eventType: event.type,
+            action: action,
+            branch: null,
+            actorUsername: event.actor.login,
+            actorAvatarUrl: event.actor.avatar_url,
+            summary: `pull request #${prPayload.pull_request.number}: ${prPayload.pull_request.title}`,
+            targetUrl: prPayload.pull_request.html_url,
+            timestamp: new Date(event.created_at!),
+          });
+          console.log(`Matched PullRequestEvent. Summary: ${prPayload.pull_request.title}`);
+          break;
+        }
+        
+        case "IssueCommentEvent": {
+          const commentPayload = event.payload as any;
+          const type = commentPayload.issue.pull_request ? "pull request" : "issue";
+          activitiesToCreate.push({
+            githubEventId: event.id,
+            projectId: project.id,
+            eventType: event.type,
+            action: "commented",
+            branch: null,
+            actorUsername: event.actor.login,
+            actorAvatarUrl: event.actor.avatar_url,
+            summary: `commented on ${type} #${commentPayload.issue.number}`,
+            targetUrl: commentPayload.comment.html_url,
+            timestamp: new Date(event.created_at!),
+          });
+          console.log(`Matched IssueCommentEvent.`);
+          break;
+        }
+
+        default:
+          console.log(`Skipping event type: ${event.type}`);
+          continue; // Skip events we don't want to track
+      }
+    }
+
+    if (activitiesToCreate.length > 0) {
+      // De-duplicate one last time before insertion, just in case
+      const uniqueActivities = Array.from(new Map(activitiesToCreate.map(a => [a.githubEventId, a])).values());
+      console.log(`Storing ${uniqueActivities.length} unique processed activities.`);
+
+      const result = await db.gitHubActivity.createMany({
+        data: uniqueActivities,
+        skipDuplicates: true,
+      });
+      console.log(`Backfill complete for ${owner}/${repo}. Stored ${result.count} new activities.`);
+    } else {
+      console.log(`Backfill complete for ${owner}/${repo}. No new activities to store.`);
+    }
+
+  } catch (error) {
+    console.error(`Failed to fetch or store recent activity for ${owner}/${repo}:`, error);
+  }
+}

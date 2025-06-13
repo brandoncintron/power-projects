@@ -5,6 +5,9 @@ import { z } from "zod";
 
 import { db } from "@/lib/db";
 import { absoluteUrl } from "@/lib/utils";
+import {
+  fetchAndStoreRecentActivity,
+} from "@/lib/github/services";
 
 const connectRepoSchema = z.object({
   projectId: z.string(),
@@ -94,15 +97,13 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // --- Create the webhook on GitHub ---
-    // Debug - remove later
-    console.log(`Attempting to create webhook for ${repository.full_name}...`);
+    // --- Create the webhook and backfill data ---
     try {
       const session = await auth(); // Re-auth to get a fresh session for Octokit
       const octokit = await getOctokitInstance(session);
       const webhookUrl = absoluteUrl("/api/github/webhook");
 
-      const response = await octokit.rest.repos.createWebhook({
+      await octokit.rest.repos.createWebhook({
         owner: repository.owner.login,
         repo: repository.name,
         events: ["push", "issues", "pull_request", "issue_comment"],
@@ -113,17 +114,22 @@ export async function POST(request: NextRequest) {
         },
         active: true,
       });
+      
+      console.log(`Webhook created successfully for ${repository.full_name}.`);
 
-      // Debug - remove later
-      console.log(`Webhook created successfully for ${repository.full_name}. ID: ${response.data.id}`);
+      // Now, backfill the recent activity. Await this to prevent a race condition.
+      await fetchAndStoreRecentActivity(updatedProject, octokit);
 
-    } catch (webhookError) {
-      // Debug - remove later
+    } catch (error) {
+      // If webhook or backfill creation fails, it's not a critical error for the connection itself.
+      // The main connection is already saved. We should log this for debugging.
       console.error(
-        `Failed to create webhook for ${repository.full_name}. Project ID: ${projectId}`,
-        webhookError,
+        `Failed to create webhook or backfill activity for ${repository.full_name}. Project ID: ${projectId}`,
+        error,
       );
+      // Optionally, you could store a flag on the project to retry later.
     }
+    // ------------------------------------
 
     return NextResponse.json({
       success: true,

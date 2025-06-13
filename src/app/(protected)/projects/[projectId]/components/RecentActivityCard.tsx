@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
-import { Activity, ExternalLink, Github } from "lucide-react";
+import { Activity, ExternalLink, Github, GitBranch } from "lucide-react";
 import Link from "next/link";
 
 import OAuthButton from "@/components/auth/OAuthButton";
@@ -148,20 +148,20 @@ export function RecentActivityCard({
                     <li key={activity.id} className="flex items-start gap-3">
                       <Avatar className="h-9 w-9 border">
                         <AvatarImage
-                          src={activity.actor.avatarUrl}
-                          alt={activity.actor.name}
+                          src={activity.actorAvatarUrl || ""}
+                          alt={activity.actorUsername}
                         />
                         <AvatarFallback>
-                          {activity.actor.name.charAt(0)}
+                          {activity.actorUsername.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 text-sm pt-1">
                         <p className="leading-tight">
                           <span className="font-semibold">
-                            {activity.actor.name}
+                            {activity.actorUsername}
                           </span>{" "}
                           <Link
-                            href={activity.primaryUrl || "#"}
+                            href={activity.targetUrl || "#"}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hover:underline"
@@ -169,6 +169,12 @@ export function RecentActivityCard({
                             {activity.summary}
                           </Link>
                         </p>
+                        {activity.branch && (
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground pt-1">
+                            <GitBranch size={12} />
+                            <span>{activity.branch}</span>
+                          </div>
+                        )}
                         <p className="text-xs text-muted-foreground pt-1">
                           {formatDistanceToNow(new Date(activity.timestamp), {
                             addSuffix: true,
