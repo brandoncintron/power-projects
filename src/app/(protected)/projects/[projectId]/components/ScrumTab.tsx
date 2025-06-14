@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 /* Scrum Board Card - Placeholder for the future scrum board functionality */
-export function ScrumBoard() {
+export function ScrumTab() {
   return (
     <Card>
       <CardHeader>
@@ -11,7 +11,7 @@ export function ScrumBoard() {
       </CardHeader>
       <CardContent>
         <div className="text-center py-8">
-          <p className="text-muted-foreground">Scrum board coming soon</p>
+          <p className="text-muted-foreground">Scrum board functionality coming soon.</p>
         </div>
       </CardContent>
     </Card>

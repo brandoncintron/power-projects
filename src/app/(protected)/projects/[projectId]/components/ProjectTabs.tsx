@@ -3,11 +3,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { ProjectTabsProps } from "../types/types";
-import { ProjectApplicationsSection } from "./ProjectApplicationsSection";
-import { ProjectChatCard } from "./ProjectChatCard";
-import { ProjectOverview } from "./ProjectOverview";
-import { ProjectTasksCard } from "./ProjectTasks";
-import { ScrumBoard } from "./ScrumBoard";
+import { ApplicationsTab } from "./ApplicationsTab";
+import { ProjectOverview } from "./OverviewTab";
+import { ChatTab } from "./ChatTab";
+import { TasksTab } from "./TasksTab";
+import { ScrumTab } from "./ScrumTab";
 
 /* Project Tabs - Manages tabbed interface for project content with conditional rendering based on ownership and collaboration status */
 export function ProjectTabs({
@@ -82,20 +82,20 @@ export function ProjectTabs({
       </TabsContent>
 
       <TabsContent value="tasks" className="mt-18 md:mt-6">
-        <ProjectTasksCard />
+        <TasksTab />
       </TabsContent>
 
       <TabsContent value="scrum" className="mt-18 md:mt-6">
-        <ScrumBoard />
+        <ScrumTab />
       </TabsContent>
 
       <TabsContent value="chat" className="mt-18 md:mt-6">
-        <ProjectChatCard />
+        <ChatTab />
       </TabsContent>
 
       {isOwner && (
         <TabsContent value="applications" className="mt-18 md:mt-6">
-          <ProjectApplicationsSection
+          <ApplicationsTab
             owner={owner}
             applicants={applicants}
             collaborators={collaborators}

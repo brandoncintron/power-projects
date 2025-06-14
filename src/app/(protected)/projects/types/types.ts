@@ -53,12 +53,7 @@ export interface ProjectApplicantsListProps {
   pendingActions?: { [key: string]: { accept?: boolean; deny?: boolean } };
 }
 
-export interface ProjectApplicationSectionProps {
-  owner: Owner;
-  applicants: Applicants[];
-  collaborators?: Collaborator[];
-  projectId: string;
-}
+
 
 export interface ProjectHeaderProps {
   projectName: string;

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 /* Project Tasks Card - Placeholder for the future project tasks functionality */
-export function ProjectTasksCard() {
+export function TasksTab() {
   return (
     <Card>
       <CardHeader>
@@ -11,7 +11,7 @@ export function ProjectTasksCard() {
       </CardHeader>
       <CardContent>
         <div className="text-center py-8">
-          <p className="text-muted-foreground">Track tasks and progress here</p>
+          <p className="text-muted-foreground">Task tracking functionality coming soon.</p>
         </div>
       </CardContent>
     </Card>

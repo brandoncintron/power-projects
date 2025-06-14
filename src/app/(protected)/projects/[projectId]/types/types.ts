@@ -1,5 +1,7 @@
 import type { Session } from "next-auth";
 
+import { Applicants, Collaborator, Owner } from "@@/projects/types/types";
+
 // GitHub Repository Types
 export interface GitHubRepository {
   id: number;
@@ -113,7 +115,7 @@ export interface RecentActivityCardProps {
 }
 
 // Project Overview Props
-export interface ProjectOverviewProps {
+export interface OverviewTabProps {
   applicationType: string;
   frameworks: string[];
   databases: string[];
@@ -175,4 +177,11 @@ export interface ProjectTabsProps {
   projectId: string;
   githubConnection?: GitHubConnectionData;
   session: Session | null;
+}
+
+export interface ApplicationsTabProps {
+  owner: Owner;
+  applicants: Applicants[];
+  collaborators?: Collaborator[];
+  projectId: string;
 }

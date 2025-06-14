@@ -1,6 +1,6 @@
 "use client";
 
-import { ProjectOverviewProps } from "../types/types";
+import { OverviewTabProps } from "../types/types";
 import { DescriptionCard } from "./DescriptionCard";
 import { ProjectDetailsCard } from "./ProjectDetailsCard";
 import { RecentActivityCard } from "./RecentActivityCard";
@@ -19,7 +19,7 @@ export function ProjectOverview({
   projectId = "",
   githubConnection,
   session,
-}: ProjectOverviewProps) {
+}: OverviewTabProps) {
   const dateObject = completionDate
     ? typeof completionDate === "string"
       ? new Date(completionDate)

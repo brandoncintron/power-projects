@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 /* Project Chat Card - Placeholder for the future chat functionality */
-export function ProjectChatCard() {
+export function ChatTab() {
   return (
     <Card>
       <CardHeader>

@@ -3,15 +3,15 @@
 import { ProjectApplicantsList } from "@@/projects/[projectId]/components/ProjectApplicantsList";
 import { TeamMembersCard } from "@@/projects/[projectId]/components/TeamMembersCard";
 import { useApplicationActions } from "@@/projects/[projectId]/hooks/useApplicationActions";
-import { ProjectApplicationSectionProps } from "@@/projects/types/types";
+import { ApplicationsTabProps } from "../types/types";
 
 /* Project Applications Section - Organizes team members and project applicants */
-export function ProjectApplicationsSection({
+export function ApplicationsTab({
   owner,
   applicants,
   collaborators = [],
   projectId,
-}: ProjectApplicationSectionProps) {
+}: ApplicationsTabProps) {
   const { pendingActions, onAccept, onDeny, filterPendingApplicants } =
     useApplicationActions(projectId);
 
