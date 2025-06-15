@@ -1,9 +1,3 @@
 {
-  "buildCommand": "next build --no-lint",
-  "rewrites": [
-    {
-      "source": "/api/github/webhook",
-      "destination": "/api/github/webhook"
-    }
-  ]
+  "buildCommand": "next build --no-lint"
 }
