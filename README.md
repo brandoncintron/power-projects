@@ -46,7 +46,6 @@ Power Projects is a collaborative platform designed to help developers of all sk
 4. **Database and Storage**
 
 - ![Supabase](https://img.shields.io/badge/-Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
-- ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
 
 5. **Hosting**
 
