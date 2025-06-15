@@ -162,3 +162,5 @@ export interface ProjectGridProps {
 export interface ProjectStatsProps {
   projects: ProjectWithDetails[];
 }
+
+

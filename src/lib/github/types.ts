@@ -2,25 +2,34 @@ import { Octokit } from "octokit";
 
 export type OctokitInstance = InstanceType<typeof Octokit>;
 
-// Simplified type for a commit within a PushEvent
-export interface PushEventCommit {
-  sha: string;
+
+export interface WebhookPushCommit {
+  id: string; // This is the commit SHA
   message: string;
-  timestamp: string; // ISO 8601
+  timestamp: string;
   url: string;
 }
 
-// Simplified type for the payload of a PushEvent
-export interface PushEventPayload {
+export interface WebhookPushPayload {
   ref: string;
-  commits: PushEventCommit[];
+  commits: WebhookPushCommit[];
   sender: {
     login: string;
     avatar_url: string;
   };
 }
 
-// Simplified type for an Issue
+export interface ApiPushEventCommit {
+  sha: string; // This is the commit SHA
+  message: string;
+  url: string;
+}
+
+export interface ApiPushPayload {
+  ref: string;
+  commits: ApiPushEventCommit[];
+}
+
 export interface Issue {
   number: number;
   title: string;
@@ -29,7 +38,6 @@ export interface Issue {
   pull_request?: object; // Present if the issue is a PR
 }
 
-// Simplified type for the payload of an IssuesEvent
 export interface IssuesEventPayload {
   action: string;
   issue: Issue;
@@ -39,7 +47,6 @@ export interface IssuesEventPayload {
   };
 }
 
-// Simplified type for a Pull Request
 export interface PullRequest {
   number: number;
   title: string;
@@ -47,7 +54,6 @@ export interface PullRequest {
   updated_at: string; // ISO 8601
 }
 
-// Simplified type for the payload of a PullRequestEvent
 export interface PullRequestEventPayload {
   action: string;
   pull_request: PullRequest;
@@ -57,13 +63,11 @@ export interface PullRequestEventPayload {
   };
 }
 
-// Simplified type for a Comment
 export interface Comment {
   html_url: string;
   updated_at: string; // ISO 8601
 }
 
-// Simplified type for the payload of an IssueCommentEvent
 export interface IssueCommentEventPayload {
   action: string;
   issue: Issue;
@@ -83,10 +87,16 @@ export interface GitHubEvent {
     avatar_url: string;
   };
   payload:
-    | PushEventPayload
+    | ApiPushPayload
     | IssuesEventPayload
     | PullRequestEventPayload
     | IssueCommentEventPayload
     | object; // Fallback for other event types
   created_at: string | null;
 } 
+
+export interface CreateRepoOptions {
+    projectName: string;
+    description?: string;
+    visibility: "PUBLIC" | "PRIVATE";
+  }

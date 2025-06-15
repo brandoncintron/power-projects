@@ -1,11 +1,23 @@
+/**
+ * @file This API route handles the one-time action of connecting or disconnecting a GitHub repository
+ * to a project within the application.
+ *
+ * It:
+ * 1.  Updates the project's details in the database with the repository's information.
+ * 2.  Uses the GitHub service to create a webhook for the connected repository. This webhook
+ *     sends real-time events to our `/api/github/webhook` endpoint.
+ * 3.  Triggers the backfill of historical data by calling `fetchAndStoreRecentActivity`
+ *     to populate the activity feed with past events.
+ * 
+ */
 import { auth } from "@/auth";
 import { getOctokitInstance } from "@/lib/github/services";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { db } from "@/lib/db";
-import { absoluteUrl } from "@/lib/utils";
 import {
+  createWebhook,
   fetchAndStoreRecentActivity,
 } from "@/lib/github/services";
 
@@ -101,35 +113,20 @@ export async function POST(request: NextRequest) {
     try {
       const session = await auth(); // Re-auth to get a fresh session for Octokit
       const octokit = await getOctokitInstance(session);
-      const webhookUrl = absoluteUrl("/api/github/webhook");
 
-      await octokit.rest.repos.createWebhook({
-        owner: repository.owner.login,
-        repo: repository.name,
-        events: ["push", "issues", "pull_request", "issue_comment"],
-        config: {
-          url: webhookUrl,
-          content_type: "json",
-          secret: process.env.GITHUB_WEBHOOK_SECRET,
-        },
-        active: true,
-      });
+      await createWebhook(octokit, repository.owner.login, repository.name);
       
       console.log(`Webhook created successfully for ${repository.full_name}.`);
 
-      // Now, backfill the recent activity. Await this to prevent a race condition.
+      // backfill the recent activity. Awaiting this to prevent race condition.
       await fetchAndStoreRecentActivity(updatedProject, octokit);
 
     } catch (error) {
-      // If webhook or backfill creation fails, it's not a critical error for the connection itself.
-      // The main connection is already saved. We should log this for debugging.
       console.error(
         `Failed to create webhook or backfill activity for ${repository.full_name}. Project ID: ${projectId}`,
         error,
-      );
-      // Optionally, you could store a flag on the project to retry later.
+      ); 
     }
-    // ------------------------------------
 
     return NextResponse.json({
       success: true,

@@ -4,8 +4,11 @@ import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
-
-import { createGithubRepository } from "@/lib/github/services";
+import {
+  createGithubRepository,
+  createWebhook,
+  getOctokitInstance,
+} from "@/lib/github/services";
 import { ProjectFormData, projectSchema } from "./schemas/project-schema";
 
 export async function createProject(data: ProjectFormData) {
@@ -25,9 +28,14 @@ export async function createProject(data: ProjectFormData) {
     };
   }
 
+  let newProject;
+
   try {
     const { githubRepoCreatedViaApp, ...restOfData } = validatedFields.data;
     let githubConnectionData = {};
+    let repoDataForWebhook:
+      | { githubRepoOwner: string; githubRepoName: string }
+      | undefined;
 
     if (githubRepoCreatedViaApp) {
       const { projectName, description, visibility } = restOfData;
@@ -45,6 +53,12 @@ export async function createProject(data: ProjectFormData) {
           githubRepoUrl: repoData.githubRepoUrl,
           githubConnectedAt: new Date(),
         };
+
+        // Save for webhook creation after project is created
+        repoDataForWebhook = {
+          githubRepoOwner: repoData.githubRepoOwner,
+          githubRepoName: repoData.githubRepoName,
+        };
       } catch (error) {
         const errorMessage =
           error instanceof Error
@@ -56,15 +70,36 @@ export async function createProject(data: ProjectFormData) {
       }
     }
 
-    await db.project.create({
+    newProject = await db.project.create({
       data: {
         ...restOfData,
-        visibility: restOfData.visibility as "PUBLIC" | "PRIVATE" | "UNIVERSITY",
+        visibility:
+          restOfData.visibility as "PUBLIC" | "PRIVATE" | "UNIVERSITY",
         ownerId: session.user.id,
         ...githubConnectionData,
         githubRepoCreatedViaApp,
       },
     });
+
+    // If a repo was created, now create the webhook for it.
+    if (githubRepoCreatedViaApp && repoDataForWebhook) {
+      try {
+        const octokit = await getOctokitInstance(session);
+        await createWebhook(
+          octokit,
+          repoDataForWebhook.githubRepoOwner,
+          repoDataForWebhook.githubRepoName,
+        );
+      } catch (webhookError) {
+        // Log the error but don't fail the entire operation since the
+        // project and repo are already created. This can be alerted
+        // on and fixed manually if needed.
+        console.error(
+          `Project and repo created successfully for project ID ${newProject.id}, but failed to create webhook:`,
+          webhookError,
+        );
+      }
+    }
   } catch (error) {
     console.error("Failed to create project:", error);
     return {
@@ -72,5 +107,6 @@ export async function createProject(data: ProjectFormData) {
     };
   }
 
-  revalidatePath("/dashboard");
+  revalidatePath("/projects/my-projects"); // Revalidate the projects list
+  return { success: true, project: newProject };
 }
