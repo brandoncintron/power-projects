@@ -34,11 +34,27 @@ async function verifySignature(
   body: Buffer,
 ): Promise<boolean> {
   const signature = req.headers.get("x-hub-signature-256");
-  if (!signature) return false;
+  if (!signature) {
+    console.error("Webhook signature header not found.");
+    return false;
+  }
 
-  const hmac = crypto.createHmac("sha256", GITHUB_WEBHOOK_SECRET!);
+  if (!GITHUB_WEBHOOK_SECRET) {
+    console.error("GITHUB_WEBHOOK_SECRET is not configured on the server.");
+    return false;
+  }
+
+  const hmac = crypto.createHmac("sha256", GITHUB_WEBHOOK_SECRET);
   hmac.update(body);
   const digest = `sha256=${hmac.digest("hex")}`;
+
+  console.log(`Received signature: ${signature}`);
+  console.log(`Computed digest:  ${digest}`);
+
+  if (signature.length !== digest.length) {
+    console.error("Signature and digest lengths do not match.");
+    return false;
+  }
 
   return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(digest));
 }
@@ -221,6 +237,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Disable Next.js body parsing to handle raw body for signature verification
 export const config = {
   api: {
     bodyParser: false,
