@@ -25,7 +25,7 @@ export function DatabaseSelection({
   onRemove,
 }: DatabaseSelectionProps) {
   const [customDatabase, setCustomDatabase] = React.useState("");
-  
+
   const handleAdd = () => {
     handleAddCustom("databases", customDatabase);
     setCustomDatabase("");

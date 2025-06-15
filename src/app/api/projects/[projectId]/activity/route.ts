@@ -7,12 +7,13 @@
  * for the "Recent Activity" component in the UI.
  */
 import { auth } from "@/auth";
-import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
+
+import { db } from "@/lib/db";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ projectId: string }> }
+  { params }: { params: Promise<{ projectId: string }> },
 ) {
   try {
     const session = await auth();
@@ -33,9 +34,8 @@ export async function GET(
     });
 
     return NextResponse.json(activities);
-    
   } catch (error) {
     console.error("[PROJECT_ACTIVITY_GET]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
-} 
+}

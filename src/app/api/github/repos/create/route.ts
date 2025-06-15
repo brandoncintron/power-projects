@@ -1,7 +1,6 @@
+import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-
-import { auth } from "@/auth";
 import {
   createGithubRepository,
   GithubServiceError,
@@ -35,7 +34,10 @@ export async function POST(req: NextRequest) {
     console.error("Failed to create GitHub repository:", error);
 
     if (error instanceof GithubServiceError) {
-      return NextResponse.json({ error: error.message }, { status: error.status });
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
     }
 
     const errorMessage =
@@ -45,4 +47,4 @@ export async function POST(req: NextRequest) {
       { status: 500 },
     );
   }
-} 
+}

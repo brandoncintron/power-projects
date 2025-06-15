@@ -76,7 +76,9 @@ export function TechnologySelection({
                           key={option.name}
                           item={option}
                           isSelected={frameworks.includes(option.name)}
-                          onToggle={(name: string) => onToggle(name, "frameworks")}
+                          onToggle={(name: string) =>
+                            onToggle(name, "frameworks")
+                          }
                         />
                       ))}
                     </div>
@@ -152,4 +154,4 @@ export function TechnologySelection({
       </Tabs>
     </div>
   );
-} 
+}

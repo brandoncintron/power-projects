@@ -4,10 +4,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { ProjectTabsProps } from "../types/types";
 import { ApplicationsTab } from "./ApplicationsTab";
-import { ProjectOverview } from "./OverviewTab";
 import { ChatTab } from "./ChatTab";
-import { TasksTab } from "./TasksTab";
+import { ProjectOverview } from "./OverviewTab";
 import { ScrumTab } from "./ScrumTab";
+import { TasksTab } from "./TasksTab";
 
 /* Project Tabs - Manages tabbed interface for project content with conditional rendering based on ownership and collaboration status */
 export function ProjectTabs({

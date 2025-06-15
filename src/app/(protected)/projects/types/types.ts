@@ -53,8 +53,6 @@ export interface ProjectApplicantsListProps {
   pendingActions?: { [key: string]: { accept?: boolean; deny?: boolean } };
 }
 
-
-
 export interface ProjectHeaderProps {
   projectName: string;
   memberCount: number;
@@ -162,5 +160,3 @@ export interface ProjectGridProps {
 export interface ProjectStatsProps {
   projects: ProjectWithDetails[];
 }
-
-

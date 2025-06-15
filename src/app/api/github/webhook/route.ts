@@ -10,8 +10,11 @@
  * This endpoint ensures that the linked project's activity feed stays up-to-date with
  * events that happen in the linked repository *after* the initial connection.
  */
-import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+
+import { GitHubActivity } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+
 import { db } from "@/lib/db";
 import {
   IssueCommentEventPayload,
@@ -19,7 +22,6 @@ import {
   PullRequestEventPayload,
   WebhookPushPayload,
 } from "@/lib/github/types";
-import { GitHubActivity } from "@prisma/client";
 
 const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET;
 
@@ -27,7 +29,10 @@ if (!GITHUB_WEBHOOK_SECRET) {
   throw new Error("GITHUB_WEBHOOK_SECRET is not set");
 }
 
-async function verifySignature(req: NextRequest, body: Buffer): Promise<boolean> {
+async function verifySignature(
+  req: NextRequest,
+  body: Buffer,
+): Promise<boolean> {
   const signature = req.headers.get("x-hub-signature-256");
   if (!signature) return false;
 
@@ -61,8 +66,13 @@ export async function POST(req: NextRequest) {
   const repoOwner = payload.repository?.owner?.login;
 
   if (!repoName || !repoOwner || !deliveryId) {
-    console.error("Webhook payload missing repository or delivery information.");
-    return NextResponse.json({ error: "Missing repository or delivery information" }, { status: 400 });
+    console.error(
+      "Webhook payload missing repository or delivery information.",
+    );
+    return NextResponse.json(
+      { error: "Missing repository or delivery information" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -74,8 +84,12 @@ export async function POST(req: NextRequest) {
     });
 
     if (!project) {
-      console.warn(`Webhook for ${repoOwner}/${repoName} received, but no matching project found. Ignoring.`);
-      return NextResponse.json({ message: "Project not found, webhook ignored." });
+      console.warn(
+        `Webhook for ${repoOwner}/${repoName} received, but no matching project found. Ignoring.`,
+      );
+      return NextResponse.json({
+        message: "Project not found, webhook ignored.",
+      });
     }
 
     console.log(
@@ -160,34 +174,49 @@ export async function POST(req: NextRequest) {
 
       default:
         console.log(`Event type ${event} not handled, ignoring.`);
-        return NextResponse.json({ message: `Event type ${event} not handled.` });
+        return NextResponse.json({
+          message: `Event type ${event} not handled.`,
+        });
     }
 
     if (activitiesToCreate.length > 0) {
       // De-duplicate before insertion to prevent constraint violations
       const existingEventIds = await db.gitHubActivity.findMany({
-          where: { githubEventId: { in: activitiesToCreate.map(a => a.githubEventId) } },
-          select: { githubEventId: true },
+        where: {
+          githubEventId: { in: activitiesToCreate.map((a) => a.githubEventId) },
+        },
+        select: { githubEventId: true },
       });
-      const existingIdsSet = new Set(existingEventIds.map(e => e.githubEventId));
+      const existingIdsSet = new Set(
+        existingEventIds.map((e) => e.githubEventId),
+      );
 
-      const uniqueActivities = activitiesToCreate.filter(a => !existingIdsSet.has(a.githubEventId));
-      
+      const uniqueActivities = activitiesToCreate.filter(
+        (a) => !existingIdsSet.has(a.githubEventId),
+      );
+
       if (uniqueActivities.length > 0) {
         const result = await db.gitHubActivity.createMany({
           data: uniqueActivities,
         });
-        console.log(`Successfully stored ${result.count} new activities for project ${project.id}.`);
+        console.log(
+          `Successfully stored ${result.count} new activities for project ${project.id}.`,
+        );
       } else {
-        console.log("All activities from this webhook were duplicates. Nothing new to store.");
+        console.log(
+          "All activities from this webhook were duplicates. Nothing new to store.",
+        );
       }
     }
 
     return NextResponse.json({ success: true });
-
   } catch (error) {
     console.error("Error processing webhook:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json({ error: `Webhook processing failed: ${errorMessage}` }, { status: 500 });
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json(
+      { error: `Webhook processing failed: ${errorMessage}` },
+      { status: 500 },
+    );
   }
-} 
+}

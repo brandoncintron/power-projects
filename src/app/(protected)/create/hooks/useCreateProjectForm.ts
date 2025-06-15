@@ -40,12 +40,19 @@ export function useCreateProjectForm(): UseCreateProjectFormReturn {
     showLoading("Creating your project...");
 
     const response = await createProject(data);
-    if (response?.error) {
+
+    if (response?.error || !response?.project?.id) {
       hideLoading();
-      toast.error(response.error);
+      toast.error(
+        response?.error || "Failed to create project. Please try again.",
+      );
     } else {
-      setToast("Project created successfully!", "success", "myProjectsToast");
-      router.push("/projects/my-projects");
+      setToast(
+        "Project created successfully!",
+        "success",
+        `project-toast-${response.project.id}`,
+      );
+      router.push(`/projects/${response.project.id}`);
     }
   }
 

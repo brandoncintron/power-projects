@@ -8,10 +8,9 @@
  *     sends real-time events to our `/api/github/webhook` endpoint.
  * 3.  Triggers the backfill of historical data by calling `fetchAndStoreRecentActivity`
  *     to populate the activity feed with past events.
- * 
+ *
  */
 import { auth } from "@/auth";
-import { getOctokitInstance } from "@/lib/github/services";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -19,6 +18,7 @@ import { db } from "@/lib/db";
 import {
   createWebhook,
   fetchAndStoreRecentActivity,
+  getOctokitInstance,
 } from "@/lib/github/services";
 
 const connectRepoSchema = z.object({
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     // Check if project exists and user is the owner
     const project = await db.project.findFirst({
       where: {
-        id: projectId, 
+        id: projectId,
         ownerId: session.user.id,
       },
     });
@@ -115,17 +115,16 @@ export async function POST(request: NextRequest) {
       const octokit = await getOctokitInstance(session);
 
       await createWebhook(octokit, repository.owner.login, repository.name);
-      
+
       console.log(`Webhook created successfully for ${repository.full_name}.`);
 
       // backfill the recent activity. Awaiting this to prevent race condition.
       await fetchAndStoreRecentActivity(updatedProject, octokit);
-
     } catch (error) {
       console.error(
         `Failed to create webhook or backfill activity for ${repository.full_name}. Project ID: ${projectId}`,
         error,
-      ); 
+      );
     }
 
     return NextResponse.json({

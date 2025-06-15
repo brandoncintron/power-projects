@@ -11,7 +11,9 @@ export function TasksTab() {
       </CardHeader>
       <CardContent>
         <div className="text-center py-8">
-          <p className="text-muted-foreground">Task tracking functionality coming soon.</p>
+          <p className="text-muted-foreground">
+            Task tracking functionality coming soon.
+          </p>
         </div>
       </CardContent>
     </Card>

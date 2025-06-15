@@ -9,6 +9,7 @@ import {
   createWebhook,
   getOctokitInstance,
 } from "@/lib/github/services";
+
 import { ProjectFormData, projectSchema } from "./schemas/project-schema";
 
 export async function createProject(data: ProjectFormData) {
@@ -73,8 +74,10 @@ export async function createProject(data: ProjectFormData) {
     newProject = await db.project.create({
       data: {
         ...restOfData,
-        visibility:
-          restOfData.visibility as "PUBLIC" | "PRIVATE" | "UNIVERSITY",
+        visibility: restOfData.visibility as
+          | "PUBLIC"
+          | "PRIVATE"
+          | "UNIVERSITY",
         ownerId: session.user.id,
         ...githubConnectionData,
         githubRepoCreatedViaApp,

@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
-import { Activity, ExternalLink, Github, GitBranch } from "lucide-react";
+import { Activity, ExternalLink, GitBranch, Github } from "lucide-react";
 import Link from "next/link";
 
 import OAuthButton from "@/components/auth/OAuthButton";
@@ -30,8 +30,12 @@ export function RecentActivityCard({
   // User has access if they are the owner or a collaborator
   const hasAccess = isOwner || isCollaborator;
 
-  const shouldFetchActivity =
-    !!(projectId && isRepositoryConnected && hasAccess && session);
+  const shouldFetchActivity = !!(
+    projectId &&
+    isRepositoryConnected &&
+    hasAccess &&
+    session
+  );
 
   const {
     data: activities,
@@ -51,17 +55,19 @@ export function RecentActivityCard({
               <Github size={14} className="text-muted-foreground" />
             )}
           </div>
-          {isRepositoryConnected && githubConnection?.githubRepoUrl && session && (
-            <Link
-              href={githubConnection.githubRepoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
-                View on GitHub <ExternalLink size={12} className="ml-1" />
-              </Button>
-            </Link>
-          )}
+          {isRepositoryConnected &&
+            githubConnection?.githubRepoUrl &&
+            session && (
+              <Link
+                href={githubConnection.githubRepoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                  View on GitHub <ExternalLink size={12} className="ml-1" />
+                </Button>
+              </Link>
+            )}
         </CardTitle>
       </CardHeader>
 
@@ -82,11 +88,11 @@ export function RecentActivityCard({
           ) : !hasAccess ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground">
-                You need to be a collaborator to view this project&apos;s activity.
+                You need to be a collaborator to view this project&apos;s
+                activity.
               </p>
             </div>
-          ) : 
-          (
+          ) : (
             <div className="space-y-4">
               {isLoading && (
                 <div className="space-y-4">

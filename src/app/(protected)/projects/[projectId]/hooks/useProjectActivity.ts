@@ -36,4 +36,4 @@ export const useProjectActivity = (projectId: string, isEnabled: boolean) => {
     enabled: isEnabled,
     staleTime: 1000 * 60 * 3, // 3 minutes
   });
-}; 
+};

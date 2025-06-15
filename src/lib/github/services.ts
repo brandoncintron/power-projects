@@ -9,14 +9,15 @@ import { Octokit } from "octokit";
 
 import { db } from "@/lib/db";
 import { absoluteUrl } from "@/lib/utils";
+
 import {
   ApiPushPayload,
+  CreateRepoOptions,
   GitHubEvent,
   IssueCommentEventPayload,
   IssuesEventPayload,
   OctokitInstance,
   PullRequestEventPayload,
-  CreateRepoOptions
 } from "./types";
 
 export class GithubServiceError extends Error {
@@ -62,8 +63,6 @@ export async function getOctokitInstance(session: Session | null) {
 
   return octokit;
 }
-
-
 
 export async function createGithubRepository(
   session: Session,
@@ -114,8 +113,10 @@ export async function createWebhook(
   } catch (error) {
     // It's possible the webhook already exists, which throws an error.
     // log this, but it's not a critical failure.
-    console.log(`Error: ${error}`)
-    console.warn(`Could not create webhook for ${owner}/${repo}. It may already exist.`);
+    console.log(`Error: ${error}`);
+    console.warn(
+      `Could not create webhook for ${owner}/${repo}. It may already exist.`,
+    );
   }
 }
 
@@ -128,7 +129,9 @@ export async function fetchAndStoreRecentActivity(
   octokit: OctokitInstance,
 ) {
   if (!project.githubRepoOwner || !project.githubRepoName) {
-    console.error(`Project ${project.id} is missing repository details. Skipping activity fetch.`);
+    console.error(
+      `Project ${project.id} is missing repository details. Skipping activity fetch.`,
+    );
     return;
   }
 
@@ -247,7 +250,9 @@ export async function fetchAndStoreRecentActivity(
       const uniqueActivities = Array.from(
         new Map(activitiesToCreate.map((a) => [a.githubEventId, a])).values(),
       );
-      console.log(`Storing ${uniqueActivities.length} unique processed activities.`);
+      console.log(
+        `Storing ${uniqueActivities.length} unique processed activities.`,
+      );
 
       const result = await db.gitHubActivity.createMany({
         data: uniqueActivities,

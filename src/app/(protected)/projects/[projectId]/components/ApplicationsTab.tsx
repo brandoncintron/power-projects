@@ -3,6 +3,7 @@
 import { ProjectApplicantsList } from "@@/projects/[projectId]/components/ProjectApplicantsList";
 import { TeamMembersCard } from "@@/projects/[projectId]/components/TeamMembersCard";
 import { useApplicationActions } from "@@/projects/[projectId]/hooks/useApplicationActions";
+
 import { ApplicationsTabProps } from "../types/types";
 
 /* Project Applications Section - Organizes team members and project applicants */

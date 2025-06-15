@@ -24,7 +24,10 @@ export async function GET() {
     console.error("GitHub API Error:", error);
 
     if (error instanceof GithubServiceError) {
-      return NextResponse.json({ error: error.message }, { status: error.status });
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
     }
 
     // Handle specific GitHub API errors

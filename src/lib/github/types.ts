@@ -2,7 +2,6 @@ import { Octokit } from "octokit";
 
 export type OctokitInstance = InstanceType<typeof Octokit>;
 
-
 export interface WebhookPushCommit {
   id: string; // This is the commit SHA
   message: string;
@@ -93,10 +92,10 @@ export interface GitHubEvent {
     | IssueCommentEventPayload
     | object; // Fallback for other event types
   created_at: string | null;
-} 
+}
 
 export interface CreateRepoOptions {
-    projectName: string;
-    description?: string;
-    visibility: "PUBLIC" | "PRIVATE";
-  }
+  projectName: string;
+  description?: string;
+  visibility: "PUBLIC" | "PRIVATE";
+}

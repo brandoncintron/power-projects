@@ -11,7 +11,9 @@ export function ScrumTab() {
       </CardHeader>
       <CardContent>
         <div className="text-center py-8">
-          <p className="text-muted-foreground">Scrum board functionality coming soon.</p>
+          <p className="text-muted-foreground">
+            Scrum board functionality coming soon.
+          </p>
         </div>
       </CardContent>
     </Card>
