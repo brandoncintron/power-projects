@@ -4,6 +4,7 @@
  * fetching data like repository events.
  * Uses the octokit library to handle authenticated API requests.
  */
+import { GitHubActivity } from "@prisma/client";
 import { Session } from "next-auth";
 import { Octokit } from "octokit";
 
@@ -19,6 +20,8 @@ import {
   OctokitInstance,
   PullRequestEventPayload,
 } from "./types";
+
+type ActivityToCreate = Omit<GitHubActivity, "id">;
 
 export class GithubServiceError extends Error {
   constructor(
@@ -149,7 +152,7 @@ export async function fetchAndStoreRecentActivity(
 
     console.log(`Total events fetched from API: ${events.length}`);
 
-    const activitiesToCreate = [];
+    const activitiesToCreate: ActivityToCreate[] = [];
 
     for (const event of events) {
       console.log(`Processing event type: ${event.type}, ID: ${event.id}`);
@@ -159,19 +162,21 @@ export async function fetchAndStoreRecentActivity(
           const pushPayload = event.payload as ApiPushPayload;
           if (pushPayload.commits) {
             for (const commit of pushPayload.commits) {
-              const branch = pushPayload.ref.split("/").pop();
-              activitiesToCreate.push({
-                githubEventId: commit.sha,
-                projectId: project.id,
-                eventType: "push",
-                action: "pushed",
-                branch: branch,
-                actorUsername: event.actor.login,
-                actorAvatarUrl: event.actor.avatar_url,
-                summary: `pushed commit: ${commit.message.split("\n")[0]}`,
-                targetUrl: commit.url,
-                timestamp: new Date(event.created_at!),
-              });
+              const branch = pushPayload.ref.split("/").pop() || null;
+              if (commit.url && commit.url.startsWith("http")) {
+                activitiesToCreate.push({
+                  githubEventId: commit.sha,
+                  projectId: project.id,
+                  eventType: "push",
+                  action: "pushed",
+                  branch: branch,
+                  actorUsername: event.actor.login,
+                  actorAvatarUrl: event.actor.avatar_url,
+                  summary: `pushed commit: ${commit.message.split("\n")[0]}`,
+                  targetUrl: commit.url,
+                  timestamp: new Date(event.created_at!),
+                });
+              }
               console.log(`Prepared PushEvent commit. SHA: ${commit.sha}`);
             }
           }

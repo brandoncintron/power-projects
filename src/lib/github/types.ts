@@ -21,7 +21,7 @@ export interface WebhookPushPayload {
 export interface ApiPushEventCommit {
   sha: string; // This is the commit SHA
   message: string;
-  url: string;
+  url?: string;
 }
 
 export interface ApiPushPayload {

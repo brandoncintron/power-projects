@@ -13,6 +13,7 @@ const nextConfig = {
       },
     ],
   },
+  allowedDevOrigins: ["*.ngrok-free.app"],
 };
 
 module.exports = nextConfig;

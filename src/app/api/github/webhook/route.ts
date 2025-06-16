@@ -46,7 +46,7 @@ async function verifySignature(
 
   const hmac = crypto.createHmac("sha256", GITHUB_WEBHOOK_SECRET);
   hmac.update(body);
-  const digest = `${hmac.digest("hex")}`;
+  const digest = `sha256=${hmac.digest("hex")}`;
 
   if (signature.length !== digest.length) {
     console.error("Signature and digest lengths do not match.");
