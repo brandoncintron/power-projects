@@ -48,7 +48,12 @@ export function ProjectSettingsSection() {
               <FormLabel>Create a GitHub Repository</FormLabel>
               <FormDescription>
                 {`This will create a new repository on your GitHub profile. Its visibility will match the one you select for the project.`}
+                <br />
               </FormDescription>
+              <span className="text-xs text-muted-foreground">
+                Note: If you have an existing repository, don't select this
+                option. You'll add it on the project page.
+              </span>
             </div>
           </FormItem>
         )}

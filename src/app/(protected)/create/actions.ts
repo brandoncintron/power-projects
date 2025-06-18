@@ -61,6 +61,17 @@ export async function createProject(data: ProjectFormData) {
           githubRepoName: repoData.githubRepoName,
         };
       } catch (error) {
+        // Provide a friendlier message if the repository name already exists
+        if (
+          error instanceof Error &&
+          error.message.includes("name already exists on this account")
+        ) {
+          return {
+            error:
+              "A GitHub repository with that name already exists in your account. Please choose a different project name.",
+          };
+        }
+
         const errorMessage =
           error instanceof Error
             ? error.message
