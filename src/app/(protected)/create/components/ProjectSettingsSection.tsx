@@ -51,8 +51,8 @@ export function ProjectSettingsSection() {
                 <br />
               </FormDescription>
               <span className="text-xs text-muted-foreground">
-                Note: If you have an existing repository, don't select this
-                option. You'll add it on the project page.
+                Note: If you have an existing repository, don&apos;t select this
+                option. You&apos;ll add it on the project page.
               </span>
             </div>
           </FormItem>

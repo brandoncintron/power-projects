@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { LuGithub, LuRefreshCw } from "react-icons/lu";
@@ -46,6 +46,12 @@ export function GitHubConnectDialog({ projectId }: GitHubConnectDialogProps) {
     projectId,
     onSuccess: close,
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      refetch();
+    }
+  }, [isOpen, refetch]);
 
   const handleRepositorySelect = (repository: GitHubRepository) => {
     setSelectedRepository(

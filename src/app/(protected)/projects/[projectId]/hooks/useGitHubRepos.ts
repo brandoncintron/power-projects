@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import type {
   GitHubReposError,
@@ -47,11 +47,6 @@ export function useGitHubRepos() {
       repo.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       repo.language?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  // Fetch repositories on mount
-  useEffect(() => {
-    fetchRepositories();
-  }, [fetchRepositories]);
 
   return {
     repositories: filteredRepositories,
