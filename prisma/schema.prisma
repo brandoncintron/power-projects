@@ -122,10 +122,12 @@ model Project {
   updatedAt DateTime @updatedAt
 
   // --- GitHub Integration ---
+  githubRepoId      String?
   githubRepoUrl     String?
   githubRepoName    String?
   githubRepoOwner   String?
   githubConnectedAt DateTime?
+  githubRepoCreatedViaApp Boolean @default(false)
 
   // --- Relationships ---
   // Relation to the owner (User)
@@ -140,6 +142,8 @@ model Project {
 
   @@index([ownerId]) // Index for faster lookups by owner
   notifications       Notification[]
+
+  activities              GitHubActivity[] // Relation to GitHubActivity
 }
 
 // --- Join Table for Project Collaborators (Many-to-Many User <-> Project) ---
@@ -170,4 +174,29 @@ model ProjectApplication {
   @@unique([userId, projectId])
   @@index([projectId])      // Index for faster lookups by project
   @@index([userId])         // Index for faster lookups by user
+}
+
+model GitHubActivity {
+  id              String   @id @default(cuid())
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  githubEventId   String   @unique // The unique ID from the webhook delivery to prevent duplicates
+  eventType       String   // "push", "issues", "pull_request"
+  action          String?  // "opened", "closed", "created" - optional as not all events have it
+  actorUsername   String   // The GitHub username of the person who did the action
+  actorAvatarUrl  String?
+  summary         String   // A human-readable summary like "pushed 3 commits to main"
+  targetUrl       String   // The direct URL to the issue, PR, or commit
+  branch          String?  // The branch name, if applicable (e.g., for push events)
+  timestamp       DateTime @default(now())
+
+  @@index([projectId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+
+  @@unique([identifier, token])
 }

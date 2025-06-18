@@ -68,7 +68,7 @@ const MobileNavbar = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center justify-between py-4 px-6 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center justify-between py-4 px-6 hover:bg-accent transition-colors"
               >
                 <span className="text-lg font-medium">GitHub</span>
                 <Github size={20} className="text-gray-400" />
@@ -76,7 +76,7 @@ const MobileNavbar = () => {
 
               <button
                 onClick={toggleTheme}
-                className="flex items-center justify-between py-4 px-6 w-full text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center justify-between py-4 px-6 w-full text-left hover:bg-accent transition-colors"
               >
                 <span className="text-lg font-medium">
                   {theme === "dark" ? "Light Mode" : "Dark Mode"}
@@ -96,7 +96,7 @@ const MobileNavbar = () => {
                   className="w-full py-6 text-base border-gray-300 dark:border-gray-700 font-medium"
                   onClick={() => {
                     setIsOpen(false);
-                    open("signin");
+                    open();
                   }}
                 >
                   Sign In
@@ -106,7 +106,7 @@ const MobileNavbar = () => {
                   className="w-full py-6 text-base bg-blue-600 hover:bg-blue-700 text-white font-medium"
                   onClick={() => {
                     setIsOpen(false);
-                    open("signup");
+                    open();
                   }}
                 >
                   Get Started

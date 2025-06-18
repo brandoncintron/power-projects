@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import { HideLoading } from "@/components/HideLoading";
+import { ShowToast } from "@/components/ShowToast";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { db } from "@/lib/db";
@@ -91,6 +92,7 @@ export default async function MyProjectsPage() {
   return (
     <div className="min-h-screen">
       <HideLoading />
+      <ShowToast storageKey="myProjectsToast" />
       <main className="container mx-auto py-6 px-4 md:px-6">
         {/* Header with action button */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
@@ -101,7 +103,7 @@ export default async function MyProjectsPage() {
             </p>
           </div>
           <Button asChild>
-            <Link href="/create-project">
+            <Link href="/create">
               <Plus className="mr-2 h-4 w-4" />
               Create Project
             </Link>
@@ -110,7 +112,7 @@ export default async function MyProjectsPage() {
 
         {/* Display error if any */}
         {fetchError && (
-          <div className="text-center py-10 text-red-600 bg-red-50 rounded-md mb-6">
+          <div className="text-center py-10 text-destructive bg-destructive/5 rounded-md mb-6">
             <p>{fetchError}</p>
           </div>
         )}
@@ -127,7 +129,7 @@ export default async function MyProjectsPage() {
               project to start collaborating with others.
             </p>
             <Button asChild>
-              <Link href="/create-project">Create Your First Project</Link>
+              <Link href="/create">Create Your First Project</Link>
             </Button>
           </Card>
         )}

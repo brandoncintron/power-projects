@@ -8,12 +8,13 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import {
-  FilteredProjectListProps,
-  ProjectWithDetails,
-} from "../../types/types";
 import { useAnimatedItemsInView } from "../hooks/useAnimatedItemsInView";
 import { useProjectFiltering } from "../hooks/useProjectFiltering";
+import {
+  AnimatedProjectItemProps,
+  FilteredProjectListProps,
+  ProjectWithDetails,
+} from "../types/types";
 import ProjectListItem from "./ProjectListItem";
 
 // Animated project item that fades in when in view
@@ -24,14 +25,8 @@ const AnimatedProjectItem = ({
   userId,
   index,
   animationKey,
-}: {
-  project: ProjectWithDetails;
-  hasApplied: boolean;
-  isCollaborator: boolean;
-  userId?: string;
-  index: number;
-  animationKey: number;
-}) => {
+  session,
+}: AnimatedProjectItemProps) => {
   const { elementRef, isElementInView } = useAnimatedItemsInView();
 
   return (
@@ -47,6 +42,7 @@ const AnimatedProjectItem = ({
           hasApplied={hasApplied}
           isCollaborator={isCollaborator}
           userId={userId}
+          session={session}
         />
       </motion.div>
     </div>
@@ -59,6 +55,7 @@ export default function FilteredProjectList({
   userApplications = [],
   userCollaborations = [],
   userId,
+  session,
 }: FilteredProjectListProps) {
   const {
     searchQuery,
@@ -122,6 +119,7 @@ export default function FilteredProjectList({
                   userId={userId}
                   index={index}
                   animationKey={animationKey}
+                  session={session}
                 />
               ),
             )}

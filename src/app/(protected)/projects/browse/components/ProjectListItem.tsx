@@ -8,17 +8,19 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useLoading } from "@/components/ui/loading-context";
-import { getDatabaseIcon, getTechnologyIcon } from "@/lib/language-icons";
+import { technologyIconMap } from "@/lib/technology-icons";
 import { formatRelativeTime } from "@/utils/formatRelativeTime";
 
 import { useProjectApplication } from "@@/projects/browse/hooks/useProjectApplication";
-import { ProjectListItemProps } from "@@/projects/types/types";
+
+import { ProjectListItemProps } from "../types/types";
 
 export default function ProjectListItem({
   project,
   hasApplied = false,
   isCollaborator = false,
   userId,
+  session,
 }: ProjectListItemProps) {
   // Project status management
   const isProjectOpen = project.status === "OPEN";
@@ -43,7 +45,7 @@ export default function ProjectListItem({
   return (
     <div
       className={`relative rounded-3xl p-4 hover:shadow-md transition-all duration-300 flex flex-col gap-2.5 hover:translate-y-[-1px] bg-card w-full
-      ${isCollaborator ? "border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200 dark:ring-emerald-900" : ""}
+      ${isCollaborator ? "border-emerald-300 dark:border-emerald-800 ring-1 ring-emerald-200 dark:ring-emerald-900" : "border"}
     `}
     >
       {/* Collaboration Badge */}
@@ -69,22 +71,22 @@ export default function ProjectListItem({
         <Badge
           variant="outline"
           className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
+          icon={<FileCode2 className="size-3" />}
         >
-          <FileCode2 className="size-3" />
-          <span>{project.applicationType}</span>
+          {project.applicationType}
         </Badge>
         {project.frameworks?.map((fw) => (
           <Badge
             key={fw}
             variant="secondary"
             className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
+            icon={
+              <div className="flex size-4 shrink-0 items-center justify-center">
+                {technologyIconMap[fw.toLowerCase()] || <FileCode2 size={16} />}
+              </div>
+            }
           >
-            <div className="flex size-4 shrink-0 items-center justify-center">
-              {getTechnologyIcon(fw.toLowerCase())}
-            </div>
-            <span>
-              {fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()}
-            </span>
+            {fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()}
           </Badge>
         ))}
         {project.databases?.map((db) => (
@@ -92,11 +94,13 @@ export default function ProjectListItem({
             key={db}
             variant="secondary"
             className="whitespace-nowrap flex items-center gap-1 text-xs px-2 py-0.5"
+            icon={
+              <div className="flex size-4 shrink-0 items-center justify-center">
+                {technologyIconMap[db.toLowerCase()] || <FileCode2 size={16} />}
+              </div>
+            }
           >
-            <div className="flex size-4 shrink-0 items-center justify-center">
-              {getDatabaseIcon(db)}
-            </div>
-            <span>{db}</span>
+            {db}
           </Badge>
         ))}
       </div>
@@ -145,7 +149,7 @@ export default function ProjectListItem({
       {/* Action buttons */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mt-2 pt-2 border-t">
         <div className="flex items-center gap-2">
-          {isProjectOpen && !isOwner && !isCollaborator && (
+          {isProjectOpen && !isOwner && !isCollaborator && session && (
             <>
               {showAppliedState ? (
                 <Button

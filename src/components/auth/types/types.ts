@@ -1,21 +1,10 @@
 import { useRouter } from "next/navigation";
-
-export type AuthView = "signin" | "signup";
-
-export interface AuthDialogContextType {
-  isOpen: boolean;
-  view: AuthView;
-  error: string | null;
-  open: (view?: AuthView, error?: string | null) => void;
-  close: () => void;
-  setView: (view: AuthView) => void;
-  setError: (error: string | null) => void;
-}
+import { z } from "zod";
 
 // Auth error handling types
 export interface AuthErrorHandlerParams {
   errorParam: string | null;
-  open: (view: AuthView, error?: string) => void;
+  open: (error?: string) => void;
   router: ReturnType<typeof useRouter>;
   errorCheckedRef: React.MutableRefObject<boolean>;
 }
@@ -26,7 +15,11 @@ export interface FormState {
   error: string | undefined;
 }
 
-// Username form type (from SetUsernamePopup)
-export interface UsernameFormType {
-  username: string;
-}
+export const usernameSchema = z.object({
+  username: z
+    .string()
+    .min(1, "Username must be at least 1 character.")
+    .max(20, "Username must be less than 20 characters."),
+});
+
+export type UsernameFormType = z.infer<typeof usernameSchema>;

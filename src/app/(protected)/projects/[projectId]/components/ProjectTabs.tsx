@@ -2,12 +2,12 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { ProjectApplicationsSection } from "@@/projects/[projectId]/components/ProjectApplicationsSection";
-import { ProjectChatCard } from "@@/projects/[projectId]/components/ProjectChatCard";
-import { ProjectOverview } from "@@/projects/[projectId]/components/ProjectOverview";
-import { ProjectTasksCard } from "@@/projects/[projectId]/components/ProjectTasks";
-import { ScrumBoard } from "@@/projects/[projectId]/components/ScrumBoard";
-import { ProjectTabsProps } from "@@/projects/types/types";
+import { ProjectTabsProps } from "../types/types";
+import { ApplicationsTab } from "./ApplicationsTab";
+import { ChatTab } from "./ChatTab";
+import { ProjectOverview } from "./OverviewTab";
+import { ScrumTab } from "./ScrumTab";
+import { TasksTab } from "./TasksTab";
 
 /* Project Tabs - Manages tabbed interface for project content with conditional rendering based on ownership and collaboration status */
 export function ProjectTabs({
@@ -22,6 +22,8 @@ export function ProjectTabs({
   applicants,
   collaborators = [],
   projectId,
+  githubConnection,
+  session,
 }: ProjectTabsProps) {
   // Non-owner and non-collaborator view shows only the overview without tabs
   if (!isOwner && !isCollaborator) {
@@ -37,7 +39,10 @@ export function ProjectTabs({
             owner={owner}
             collaborators={collaborators}
             isOwner={isOwner}
+            isCollaborator={isCollaborator}
             projectId={projectId}
+            githubConnection={githubConnection}
+            session={session}
           />
         </div>
       </>
@@ -48,7 +53,7 @@ export function ProjectTabs({
   return (
     <Tabs defaultValue="overview" className="w-full">
       <TabsList
-        className={`grid w-full ${isOwner ? "grid-cols-5 md:w-[600px]" : "grid-cols-4 md:w-[500px]"}`}
+        className={`grid w-full ${isOwner ? "grid-cols-2 md:grid-cols-5 md:w-[600px]" : "grid-cols-2 md:grid-cols-4 md:w-[500px]"}`}
       >
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="tasks">Project Tasks</TabsTrigger>
@@ -59,7 +64,7 @@ export function ProjectTabs({
         )}
       </TabsList>
 
-      <TabsContent value="overview" className="mt-6">
+      <TabsContent value="overview" className="mt-18 md:mt-6">
         <ProjectOverview
           applicationType={applicationType}
           frameworks={frameworks}
@@ -69,25 +74,28 @@ export function ProjectTabs({
           owner={owner}
           collaborators={collaborators}
           isOwner={isOwner}
+          isCollaborator={isCollaborator}
           projectId={projectId}
+          githubConnection={githubConnection}
+          session={session}
         />
       </TabsContent>
 
-      <TabsContent value="tasks" className="mt-6">
-        <ProjectTasksCard />
+      <TabsContent value="tasks" className="mt-18 md:mt-6">
+        <TasksTab />
       </TabsContent>
 
-      <TabsContent value="scrum" className="mt-6">
-        <ScrumBoard />
+      <TabsContent value="scrum" className="mt-18 md:mt-6">
+        <ScrumTab />
       </TabsContent>
 
-      <TabsContent value="chat" className="mt-6">
-        <ProjectChatCard />
+      <TabsContent value="chat" className="mt-18 md:mt-6">
+        <ChatTab />
       </TabsContent>
 
       {isOwner && (
-        <TabsContent value="applications" className="mt-6">
-          <ProjectApplicationsSection
+        <TabsContent value="applications" className="mt-18 md:mt-6">
+          <ApplicationsTab
             owner={owner}
             applicants={applicants}
             collaborators={collaborators}

@@ -152,15 +152,15 @@ export function AuthedNavMenu({ session }: { session: Session | null }) {
             <SidebarMenuItem>
               <SidebarMenuButton
                 asChild
-                isActive={pathname.includes("create-project")}
+                isActive={pathname.includes("create")}
                 tooltip="Create Project"
                 className="px-2 py-1.5"
               >
                 <Link
-                  href="/create-project"
+                  href="/create"
                   onClick={() =>
                     handleNavWithLoading(
-                      "/create-project",
+                      "/create",
                       "Loading project creation...",
                     )
                   }

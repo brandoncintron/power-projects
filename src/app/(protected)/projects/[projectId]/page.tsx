@@ -7,6 +7,7 @@ import { HideLoading } from "@/components/HideLoading";
 import { ShowToast } from "@/components/ShowToast";
 import { db } from "@/lib/db";
 
+import { GitHubConnectDialog } from "./components/GitHubConnectDialog";
 import { ProjectHeader } from "./components/ProjectHeader";
 import { ProjectTabs } from "./components/ProjectTabs";
 
@@ -91,9 +92,18 @@ async function ProjectDetailPage(props: {
     ? project.collaborators.some((collab) => collab.userId === currentUserId)
     : false;
 
+  // Prepare GitHub connection data
+  const githubConnection = {
+    githubRepoUrl: project.githubRepoUrl,
+    githubRepoName: project.githubRepoName,
+    githubRepoOwner: project.githubRepoOwner,
+    githubConnectedAt: project.githubConnectedAt,
+  };
+
   return (
     <div className="container mx-auto p-4 md:p-8 min-h-screen">
       <ShowToast storageKey="projectToast" />
+      <ShowToast storageKey="githubConnectStatus" />
       <HideLoading />
       {/* Header Section */}
       <ProjectHeader
@@ -102,6 +112,8 @@ async function ProjectDetailPage(props: {
         projectId={project.id}
         createdAt={project.createdAt}
         isOwner={isOwner}
+        githubConnection={githubConnection}
+        githubRepoCreatedViaApp={project.githubRepoCreatedViaApp}
       />
 
       {/* Main Content */}
@@ -117,7 +129,12 @@ async function ProjectDetailPage(props: {
         applicants={project.applicants}
         collaborators={project.collaborators}
         projectId={project.id}
+        githubConnection={githubConnection}
+        session={session}
       />
+
+      {/* GitHub Connect Dialog */}
+      <GitHubConnectDialog projectId={project.id} />
     </div>
   );
 }

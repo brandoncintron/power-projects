@@ -1,4 +1,7 @@
+/**  Credentials auth not being used for now - disabling
+
 import * as z from "zod";
+
 
 export const signInSchema = z.object({
   email: z
@@ -37,3 +40,4 @@ export const signUpSchema = z
 
 export type signInSchemaType = z.infer<typeof signInSchema>;
 export type signUpSchemaType = z.infer<typeof signUpSchema>;
+ */

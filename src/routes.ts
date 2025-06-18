@@ -1,4 +1,9 @@
-export const publicRoutes = ["/", "/projects/browse", "/projects/[projectId]"];
+export const publicRoutes = [
+  "/",
+  "/projects/browse",
+  "/projects/[projectId]",
+  "/api/github/webhook",
+];
 
 export const apiAuthPrefix = "/api/auth";
 

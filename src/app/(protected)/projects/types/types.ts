@@ -7,7 +7,6 @@ export interface Owner {
 }
 
 export interface Applicants {
-  // Also export if needed elsewhere
   userId: string;
   status: string | null;
   appliedAt: Date;
@@ -52,13 +51,6 @@ export interface ProjectApplicantsListProps {
   onAccept: (userId: string) => void;
   onDeny: (userId: string) => void;
   pendingActions?: { [key: string]: { accept?: boolean; deny?: boolean } };
-}
-
-export interface ProjectApplicationSectionProps {
-  owner: Owner;
-  applicants: Applicants[];
-  collaborators?: Collaborator[];
-  projectId: string;
 }
 
 export interface ProjectHeaderProps {
@@ -109,19 +101,8 @@ export interface ProjectTabsProps {
   projectId: string;
 }
 
-export interface ProjectListItemProps {
+export interface AnimatedProjectItem {
   project: ProjectWithDetails;
-  hasApplied?: boolean;
-  isCollaborator?: boolean;
-  userId?: string;
-}
-
-export interface FilteredProjectListProps {
-  projects: ProjectWithDetails[];
-  filterTags: string[];
-  userApplications?: string[];
-  userCollaborations?: string[];
-  userId?: string;
 }
 
 export interface ActivityItem {

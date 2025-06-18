@@ -17,7 +17,7 @@ const Navbar = () => {
     <div className="flex flex-col w-full sticky top-0 z-50">
       <AlertBanner />
       <nav
-        className={`w-full bg-white transition-all duration-200 py-4 dark:bg-[#161722] ${
+        className={`w-full bg-background transition-all duration-200 py-4 ${
           scrolled ? "border-b shadow-sm" : ""
         }`}
       >
@@ -38,7 +38,7 @@ const Navbar = () => {
             <Link
               href="https://github.com/brandoncintron/power-projects"
               target="_blank"
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-full hover:bg-accent transition-colors"
             >
               <Github size={20} />
             </Link>
