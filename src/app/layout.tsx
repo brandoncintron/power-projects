@@ -21,8 +21,6 @@ import Navbar from "@/components/nav/Navbar";
 import { LoadingProvider } from "@/components/ui/loading-context";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
-import Providers from "./providers";
-
 const dmSansFont = DM_Sans({ subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
@@ -44,7 +42,6 @@ export default async function RootLayout({
         id="top"
         className={`flex min-h-screen flex-col ${dmSansFont.className}`}
       >
-        <Providers>
           <Suspense>
             <ThemeProvider
               attribute="class"
@@ -95,7 +92,6 @@ export default async function RootLayout({
               </AuthDialogProvider>
             </ThemeProvider>
           </Suspense>
-        </Providers>
       </body>
     </html>
   );
