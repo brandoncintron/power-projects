@@ -164,28 +164,46 @@ export const useSSEProjectActivity = (
   }, [cleanup]);
 
   useEffect(() => {
-    const handleVisibilityOrFocus = () => {
-      if (document.visibilityState === "visible") {
-        // If we're not connected (or the underlying socket has died) start fresh
-        if (!isConnected) {
-          reconnectAttemptsRef.current = 0; // reset back-off
-          connect();
-        }
-      } else {
-        // Tab just became hidden – shut down the stream to save resources
+    const reconnectIfNeeded = () => {
+      const isStreamOpen =
+        eventSourceRef.current && eventSourceRef.current.readyState === 1;
+
+      if (!isStreamOpen) {
         cleanup();
+        reconnectAttemptsRef.current = 0; // reset back-off counter
+        connect();
       }
     };
 
-    // Page Visibility API + window focus events
-    document.addEventListener("visibilitychange", handleVisibilityOrFocus);
-    window.addEventListener("focus", handleVisibilityOrFocus);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        // Page/tab no longer visible – free resources immediately
+        cleanup();
+      } else {
+        // Tab became visible again
+        reconnectIfNeeded();
+      }
+    };
+
+    const handleWindowFocus = () => {
+      reconnectIfNeeded();
+    };
+
+    const handleWindowBlur = () => {
+      // When the browser window loses OS-level focus (e.g., user Cmd+Tabs to another app)
+      cleanup();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("focus", handleWindowFocus);
+    window.addEventListener("blur", handleWindowBlur);
 
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityOrFocus);
-      window.removeEventListener("focus", handleVisibilityOrFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("focus", handleWindowFocus);
+      window.removeEventListener("blur", handleWindowBlur);
     };
-  }, [isConnected, connect, cleanup]);
+  }, [connect, cleanup]);
 
   return {
     data,
