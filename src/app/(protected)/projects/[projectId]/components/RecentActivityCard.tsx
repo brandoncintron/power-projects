@@ -1,3 +1,12 @@
+/**
+ * @file This component displays project activity, with real-time updates from GitHub.
+ *
+ * It features:
+ * - SSE-powered real-time updates for new GitHub activities.
+ * - A clean, paginated view of the 50 most recent events.
+ * - The ability to connect a GitHub repository if one is not already linked.
+ * - A manual refresh option and connection status indicators for the real-time feed.
+ */
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
@@ -11,6 +20,7 @@ import {
   WifiOff,
 } from "lucide-react";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 import OAuthButton from "@/components/auth/OAuthButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -23,6 +33,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 import { useGitHubDialog } from "../hooks/useGitHubDialog";
 import { useSSEProjectActivity } from "../hooks/useSSEProjectActivity";
@@ -37,6 +56,8 @@ export function RecentActivityCard({
   isOwner = false,
 }: RecentActivityCardProps) {
   const { open: openGitHubDialog } = useGitHubDialog();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const isRepositoryConnected =
     githubConnection?.githubRepoUrl && githubConnection?.githubRepoName;
@@ -59,6 +80,20 @@ export function RecentActivityCard({
     isConnected,
     refetch,
   } = useSSEProjectActivity(projectId!, shouldFetchActivity);
+
+  const paginatedActivities = useMemo(() => {
+    if (!activities) return [];
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return activities.slice(startIndex, startIndex + itemsPerPage);
+  }, [activities, currentPage]);
+
+  const totalPages = activities ? Math.ceil(activities.length / itemsPerPage) : 0;
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   return (
     <Card>
@@ -222,9 +257,9 @@ export function RecentActivityCard({
                   )}
                 </div>
               )}
-              {activities && activities.length > 0 && !isLoading && (
+              {paginatedActivities && paginatedActivities.length > 0 && !isLoading && (
                 <ul className="space-y-4">
-                  {activities.map((activity) => (
+                  {paginatedActivities.map((activity) => (
                     <li key={activity.id} className="flex items-start gap-3">
                       <Avatar className="h-9 w-9 border">
                         <AvatarImage
@@ -276,6 +311,58 @@ export function RecentActivityCard({
                       automatically.
                     </p>
                   )}
+                </div>
+              )}
+              {totalPages > 1 && (
+                <div className="pt-6">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage - 1);
+                          }}
+                          aria-disabled={currentPage === 1}
+                          className={
+                            currentPage === 1
+                              ? "pointer-events-none opacity-50"
+                              : undefined
+                          }
+                        />
+                      </PaginationItem>
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <PaginationItem key={i}>
+                          <PaginationLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePageChange(i + 1);
+                            }}
+                            isActive={currentPage === i + 1}
+                          >
+                            {i + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))}
+                      <PaginationItem>
+                        <PaginationNext
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage + 1);
+                          }}
+                          aria-disabled={currentPage === totalPages}
+                          className={
+                            currentPage === totalPages
+                              ? "pointer-events-none opacity-50"
+                              : undefined
+                          }
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
                 </div>
               )}
             </div>
