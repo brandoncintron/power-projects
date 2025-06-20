@@ -6,6 +6,7 @@
  * 2.  Parses the event payload from GitHub (e.g., for pushes, new issues, comments).
  * 3.  Finds the corresponding project in the database.
  * 4.  Stores the new activity in the `GitHubActivity` table.
+ * 5.  Broadcasts the new activity to connected SSE clients in real-time.
  *
  * This endpoint ensures that the linked project's activity feed stays up-to-date with
  * events that happen in the linked repository *after* the initial connection.
@@ -22,6 +23,7 @@ import {
   PullRequestEventPayload,
   WebhookPushPayload,
 } from "@/lib/github/types";
+import { sseConnectionManager } from "@/lib/sse/connection-manager";
 
 const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET;
 
@@ -215,6 +217,22 @@ export async function POST(req: NextRequest) {
         console.log(
           `Successfully stored ${result.count} new activities for project ${project.id}.`,
         );
+
+        // Broadcast new activities to SSE clients
+        for (const activityData of uniqueActivities) {
+          // Create a complete activity object with timestamp for broadcasting
+          const activityForBroadcast = {
+            ...activityData,
+            id: `temp_${Date.now()}_${Math.random()}`, // Temporary ID for SSE
+            timestamp: new Date().toISOString(),
+          };
+
+          sseConnectionManager.broadcastToProject(project.id, {
+            type: "new_activity",
+            activity: activityForBroadcast,
+            timestamp: new Date().toISOString(),
+          });
+        }
       } else {
         console.log(
           "All activities from this webhook were duplicates. Nothing new to store.",

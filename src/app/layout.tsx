@@ -42,56 +42,54 @@ export default async function RootLayout({
         id="top"
         className={`flex min-h-screen flex-col ${dmSansFont.className}`}
       >
-          <Suspense>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="light"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <AuthDialogProvider>
-                <GitHubDialogProvider>
-                  <LoadingProvider>
-                    {/* Full-screen username popup when username is not set */}
-                    {session && user?.username === null ? (
-                      <div className="fixed inset-0 z-50 bg-background">
-                        <SetUsernamePopup />
-                        <Toaster richColors />
-                      </div>
-                    ) : session ? (
-                      <SidebarProvider defaultOpen={true}>
-                        <AuthedNavMenu session={session} />
-                        <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out">
-                          <div className="w-[calc(100%+5px)] relative left-[-5px]">
-                            <AlertBanner />
-                          </div>
-
-                          <div className="fixed top-18 right-5 lg:left-auto md:right-4 z-50">
-                            <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground max-[1439px]:block hidden" />
-                          </div>
-
-                          <div className="p-0 md:w-[80%] mx-auto">
-                            {children}
-                          </div>
-                          <Footer />
+        <Suspense>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AuthDialogProvider>
+              <GitHubDialogProvider>
+                <LoadingProvider>
+                  {/* Full-screen username popup when username is not set */}
+                  {session && user?.username === null ? (
+                    <div className="fixed inset-0 z-50 bg-background">
+                      <SetUsernamePopup />
+                      <Toaster richColors />
+                    </div>
+                  ) : session ? (
+                    <SidebarProvider defaultOpen={true}>
+                      <AuthedNavMenu session={session} />
+                      <div className="flex-1 flex flex-col transition-all duration-200 ease-in-out">
+                        <div className="w-[calc(100%+5px)] relative left-[-5px]">
+                          <AlertBanner />
                         </div>
-                        <AuthDialog />
-                        <Toaster richColors />
-                      </SidebarProvider>
-                    ) : (
-                      <div className="bg-background">
-                        <Navbar />
-                        {children}
+
+                        <div className="fixed top-18 right-5 lg:left-auto md:right-4 z-50">
+                          <SidebarTrigger className="bg-background/90 backdrop-blur-sm shadow-md border border-border hover:bg-accent hover:text-accent-foreground max-[1439px]:block hidden" />
+                        </div>
+
+                        <div className="p-0 md:w-[80%] mx-auto">{children}</div>
                         <Footer />
-                        <AuthDialog />
-                        <Toaster richColors />
                       </div>
-                    )}
-                  </LoadingProvider>
-                </GitHubDialogProvider>
-              </AuthDialogProvider>
-            </ThemeProvider>
-          </Suspense>
+                      <AuthDialog />
+                      <Toaster richColors />
+                    </SidebarProvider>
+                  ) : (
+                    <div className="bg-background">
+                      <Navbar />
+                      {children}
+                      <Footer />
+                      <AuthDialog />
+                      <Toaster richColors />
+                    </div>
+                  )}
+                </LoadingProvider>
+              </GitHubDialogProvider>
+            </AuthDialogProvider>
+          </ThemeProvider>
+        </Suspense>
       </body>
     </html>
   );

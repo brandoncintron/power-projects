@@ -1,7 +1,15 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
-import { Activity, ExternalLink, GitBranch, Github } from "lucide-react";
+import {
+  Activity,
+  ExternalLink,
+  GitBranch,
+  Github,
+  RefreshCw,
+  Wifi,
+  WifiOff,
+} from "lucide-react";
 import Link from "next/link";
 
 import OAuthButton from "@/components/auth/OAuthButton";
@@ -9,12 +17,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { useGitHubDialog } from "../hooks/useGitHubDialog";
-import { useProjectActivity } from "../hooks/useProjectActivity";
+import { useSSEProjectActivity } from "../hooks/useSSEProjectActivity";
 import { RecentActivityCardProps } from "../types/types";
 
-/* Recent Activity Card - Displays the most recent project activities */
+/* Recent Activity Card - Displays the most recent project activities with real-time SSE updates */
 export function RecentActivityCard({
   projectId,
   githubConnection,
@@ -42,7 +56,9 @@ export function RecentActivityCard({
     isLoading,
     isError,
     error,
-  } = useProjectActivity(projectId!, shouldFetchActivity);
+    isConnected,
+    refetch,
+  } = useSSEProjectActivity(projectId!, shouldFetchActivity);
 
   return (
     <Card>
@@ -54,20 +70,71 @@ export function RecentActivityCard({
             {isRepositoryConnected && (
               <Github size={14} className="text-muted-foreground" />
             )}
-          </div>
-          {isRepositoryConnected &&
-            githubConnection?.githubRepoUrl &&
-            session && (
-              <Link
-                href={githubConnection.githubRepoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
-                  View on GitHub <ExternalLink size={12} className="ml-1" />
-                </Button>
-              </Link>
+            {shouldFetchActivity && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1">
+                      {isConnected ? (
+                        <Wifi size={12} className="text-green-500" />
+                      ) : (
+                        <WifiOff size={12} className="text-red-500" />
+                      )}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {isConnected
+                        ? "Connected to real-time updates"
+                        : "Disconnected from real-time updates"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
+          </div>
+          <div className="flex items-center gap-2">
+            {shouldFetchActivity && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => refetch()}
+                      disabled={isLoading}
+                    >
+                      <RefreshCw
+                        size={14}
+                        className={isLoading ? "animate-spin" : ""}
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Refresh Activity</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
+            {isRepositoryConnected &&
+              githubConnection?.githubRepoUrl &&
+              session && (
+                <Link
+                  href={githubConnection.githubRepoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 px-2 text-xs"
+                  >
+                    View on GitHub <ExternalLink size={12} className="ml-1" />
+                  </Button>
+                </Link>
+              )}
+          </div>
         </CardTitle>
       </CardHeader>
 
@@ -75,7 +142,7 @@ export function RecentActivityCard({
         <CardContent>
           {!isRepositoryConnected ? (
             <div className="text-center py-8">
-              <p className="text-muted-foreground mb-4">
+              <div className="text-muted-foreground mb-4">
                 <button
                   onClick={() => openGitHubDialog()}
                   className="text-primary hover:underline cursor-pointer bg-transparent border-none p-0 font-inherit"
@@ -83,7 +150,7 @@ export function RecentActivityCard({
                   Connect a GitHub repository
                 </button>{" "}
                 to view activity.
-              </p>
+              </div>
             </div>
           ) : !hasAccess ? (
             <div className="text-center py-8">
@@ -137,6 +204,13 @@ export function RecentActivityCard({
                           Connect a different repository
                         </Button>
                       )}
+                    </>
+                  ) : error?.message.includes("SSE connection") ? (
+                    <>
+                      <p>Real-time connection lost.</p>
+                      <p className="text-xs text-muted-foreground">
+                        Trying to reconnect automatically...
+                      </p>
                     </>
                   ) : (
                     <>
@@ -196,6 +270,12 @@ export function RecentActivityCard({
                   <p className="text-muted-foreground">
                     No recent repository activity to display.
                   </p>
+                  {isConnected && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Connected to real-time updates - new activity will appear
+                      automatically.
+                    </p>
+                  )}
                 </div>
               )}
             </div>

@@ -185,3 +185,45 @@ export interface ApplicationsTabProps {
   collaborators?: Collaborator[];
   projectId: string;
 }
+
+// useSSEProjectActivity Props
+
+export interface SSEConnection {
+  id: string;
+  projectId: string;
+  userId: string;
+  controller: ReadableStreamDefaultController;
+}
+
+export interface GitHubActivity {
+  id: string;
+  projectId: string;
+  githubEventId: string;
+  eventType: string;
+  action: string | null;
+  actorUsername: string;
+  actorAvatarUrl: string | null;
+  summary: string;
+  targetUrl: string;
+  branch: string | null;
+  timestamp: string; // ISO 8601 date string
+}
+
+export interface SSEMessage {
+  type: "connection" | "initial_data" | "new_activity";
+  message?: string;
+  activities?: GitHubActivity[];
+  activity?: GitHubActivity;
+  projectId?: string;
+  timestamp: string;
+}
+
+export interface UseSSEProjectActivityReturn {
+  data: GitHubActivity[] | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  error: Error | null;
+  isConnected: boolean;
+  activityCount: number;
+  refetch: () => void;
+}
