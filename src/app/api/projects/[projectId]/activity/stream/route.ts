@@ -78,7 +78,7 @@ export async function GET(
           .findMany({
             where: { projectId },
             orderBy: { timestamp: "desc" },
-            take: 10, // Send last 10 activities as initial load
+            take: 50, // Send last 50 activities as initial load
           })
           .then((activities) => {
             const initialDataMessage = `data: ${JSON.stringify({
